@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="Scripts/libs/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="Scripts/libs/knockout-3.3.0.debug.js"></script>
+
+    <script type="text/javascript" src="Scripts/libs/JsInject.min.js"></script>
+    <script type="text/javascript" src="Scripts/jGroupdocs.ViewerPortalService.js"></script>
+	<script type="text/javascript" src="Scripts/installableViewer.js"></script>
+    <script type="text/javascript" src="Scripts/jGroupdocs.InitJsInject.js"></script>
+</head>
+<body>
+	<div id="test" style="overflow: hidden; margin-bottom: 20px;background-color: gray;height:700px;width:100%"></div>
+	
+	<script type="text/javascript">
+	$(function() {
+	    $("#test").groupdocsViewer();
+	});
+	</script>
+</body>
+</html>
