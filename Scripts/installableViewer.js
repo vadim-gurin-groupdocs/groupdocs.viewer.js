@@ -1,29 +1,27 @@
 ﻿(function ($) {
-    $.fn.groupdocsViewer = function (action) {
-        var options = {
-            enableViewerInit: true,
-            supportTextSelection: true,
-            resourcePrefix: ""
-        };
-
-        var viewModel = getViewModel.call(this);
-        if (!action)
+    $.fn.groupdocsViewer = function (param) {
+        var viewModel;
+        if (typeof param == "object" || typeof param == "undefined") {
+            viewModel = getViewModel.call(this, param);
             return this;
-        else if (action == "getViewModel")
-            return viewModel;
+        }
+        //else if (action == "getViewModel")
+        //    return viewModel;
         else
-            return widgetObject[action].call(this);
+            return widgetObject[param].call(widgetObject, arguments);
     };
 
-    function getViewModel() {
+    function getViewModel(options) {
         var viewModel;
         var pluginDataKey = "groupdocs.viewer.js";
         var pluginData = this.data(pluginDataKey);
         if (pluginData === undefined) {
-            var options = { element: this };
-            viewModel = new window.groupdocs.groupdocsViewerViewModel(options);
-            this.data(pluginDataKey, { viewModel: viewModel });
-            ko.applyBindings(viewModel, this.get(0));
+            widgetObject.element = this;
+            $.extend(widgetObject.options, options);
+            //viewModel = new window.groupdocs.groupdocsViewerViewModel(options);
+            widgetObject._create();
+            this.data(pluginDataKey, { viewModel: widgetObject.viewModel });
+            //ko.applyBindings(viewModel, this.get(0));
         }
         else
             viewModel = pluginData.viewModel;
@@ -31,10 +29,17 @@
     };
 
     var widgetObject = {
+        options: {
+            enableViewerInit: true,
+            supportTextSelection: true,
+            resourcePrefix: "",
+            useHtmlBasedEngine: true
+        },
+
         _create: function () {
             $.extend(this.options, {
                 element: this.element,
-                applicationPath: $.ui.groupdocsViewer.prototype.applicationPath,
+                applicationPath: $.fn.groupdocsViewer.prototype.applicationPath,
                 widgetInstance: this
             });
             this._viewModel = this.getViewModel();
@@ -577,7 +582,7 @@
                 }
             };
 
-            var viewerAdapter = this.viewerAdapter = new DocViewerAdapter(
+            var viewerAdapter = this.viewerAdapter = new groupdocs.ViewerEventBus(
                 {
                     fileId: settings.filePath,
                     fileVersion: "0",

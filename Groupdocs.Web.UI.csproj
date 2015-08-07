@@ -43,14 +43,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\bootstrap.css" />
+    <Content Include="CSS\DocumentViewer.css" />
+    <Content Include="CSS\fixes.css" />
     <Content Include="Scripts\installableViewer.js" />
+    <Content Include="Scripts\jGroupdocs.DocViewer.js" />
     <Content Include="Scripts\jGroupdocs.InitJsInject.js" />
+    <Content Include="Scripts\jGroupdocs.ViewerEventBus.js" />
     <Content Include="Scripts\jGroupdocs.ViewerPortalService.js" />
     <Content Include="Scripts\jGroupdocs.StringExtensions.js" />
     <Content Include="Scripts\libs\jquery-1.9.1.min.js" />
     <Content Include="Scripts\libs\JsInject.min.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.js" />
+    <Content Include="Scripts\libs\rx.js" />
+    <Content Include="Scripts\plugins\rx.jQuery.js" />
     <Content Include="TestInstallableViewer.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

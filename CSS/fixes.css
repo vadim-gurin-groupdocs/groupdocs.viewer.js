@@ -1,0 +1,464 @@
+li.thumb-page {
+    position: relative;
+}
+
+.progresspin {
+    z-index: -1;
+}
+
+/*
+.viewer_mainwrapper {
+    background: url("../images/mainbg.png") repeat scroll 0 0 transparent;
+    bottom: 0;
+    display: inline-block;
+    left: 0;
+    position: absolute;
+    top: 62px;
+    width: 100%;
+}
+*/
+
+.embedded_viewer_wrapper {
+    background: url("../images/mainbg.png") repeat scroll 0 0 transparent;
+    bottom: 0;
+    display: inline-block;
+    left: 0;
+    position: absolute;
+    top: 40px;
+    width: 100%;
+}
+
+.doc_viewer {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.thumbs_btn_slide {
+    left: 205px;
+}
+
+.viewer_header {
+    background: none repeat scroll 0 0 #125389;
+    border-bottom: 1px solid #073052;
+    display: inline-block;
+    /*height: 60px;*/
+    position: relative;
+    width: 100%;
+}
+
+/*.viewer_mainwrapper 
+{
+    width: auto;
+}*/
+
+.groupdocs_viewer_wrapper
+{
+    position: relative;
+    background-color: #125389
+}
+
+/* page flip Viewer */
+.page.hard {
+    background: none repeat scroll 0 0 #125389;
+}
+
+.page {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+    
+div.doc_viewer_flip {
+    height: auto;
+    overflow: visible;
+    position: relative;
+    top: 0;
+    /*width: 1145px;*/
+    padding: 0;
+    left: 30px;
+    right: 30px;
+}
+
+div.pages_container_flip {
+    overflow: visible;
+}
+
+div.doc_viewer_wrapper_flip {
+    overflow: hidden;
+}
+
+.page_image_flip {
+    margin: 0;
+}
+
+.page.hard h1 {
+    background: none repeat scroll 0 0 #FFFFFF;
+    margin: 100px 0 0 30px;
+    padding: 10px;
+}
+    
+.doc-page {
+    padding: 0;
+}
+
+.doc_viewer_wrapper_page_flip {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    height:100%;
+}
+
+.page-wrapper {
+    -webkit-perspective:2000px;
+    -moz-perspective: 2000px;
+    -ms-perspective: 2000px;
+    perspective: 2000px;
+} 
+
+.ui-selectable-helper 
+{
+    position:  absolute;
+    z-index: 1000;
+    border: 1px dotted black;
+}
+
+.grpdx .page-image, .grpdx .viewer_loading_overlay, .grpdx .highlight-pane, 
+.grpdx .search-pane, .grpdx .html_pages_container .html_page_contents {
+    margin:0
+}
+    
+.grpdx .pages_container {
+    line-height: 0;
+    position: relative;
+}
+    
+.grpdx .pages_container > .doc-page {
+    margin-bottom: 15px;
+    margin-left: 7px;
+}
+
+div.thumbnailsContainer, .thumbs_btn {
+    z-index: 25;
+}
+
+.modal-backdrop {
+    z-index: 26;
+}
+
+.grpdx a, .grpdx a:hover {
+    color: inherit;
+}
+
+.grpdx .thumbnailsContainer .thumb-page {
+    min-height:0
+}
+
+div.thumbnailsContainer ul li img.thumb_image {
+    margin: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+div.thumbnailsContainer ul li .html_page_contents img {
+    width: auto;
+}
+
+div.thumbnailsContainer ul li .thumbnail_wrapper {
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+div.thumbnailsContainer ul li .html_page_contents {
+    margin: 0;
+    display: inline-block;
+}
+
+.grpdx div.thumbnailsContainer ul li .mouse_intercept_overlay
+{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color:transparent;
+    z-index:2
+}
+
+.grpdx .ie div.thumbnailsContainer ul li .thumbnail_wrapper
+{
+    font-size:12pt;
+}
+
+.groupdocs_viewer_wrapper {
+    overflow: hidden;
+}
+
+.modal.fade{top:-350px}
+
+
+.new_head_tools_btn:after {
+    line-height: 18px;
+}
+
+/* makes button tooltips always on top of other elements */
+.new_head_tools_btn:after {
+    z-index: 1000000;
+}
+
+
+.grpdx .modal_dialog_wrapper { /* The div that shows/hides. */
+    display:none; /* starts out hidden */
+    z-index:1001; /* High z-index to ensure it appears above all content */
+}
+
+.grpdx .modal_dialog_overlay { /* Shades out background when selector is active */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity:.5; /* Sets opacity so it's partly transparent */
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE transparency */
+    filter:alpha(opacity=50); /* More IE transparency */
+    z-index:1001;
+}
+
+.grpdx .modal_dialog_content_wrapper { 
+    position: absolute;
+    /*left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;*/
+    position:absolute;
+    margin: 30px auto;
+    z-index: 1002; 
+    border: 1px solid black;
+    left: 50%;
+    top: 50%;
+    overflow: auto;
+}
+
+.grpdx .modal_dialog_header{
+    height: 25px;
+    font-size: 15px;
+    font-weight: bold;
+    border-collapse: collapse;
+    background-color: #ccc;
+    padding: 3px 10px;
+}
+
+.grpdx .modal_dialog_content {
+    /*overflow: auto;
+    position: absolute;
+    top: 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;*/
+    background-color:white;
+    padding:10px;
+    border:1px solid black;
+}
+
+
+/* HTML Viewer */
+   
+/*.grpdx .page-image, .grpdx .viewer_loading_overlay {
+    margin: 0
+}*/
+    
+.grpdx .doc-page {
+    overflow: hidden;
+}
+    
+.grpdx .chrome.html_page_contents {
+    width: 0px;
+    height: 0px;
+    overflow: visible
+}
+    
+.grpdx .chrome.html_page_contents > div {
+    background-color: white;
+    -webkit-box-shadow: 2px 2px 9px #d6d6d6;
+    -moz-box-shadow: 2px 2px 9px #d6d6d6;
+    box-shadow: 2px 2px 9px #d6d6d6;
+    border: 1px solid #ededed;
+}
+
+.grpdx .html_page_contents {
+    -moz-transform-origin: left 0;
+    -webkit-transform-origin: left 0;
+    -ms-transform-origin: left 0;
+}
+
+.grpdx .html_page_contents {
+    line-height: normal;
+    background-color: white;
+    z-index: 1;
+    position: relative;
+}
+
+.grpdx .html_pages_container .viewer_loading_overlay{
+    z-index: 1;
+}
+
+.grpdx .thumbnail_wrapper {
+    overflow: hidden
+}
+
+/* inner thumbnails */
+/*
+.grpdx .thumbnail-panel {
+    overflow: hidden
+}*/
+
+.grpdx .thumbnail_panel {
+    display: inline-block
+}
+
+.grpdx .thumbnail_panel div.thumbnailsContainer {
+    display: block
+}
+
+.thumbnailsContainer {
+    display: none
+}
+
+.search_highlight_html {
+    background-color: #99cc99;
+    fill: #99cc99;
+    position: static !important;
+    font-size: inherit !important;
+}
+
+.grpdx .pages_container .current_search_highlight {
+    fill: lime
+}
+
+.grpdx .ie .doc-page .html_page_contents > div {
+    font-size:12em;
+}
+
+/* A fix for Aspose.PDF setting .ie {font-size: 1pt} */
+.grpdx .ie .doc-page .html_page_contents > div.text_document_wrapper,
+.grpdx .ie .doc-page .html_page_contents > div.html_document_wrapper
+{
+    font-size:16px;
+}
+/* End: A fix for Aspose.PDF setting .ie {font-size: 1pt} */
+
+.grpdx .ie .doc-page .html_page_contents > .pageWordToHtml{
+    font-size:1em;
+}
+
+.grpdx .ie8 .doc-page {
+    background-color: white;
+}
+
+/*.grpdx .html_page_contents table td {
+    border: 1px solid #eee;
+}*/
+
+.page-image {
+    z-index: 1;
+    position: relative;
+}
+
+
+/*
+.grpdx .doc-page .html_page_contents {
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+}
+*/
+
+.grpdx .doc-page.cover_page
+{
+    display: block;
+}
+
+/* PowerPoint to HTML fix*/
+.grpdx .doc-page .html_page_contents .slideTitle {
+    display: none;
+}
+
+.grpdx .doc-page .html_watermark {
+    z-index: 1;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    line-height: 1em;
+}
+
+.grpdx .doc-page .html_document_wrapper {
+    background-color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.grpdx .doc-page .text_document_wrapper {
+    display: inline;
+}
+
+body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
+    display: none;
+}
+
+
+@media print {
+    * { 
+        margin: 0 !important; padding: 0 !important; 
+    }
+    
+    html, body {
+        height:100% !important;
+    }
+    
+    body {
+        overflow: visible !important;
+    }
+    
+    body * {
+        display: none !important;
+    }
+    
+    /*body .grpdx div.groupdocsPrintFrame {
+        position: absolute;
+        left:0;
+        top:0;
+    }*/
+    
+    /*body .grpdx div.groupdocsPrintFrame, body .grpdx div.groupdocsPrintFrame img {*/
+    body div.groupdocsPrintFrame{
+        height: 100%;
+    }
+    
+    body div.groupdocsPrintFrame, body div.groupdocsPrintFrame img {
+        display:block !important;
+        /*visibility: visible !important;*/
+    }
+    
+    /*body :not(.groupdocsPrintFrame) {
+        display: none !important;
+    }*/
+    
+    /*.grpdx div.groupdocsPrintFrame img {*/
+    div.groupdocsPrintFrame img {
+        max-width: 100%;
+        max-height: 100%;
+        page-break-after: always;
+    }
+}
+
+/*
+.grpdx .html_page_contents.child_invisible > *{
+    display: none
+}
+*/

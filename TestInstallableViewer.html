@@ -5,16 +5,25 @@
     <script type="text/javascript" src="Scripts/libs/knockout-3.3.0.debug.js"></script>
 
     <script type="text/javascript" src="Scripts/libs/JsInject.min.js"></script>
+    <script type="text/javascript" src="Scripts/libs/rx.js"></script>
+    <script type="text/javascript" src="Scripts/plugins/rx.jquery.js"></script>
     <script type="text/javascript" src="Scripts/jGroupdocs.ViewerPortalService.js"></script>
+    <script type="text/javascript" src="Scripts/jGroupdocs.ViewerPortalService.js"></script>
+    <script type="text/javascript" src="Scripts/jGroupdocs.ViewerEventBus.js"></script>
 	<script type="text/javascript" src="Scripts/installableViewer.js"></script>
     <script type="text/javascript" src="Scripts/jGroupdocs.InitJsInject.js"></script>
+    <script type="text/javascript" src="Scripts/jGroupdocs.DocViewer.js"></script>
+
+    <link rel="stylesheet" href="CSS/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="CSS/DocumentViewer.css" type="text/css"/>
+    <link rel="stylesheet" href="CSS/fixes.css" type="text/css"/>
 </head>
 <body>
 	<div id="test" style="overflow: hidden; margin-bottom: 20px;background-color: gray;height:700px;width:100%"></div>
 	
 	<script type="text/javascript">
 	$(function() {
-	    $("#test").groupdocsViewer();
+	    $("#test").groupdocsViewer({ filePath: "candy.pdf", showHeader: false });
 	});
 	</script>
 </body>
