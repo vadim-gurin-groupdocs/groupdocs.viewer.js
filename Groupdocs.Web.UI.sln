@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groupdocs.Web.UI", "Groupdocs.Web.UI.csproj", "{6610B9BB-E085-4521-858F-A534B9688655}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groupdocs.Web.UI", "Groupdocs.Web.UI\Groupdocs.Web.UI.csproj", "{6610B9BB-E085-4521-858F-A534B9688655}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groupdocs.Viewer.EngineeringSample", "Groupdocs.Viewer.EngineeringSample\Groupdocs.Viewer.EngineeringSample.csproj", "{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{6610B9BB-E085-4521-858F-A534B9688655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6610B9BB-E085-4521-858F-A534B9688655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6610B9BB-E085-4521-858F-A534B9688655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
