@@ -858,14 +858,8 @@
                 options.synchronousWork = this.textSelectionSynchronousCalculation;
                 options.descForHtmlBasedEngine = (this.pageContentType == "html"
                     || this.use_pdf == 'false');
-                this._pdf2XmlWrapper = new jGroupdocs.Pdf2JavaScriptWrapper(options);
+                this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
                 this._onDocumentLoaded(response);
-            }
-            else {
-                if (this.use_pdf == 'false')
-                    this._onDocumentLoaded(response);
-                else
-                    this._pdf2XmlWrapper = new jSaaspose.Pdf2XmlWrapper(options);
             }
         },
 

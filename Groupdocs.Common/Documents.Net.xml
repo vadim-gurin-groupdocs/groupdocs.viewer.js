@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Documents>
+  <Document type="Cells">
+    <NativeTypes>
+      <Type name="Xls" origin="Auto" />
+      <Type name="Xlsx" />
+      <Type name="Xlsm" />
+      <Type name="Xlsb" />
+      <Type name="Csv" />
+      <Type name="Ods" />
+      <Type name="Xls2003" origin="Excel97To2003" />
+    </NativeTypes>
+
+    <ForeignTypes>
+      <Type name="Pdf" />
+      <Type name="Html" />
+      <Type name="Xml" origin="SpreadsheetML" />
+    </ForeignTypes>
+
+    <CustomTypes>
+      <Type name="Jpeg" />
+      <Type name="Jpg" />
+      <Type name="Html" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Words">
+    <NativeTypes>
+      <Type name="Doc" />
+      <Type name="Docx" />
+      <Type name="Docm" />
+      <Type name="Dot" />
+      <Type name="Dotx" />
+      <Type name="Dotm" />
+      <Type name="Rtf" />
+      <Type name="Odt" />
+      <Type name="Ott" />
+      <Type name="Txt" origin="Text" />
+      <Type name="Xml" origin="Text" />
+      <Type name="Html" />
+      <Type name="Htm" origin="Html" />
+      <Type name="Xhtml" origin="Html" />
+      <Type name="Mhtml" />
+      <Type name="Mht" origin="Mhtml" />
+    </NativeTypes>
+
+    <ForeignTypes>
+      <Type name="Pdf" />
+      <Type name="Tiff" />
+      <Type name="Xps" />
+      <Type name="Epub" />
+    </ForeignTypes>
+
+    <CustomTypes>
+      <Type name="Jpeg" />
+      <Type name="Html" />
+      <Type name="Html5" origin="HtmlFixed" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Slides">
+    <NativeTypes>
+      <Type name="Ppt" />
+      <Type name="Pps" />
+      <Type name="Pptx" />
+      <Type name="Ppsx" />
+    </NativeTypes>
+
+    <ForeignTypes>
+      <Type name="Pdf" />
+      <Type name="Xps" />
+      <Type name="Tiff" />
+      <Type name="Tif" />
+    </ForeignTypes>
+
+    <CustomTypes>
+      <Type name="Jpeg" />
+      <Type name="Jpg" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Pdf">
+    <NativeTypes>
+      <Type name="Pdf" />
+      <Type name="Xps" />
+      <Type name="Epub" />
+    </NativeTypes>
+
+    <CustomTypes>
+      <Type name="Tiff" />
+      <Type name="Tif" />
+      <Type name="Jpeg" />
+      <Type name="Jpg" />
+      <Type name="Txt" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Image">
+    <NativeTypes>
+      <Type name="Jpg" />
+      <Type name="Jpeg" />
+      <Type name="Png" />
+      <Type name="Gif" />
+      <Type name="Bmp" />
+      <Type name="Ico" />
+    </NativeTypes>
+
+    <CustomTypes>
+      <Type name="Pdf" />
+    </CustomTypes>
+
+    <ForeignTypes>
+      <Type name="Tiff" />
+      <Type name="Tif" />
+    </ForeignTypes>
+  </Document>
+
+
+  <Document type="TaggedImage">
+    <NativeTypes>
+      <Type name="Tif" />
+      <Type name="Tiff" />
+    </NativeTypes>
+
+    <CustomTypes>
+      <Type name="Jpg" />
+      <Type name="Jpeg" />
+      <Type name="Pdf" />
+      <Type name="Png" />
+      <Type name="Gif" />
+      <Type name="Bmp" />
+    </CustomTypes>
+
+    <ForeignTypes>
+    </ForeignTypes>
+  </Document>
+
+  <Document type="Email">
+    <NativeTypes>
+      <Type name="Msg" />
+      <Type name="Eml" />
+      <Type name="Emlx" />
+    </NativeTypes>
+
+    <CustomTypes>
+      <Type name="Pdf" />
+      <Type name="Jpg" />
+      <Type name="Jpeg" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Diagram">
+    <NativeTypes>
+      <Type name="Vsd" />
+      <Type name="Vsdx" />
+      <Type name="Vss" />
+      <Type name="Vst" />
+      <Type name="Vsx" />
+      <Type name="Vtx" />
+      <Type name="Vdw" />
+      <Type name="Vdx" />
+    </NativeTypes>
+
+    <CustomTypes>
+      <Type name="Pdf" />
+      <Type name="Jpg" />
+      <Type name="Jpeg" />
+      <Type name="Png" />
+      <Type name="Gif" />
+      <Type name="Bmp" />
+      <Type name="Tiff" />
+      <Type name="Tif" />
+      <Type name="Svg" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Project">
+    <NativeTypes>
+      <Type name="Mpp" />
+    </NativeTypes>
+
+    <ForeignTypes>
+      <Type name="Pdf" />
+    </ForeignTypes>
+
+    <CustomTypes>
+      <Type name="Jpeg" />
+    </CustomTypes>
+  </Document>
+
+  <Document type="Autocad">
+    <NativeTypes>
+      <Type name="Dxf" />
+      <Type name="Dwg" />
+    </NativeTypes>
+
+    <ForeignTypes>
+      <Type name="Pdf" />
+      <Type name="Png" />
+      <Type name="Jpg" />
+      <Type name="Jpeg" />
+    </ForeignTypes>
+  </Document>
+</Documents>

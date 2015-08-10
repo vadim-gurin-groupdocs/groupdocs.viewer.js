@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Groupdocs.Viewer.EngineeringSample.MvcApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="GroupdocsViewer.EngineeringSample.MvcApplication" Language="C#" %>

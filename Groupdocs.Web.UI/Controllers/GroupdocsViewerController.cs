@@ -35,9 +35,6 @@ namespace Groupdocs.Web.UI.Controllers
             _helper = new Helper();
             _logger = new Logger(_rootPathFinder.GetLogFilePath());
             _baseHandler = new BaseHandler();
-
-            var lic = new LicenseApplier();
-            lic.Apply(true);
         }
 
         protected override void OnException(ExceptionContext filterContext)
@@ -190,20 +187,12 @@ namespace Groupdocs.Web.UI.Controllers
 
         public ActionResult GetCss(string name)
         {
-            ActionResult result = CheckIfCached();
-            if (result != null)
-                return result;
-
             string css = _baseHandler.GetCss(name);
             return Content(css, "text/css");
         }
 
         public ActionResult GetEmbeddedImage(string name)
         {
-            ActionResult result = CheckIfCached();
-            if (result != null)
-                return result;
-
             Tuple<byte[], string> bytesAndMime = _baseHandler.GetEmbeddedImage(name);
             byte[] imageBody = bytesAndMime.Item1;
             string mimeType = bytesAndMime.Item2;
@@ -212,10 +201,6 @@ namespace Groupdocs.Web.UI.Controllers
 
         public ActionResult GetFont(string name)
         {
-            ActionResult result = CheckIfCached();
-            if (result != null)
-                return result;
-
             Tuple<byte[], string> bytesAndMime = _baseHandler.GetFont(name);
             byte[] fontContent = bytesAndMime.Item1;
             string mimeType = bytesAndMime.Item2;
@@ -498,6 +483,7 @@ namespace Groupdocs.Web.UI.Controllers
             DateTime? clientModifiedSince = _helper.GetDateTimeFromClientHeader(stringClientModifiedSince);
             return clientModifiedSince;
         }
+        
 
         private void SetLastModified(DateTime? fileModificationDateTime)
         {
@@ -508,22 +494,6 @@ namespace Groupdocs.Web.UI.Controllers
                     fileModificationDateTime = now;
                 Response.Cache.SetLastModified((DateTime)fileModificationDateTime);
             }
-        }
-
-
-        private ActionResult CheckIfCached()
-        {
-            string stringClientModifiedSince = Request.Headers["If-Modified-Since"];
-            DateTime assemblyModificationDateTime = _helper.GetAssemblyLastModificationTime();
-            if (!_helper.IsCachedResourceModified(stringClientModifiedSince))
-                return new HttpStatusCodeResult(304, "Not Modified");
-
-            Response.Cache.SetCacheability(HttpCacheability.Public);
-            DateTime now = DateTime.Now;
-            if (assemblyModificationDateTime > now)
-                assemblyModificationDateTime = now;
-            Response.Cache.SetLastModified(assemblyModificationDateTime);
-            return null;
         }
 
         #endregion

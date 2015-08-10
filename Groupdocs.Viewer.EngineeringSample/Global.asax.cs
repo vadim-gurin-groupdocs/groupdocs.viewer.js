@@ -4,8 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Groupdocs.Web.UI;
 
-namespace Groupdocs.Viewer.EngineeringSample
+namespace GroupdocsViewer.EngineeringSample
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -32,9 +33,14 @@ namespace Groupdocs.Viewer.EngineeringSample
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            Viewer.InitRoutes();
+            Viewer.SetBaseUrl("/");
+            string rootStoragePath = @"d:\temp\";
+            Viewer.SetRootStoragePath(rootStoragePath);
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
         }
     }
 }

@@ -18,6 +18,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         this.zooming = null;
         this.embedSource = null;
         this.viewTypeMenu = null;
+        this.docSpacePageFlip = null;
 
         var docViewer = null;
         var navigation = null;

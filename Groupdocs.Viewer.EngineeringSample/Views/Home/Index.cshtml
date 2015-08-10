@@ -8,7 +8,10 @@
 	
 <script type="text/javascript">
 	$(function () {
-	    $("#test").groupdocsViewer({ filePath: "candy.pdf", showHeader: false });
+	    $("#test").groupdocsViewer({
+	        filePath: "candy.pdf", showHeader: false, useHtmlBasedEngine: false,
+            supportTextSelection: false
+	    });
 	});
 </script>
 
