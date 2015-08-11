@@ -9,7 +9,6 @@
         _heightWidthRatio: 0,
         _thumbsSelected: 0,
         _thumbnailWidth: 150,
-        //_thumbnailHeight: 215,
         _portalService: Container.Resolve("PortalService"),
         options: {
             quality: null,
@@ -34,7 +33,6 @@
                                 var movedElement = ui.item[0];
                                 //retrieve our actual data item
                                 var dataItem = ko.dataFor(movedElement);
-                                //var item = ui.item.tmplItem().data;
                                 //figure out its new position
                                 var oldPosition = thumbnails.indexOf(dataItem);
                                 var newPosition = ko.utils.arrayIndexOf(ui.item.parent().children(), movedElement);
@@ -140,10 +138,7 @@
             this._sessionToken = data.token;
             this._docGuid = data.guid;
             this._docVersion = data.version;
-            this._viewModel.pageCount(data.page_count);
-
-            if (!data.lic && this._viewModel.pageCount() > 3)
-                this._viewModel.pageCount(3);
+            this._viewModel.pageCount(data.pageCount);
 
             this._heightWidthRatio = parseFloat(data.page_size.Height / data.page_size.Width);
             var width = this._thumbnailWidth;
@@ -162,11 +157,9 @@
                     this.viewerViewModel = viewerViewModel;
                     this._viewModel.docViewerId = docViewerId;
                     var thumbnailContainerWidth = this.element.width();
-                    //this._viewModel.thumbLeftCoord = (thumbnailContainerWidth - width) / 2;
                 }
             }
 
-            //this._viewModel.thumbnails.removeAll();
             var notObservableThumbnails = [];
             var thumbnailDescription, verticalPadding, thumbnailWidth, thumbnailHeight, backgroundColor;
             var spinnerHeight = 47;
@@ -213,7 +206,6 @@
                     thumbnailDescription.verticalPadding = ko.observable(verticalPadding);
                     thumbnailDescription.backgroundColor = ko.observable(backgroundColor);
                     thumbnailDescription.wrapperHeight = thumbnailWrapperHeight;
-                    //thumbnailDescription.scale = ko.observable(baseScale * pageDescriptions[i].h / maxPageHeight);
                     thumbnailDescription.scale = ko.observable((thumbnailHeight / pageDescriptions[i].h) / pointToPixelRatio);
                     thumbLeftCoord = (thumbnailContainerWidth - thumbnailWidth) / 2;
                     thumbnailDescription.thumbLeftCoord = ko.observable(thumbLeftCoord);
@@ -235,42 +227,22 @@
                 thumbCss = ".grpdx .thumbnailsContainer .thumb-page{min-height:" + height.toString() + "px}";
             }
 
+            var imageCount = this._viewModel.pageCount();
+            for (var i = 0; i < imageCount; i++) {
+                this._viewModel.thumbnails()[i].url(data.imageUrls[i]);
+                //this.makeThumbnailNotBusy(i);
+            }
+
             this.loadThumbnails();
         },
 
         loadThumbnails: function () {
-            // var countToShow = Math.ceil($('#thumbnails-container').height() / $('#thumb-1').height()); // count of visible thumbs
             var countToShow = Math.ceil(this.element.height() / parseInt(this._heightWidthRatio * 150)); // count of visible thumbs
 
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
             this._thumbsSelected = this._thumbsCountToShow; //_thumbsSelected = _thumbsCountToShow on start
-
-            this.retrieveImageUrls(this._viewModel.pageCount());
-        },
-
-        retrieveImageUrls: function (imageCount) {
-            this._portalService.getImageUrlsAsync(this.options.userId, this.options.userKey, this._docGuid,
-                    this._thumbnailWidth.toString() + "x", this._sessionToken, 0, imageCount,
-                    this.options.quality, this.options.use_pdf, this._docVersion, null, null, null, null,
-                    this.options.ignoreDocumentAbsence,
-                    this.options.useHtmlBasedEngine, this.options.supportPageRotation,
-                    function (response) {
-                        for (var i = 0; i < imageCount; i++) {
-                            this._viewModel.thumbnails()[i].url(response.data.image_urls[i]);
-                            //this.makeThumbnailNotBusy(i);
-                        }
-                        this._onScrollLeftPanel();
-
-                    }.bind(this),
-                    function (error) {
-                        for (var i = 0; i < imageCount; i++) {
-                            this.makeThumbnailNotBusy(i);
-                        }
-                    }.bind(this),
-                this.options.instanceIdToken,
-                this.options.locale
-            );
+            this._onScrollLeftPanel();
         },
 
         makeThumbnailNotBusy: function (thumbnailIndex) {
@@ -299,6 +271,7 @@
 
             this._thumbsSelected = endIndex;
         },
+
         setThumbnailsScroll: function (data) {
             var index = data.pi;
             if (this._viewModel.pageInd != index) {
@@ -350,7 +323,6 @@
 '<div class="thumbnailsContainer" data-bind="event: { scroll: function(e) { scrollThumbnailsPanel(e); } }, visible:!useInnerThumbnails || openThumbnails">' +
 '    <ul class="vertical-list2 ui-selectable" data-bind="' + foreachOperator + '">' +
 '        <li class="thumb-page ui-selectee" data-bind="style: {height: $data.wrapperHeight + \'px\'}, css: { \'ui-selected\': ($index() + 1) == $root.pageInd() }, click: function() { $root.selectPage($index() + 1); }">' +
-//'                <div class="thumbnail_wrapper" data-bind="style: {height: $data.height() + 2 * $data.verticalPadding() + \'px\'}">' +
 
 (this.useHtmlThumbnails ?
 (

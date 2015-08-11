@@ -85,7 +85,7 @@ namespace Groupdocs.Web.UI.Handlers
             }
             else
             {
-                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, 2, width, quality, usePdf,
+                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, 2, null, quality, usePdf,
                     watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                     ignoreDocumentAbsence,
                     useHtmlBasedEngine, supportPageRotation,
@@ -101,11 +101,11 @@ namespace Groupdocs.Web.UI.Handlers
                 id = "",
                 doc_type = TypesMapper.GetDocumentTypes(extension).FirstOrDefault().ToString(),
                 fileType = TypesMapper.GetFileType(extension).ToString(),
-                page_count = 2,
+                pageCount = 2,
                 url = downloadUrl,
                 pdfDownloadUrl,
                 name = filename,
-                image_urls = imageUrls,
+                imageUrls,
                 token = "",
                 pdfPrintUrl,
                 pageHtml,
@@ -139,7 +139,7 @@ namespace Groupdocs.Web.UI.Handlers
 
             var data = new
                 {
-                    image_urls = new[ ]{"", ""}
+                    imageUrls = new[ ]{"", ""}
                 };
 
             return data;

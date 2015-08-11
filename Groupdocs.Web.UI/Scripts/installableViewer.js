@@ -867,7 +867,7 @@
                 printFrame.empty();
 
             this.printImageElements.length = 0;
-            var pageCount = data.page_count;
+            var pageCount = data.pageCount;
 
             if (!data.lic && pageCount > 3)
                 pageCount = 3;
