@@ -1,7 +1,7 @@
-﻿if (!window.jGroupdocs)
-    window.jGroupdocs = {};
+﻿if (!window.groupdocs)
+    window.groupdocs = {};
 
-window.jGroupdocs.stringExtensions = {
+window.groupdocs.stringExtensions = {
     format: function (sourceString) {
         var s = sourceString,
             i = arguments.length;
@@ -96,7 +96,7 @@ window.jGroupdocs.stringExtensions = {
 
 };
 
-window.jGroupdocs.http = {
+window.groupdocs.http = {
     splitUrl: (function () {
         var regex = new RegExp("(\\w+)://([^/]+)([^\?]*)([\?].+)?");
 

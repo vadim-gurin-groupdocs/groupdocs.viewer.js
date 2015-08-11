@@ -89,17 +89,23 @@
     <Content Include="Scripts\jGroupdocs.DocViewer.js" />
     <Content Include="Scripts\jGroupdocs.Geometry.js" />
     <Content Include="Scripts\jGroupdocs.InitJsInject.js" />
+    <Content Include="Scripts\jGroupdocs.PartialWordSearch.js" />
     <Content Include="Scripts\jGroupdocs.PdfToJavaScriptWrapper.js" />
     <Content Include="Scripts\jGroupdocs.Selectable.js" />
     <Content Include="Scripts\jGroupdocs.ViewerEventBus.js" />
     <Content Include="Scripts\jGroupdocs.ViewerPortalService.js" />
     <Content Include="Scripts\jGroupdocs.StringExtensions.js" />
+    <Content Include="Scripts\jGroupdocs.WidgetFactory.js" />
+    <Content Include="Scripts\jGroupdocs.Navigation.js" />
+    <Content Include="Scripts\jGroupdocs.Thumbnails.js" />
+    <Content Include="Scripts\jGroupdocs.Zooming.js" />
     <Content Include="Scripts\libs\jquery-1.9.1.min.js" />
     <Content Include="Scripts\libs\JsInject.min.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.js" />
     <Content Include="Scripts\libs\rx.js" />
     <Content Include="Scripts\plugins\rx.jQuery.js" />
+    <Content Include="Scripts\plugins\scroll-startstop.events.jquery.js" />
     <Content Include="TestInstallableViewer.html" />
   </ItemGroup>
   <ItemGroup>

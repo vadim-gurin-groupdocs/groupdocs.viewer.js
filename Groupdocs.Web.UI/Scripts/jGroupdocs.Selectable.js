@@ -1,31 +1,5 @@
 ﻿(function ($, undefined) {
-    $.fn.dvselectable = function (param) {
-        var viewModel;
-        if (typeof param == "object" || typeof param == "undefined") {
-            viewModel = getViewModel.call(this, param);
-            return this;
-        }
-        else
-            return widgetObject[param].call(widgetObject, arguments);
-    };
-
-    function getViewModel(options) {
-        var viewModel;
-        var pluginDataKey = "groupdocs.selectable";
-        var pluginData = this.data(pluginDataKey);
-        if (pluginData === undefined) {
-            widgetObject.element = this;
-            $.extend(widgetObject.options, options);
-            widgetObject._create();
-            this.data(pluginDataKey, { viewModel: widgetObject._viewModel });
-        }
-        else
-            viewModel = pluginData.viewModel;
-        return viewModel;
-    };
-
-
-    var widgetObject = {
+    $.groupdocsWidget("groupdocsSelectable", {
         customArea: [],
         search: null,
         lasso: null,
@@ -190,7 +164,116 @@
             this._canvasOffset = new jSaaspose.Point(offsetX, offsetY);
         },
 
-        _mouseInit: function () {
+        _mouseInit: function() {
+            var that = this;
+
+            this.element
+                .bind("mousedown." + this.widgetName, function(event) {
+                    return that._mouseDown(event);
+                })
+                .bind("click." + this.widgetName, function(event) {
+                    if (true === $.data(event.target, that.widgetName + ".preventClickEvent")) {
+                        $.removeData(event.target, that.widgetName + ".preventClickEvent");
+                        event.stopImmediatePropagation();
+                        return false;
+                    }
+                });
+
+            this.started = false;
+        },
+
+        _mouseDestroy: function() {
+            this.element.unbind("." + this.widgetName);
+            if ( this._mouseMoveDelegate ) {
+                this.document
+                    .unbind("mousemove." + this.widgetName, this._mouseMoveDelegate)
+                    .unbind("mouseup." + this.widgetName, this._mouseUpDelegate);
+            }
+        },
+
+        _mouseDown: function(event) {
+            this._mouseMoved = false;
+
+            // we may have missed mouseup (out of window)
+            (this._mouseStarted && this._mouseUp(event));
+
+            this._mouseDownEvent = event;
+
+            var that = this,
+                btnIsLeft = (event.which === 1),
+                // event.target.nodeName works around a bug in IE 8 with
+                // disabled inputs (#7620)
+                elIsCancel = (typeof this.options.cancel === "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
+            if (!btnIsLeft || elIsCancel || !this._mouseCapture(event)) {
+                return true;
+            }
+            
+            // Click event may never have fired (Gecko & Opera)
+            if (true === $.data(event.target, this.widgetName + ".preventClickEvent")) {
+                $.removeData(event.target, this.widgetName + ".preventClickEvent");
+            }
+
+            // these delegates are required to keep context
+            this._mouseMoveDelegate = function(event) {
+                return that._mouseMove(event);
+            };
+            this._mouseUpDelegate = function(event) {
+                return that._mouseUp(event);
+            };
+
+            $(window.document)
+                .bind( "mousemove." + this.widgetName, this._mouseMoveDelegate )
+                .bind( "mouseup." + this.widgetName, this._mouseUpDelegate );
+
+            event.preventDefault();
+            return true;
+        },
+
+        _mouseMove: function(event) {
+            // Only check for mouseups outside the document if you've moved inside the document
+            // at least once. This prevents the firing of mouseup in the case of IE<9, which will
+            // fire a mousemove event if content is placed under the cursor. See #7778
+            // Support: IE <9
+            if ( this._mouseMoved ) {
+                // IE mouseup check - mouseup happened when mouse was out of window
+                if ($.browser.msie && (!document.documentMode || document.documentMode < 9) && !event.button) {
+                    return this._mouseUp(event);
+
+                    // Iframe mouseup check - mouseup occurred in another document
+                } else if ( !event.which ) {
+                    return this._mouseUp( event );
+                }
+            }
+
+            if ( event.which || event.button ) {
+                this._mouseMoved = true;
+            }
+
+            if (this._mouseStarted) {
+                this._mouseDrag(event);
+                return event.preventDefault();
+            }
+
+            return !this._mouseStarted;
+        },
+
+        _mouseUp: function(event) {
+            $(window.document)
+                .unbind( "mousemove." + this.widgetName, this._mouseMoveDelegate )
+                .unbind( "mouseup." + this.widgetName, this._mouseUpDelegate );
+
+            if (this._mouseStarted) {
+                this._mouseStarted = false;
+
+                if (event.target === this._mouseDownEvent.target) {
+                    $.data(event.target, this.widgetName + ".preventClickEvent", true);
+                }
+
+                this._mouseStop(event);
+            }
+
+            mouseHandled = false;
+            return false;
         },
 
         getPages: function () {
@@ -685,7 +768,7 @@
             var searchValueWithAccentedWords;
 
             if (useAccentInsensitiveSearch) {
-                searchValueWithAccentedWords = new RegExp(window.jGroupdocs.stringExtensions.getAccentInsensitiveRegexFromString(searchValue));
+                searchValueWithAccentedWords = new RegExp(window.groupdocs.stringExtensions.getAccentInsensitiveRegexFromString(searchValue));
             }
             var r;
 
@@ -711,7 +794,7 @@
                             var wordsWithAccentedChars = new Array();
                             for (var wordNum = 0; wordNum < words.length; wordNum++) {
                                 wordsWithAccentedChars.push(
-                                    new RegExp(window.jGroupdocs.stringExtensions.getAccentInsensitiveRegexFromString(searchWords[wordNum])));
+                                    new RegExp(window.groupdocs.stringExtensions.getAccentInsensitiveRegexFromString(searchWords[wordNum])));
                             }
                             searchWords = wordsWithAccentedChars;
                         }
@@ -942,7 +1025,7 @@
                      (pageId - 1 >= startPage && pageId - 1 <= endPage)) {
                     var pageWords = data[i].pageWords;
                     for (var j = 0; j < pageWords.length; j++) {
-                        var highlightElement = window.jGroupdocs.stringExtensions.format(this.searchTemplate, this.pagePrefix + pageId + "-search-highlight-" + j, pageWords[j].top(), pageWords[j].height(), pageWords[j].width(), pageWords[j].left());
+                        var highlightElement = window.groupdocs.stringExtensions.format(this.searchTemplate, this.pagePrefix + pageId + "-search-highlight-" + j, pageWords[j].top(), pageWords[j].height(), pageWords[j].width(), pageWords[j].left());
                         $('#' + this.pagePrefix + pageId + ' div.search-pane').append(highlightElement);
                     }
                 }
@@ -970,7 +1053,7 @@
                     var t = Math.round(Math.round(pageWords[wordIndex].top() / searchProportions) * proportions);
                     var l = Math.round(((pageWords[wordIndex].left() - dif) / searchProportions) * proportions + dif);
 
-                    var searchElement = window.jGroupdocs.stringExtensions.format(this.searchTemplate, this.pagePrefix + pageId + "-search-highlight-" + wordIndex, t, h, w, l);
+                    var searchElement = window.groupdocs.stringExtensions.format(this.searchTemplate, this.pagePrefix + pageId + "-search-highlight-" + wordIndex, t, h, w, l);
                     result += searchElement;
                     //result += this.searchTemplate.format(this.pagePrefix + pageId + "-search-highlight-" + wordIndex, t, h, w, l);
                 }
@@ -1057,7 +1140,7 @@
                     var extraStyles = (self.cAreaPageIndex == pageIndex && self.cAreaFieldIndex == fieldsIndex ? 'border-color:blue' : '');
                     result += "<div id=" + this.pagePrefix + pageIndex + "-custom-highlight-" + fieldsIndex + " index=" + pageIndex + "/" + fieldsIndex + " class='input-overlay1' style='position:absolute; cursor:pointer; padding: 0px; top: " + t + "px; height: " + h + "px; width: " + w + "px; left: " + l + "px;" + extraStyles + "'></div>";
 
-                    var customAreaHtml = window.jGroupdocs.stringExtensions.format(self.addTemplate, this.pagePrefix + pageIndex + "-custom-check-" + fieldsIndex, t - 5, l + w - 8, fields[fieldsIndex].iconType == 1 ? "selection-check" : "selection-del", pageIndex + "/" + fieldsIndex);
+                    var customAreaHtml = window.groupdocs.stringExtensions.format(self.addTemplate, this.pagePrefix + pageIndex + "-custom-check-" + fieldsIndex, t - 5, l + w - 8, fields[fieldsIndex].iconType == 1 ? "selection-check" : "selection-del", pageIndex + "/" + fieldsIndex);
                     result += customAreaHtml;
                     //result += self.addTemplate.format(this.pagePrefix + pageIndex + "-custom-check-" + fieldsIndex, t - 5, l + w - 8, fields[fieldsIndex].iconType == 1 ? "selection-check" : "selection-del", pageIndex + "/" + fieldsIndex);
                 }
@@ -1129,7 +1212,7 @@
             var customArea = this.customArea;
             var fields = customArea[data.pageIndex].fields;
             var elementIdTemplate = this.pagePrefix + "{0}-custom-check-{1}";
-            var elementId = window.jGroupdocs.stringExtensions.format(elementIdTemplate, data.pageIndex, data.fieldIndex);
+            var elementId = window.groupdocs.stringExtensions.format(elementIdTemplate, data.pageIndex, data.fieldIndex);
             //var elementId = elementIdTemplate.format(data.pageIndex, data.fieldIndex);
             $('#' + elementId).attr('class', data.iconType == 1 ? "selection-check" : "selection-del");
             fields[data.fieldIndex].iconType = data.iconType;
@@ -1162,7 +1245,7 @@
                 var pageRow = highlightPane.find("#" + pageRowId);
 
                 if (pageRow.length == 0) {
-                    var div = $(window.jGroupdocs.stringExtensions.format(template, pageRowId, bounds.top() + 2, bounds.height()));
+                    var div = $(window.groupdocs.stringExtensions.format(template, pageRowId, bounds.top() + 2, bounds.height()));
 
                     highlightPane.append(div);
                     pageRow = div;
@@ -1467,5 +1550,5 @@
             }
             return rects;
         }
-    };
+    });
 })(jQuery);

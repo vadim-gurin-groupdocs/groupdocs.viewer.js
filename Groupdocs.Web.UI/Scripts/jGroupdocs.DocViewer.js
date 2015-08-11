@@ -1,31 +1,5 @@
 ﻿(function ($, undefined) {
-    $.fn.docViewer = function (param) {
-        var viewModel;
-        if (typeof param == "object" || typeof param == "undefined") {
-            viewModel = getViewModel.call(this, param);
-            return this;
-        }
-        else
-            return widgetObject[param].call(widgetObject, arguments);
-    };
-
-    function getViewModel(options) {
-        var viewModel;
-        var pluginDataKey = "groupdocs.docViewer";
-        var pluginData = this.data(pluginDataKey);
-        if (pluginData === undefined) {
-            widgetObject.element = this;
-            $.extend(widgetObject.options, options);
-            widgetObject._create();
-            this.data(pluginDataKey, { viewModel: widgetObject._viewModel });
-        }
-        else
-            viewModel = pluginData.viewModel;
-        return viewModel;
-    };
-
-
-    var widgetObject = {
+    $.groupdocsWidget("groupdocsViewingComponent", {
         _viewModel: null,
         options: {
             fileId: 0,
@@ -240,7 +214,7 @@
             root.trigger("onHtmlCreated");
             this.element = $("#" + this.options.docViewerId);
         }
-    };
+    });
 
     // Doc Viewer Model
     docViewerModel = function (options) {
@@ -270,28 +244,14 @@
                 }
             };
 
-            switch (this._mode) {
-                case 'embed':
-                    this._portalService.viewEmbedDocumentAllAsync(this.userId, this.userKey, fileId, imageWidth, this.quality, this.use_pdf, this.preloadPagesCount, password, fileDisplayName, onSucceded, errorCallback);
-                    break;
-                case 'webComponent':
-                    this._portalService.viewDocument(fileId, imageWidth, this.quality, this.usePdf, this.preloadPagesCount, password, fileDisplayName,
-                        watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
-                        ignoreDocumentAbsence, supportPageRotation,
-                        supportListOfContentControls, supportListOfBookmarks,
-                        onSucceded, errorCallback,
-                        false,
-                        instanceIdToken,
-                        locale
-                    );
-                    break;
-                case 'annotatedDocument':
-                    this._portalService.viewAnnotatedDocumentAsync(this.userId, this.userKey, fileId, null, pagesCountToShow, imageWidth, null, this.quality, this.use_pdf, { text: watermarkText, color: watermarkColor, position: watermarkPosition, fontSize: watermarkWidth }, onSucceded, errorCallback, false);
-                    break;
-                default:
-                    this._portalService.viewDocumentAllAsync(this.userId, this.userKey, fileId, null, pagesCountToShow, imageWidth, null, this.quality, this.use_pdf, onSucceded, errorCallback, false);
-                    break;
-            }
+            this._portalService.viewDocument(fileId, imageWidth, this.quality, this.usePdf, this.preloadPagesCount, password, fileDisplayName,
+                watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
+                ignoreDocumentAbsence, supportPageRotation,
+                supportListOfContentControls, supportListOfBookmarks,
+                onSucceded, errorCallback,
+                false,
+                instanceIdToken,
+                locale);
         },
 
         loadDocumentAsHtml: function (fileId, pagesCountToShow, fileDisplayName, usePngImages, convertWordDocumentsCompletely,
@@ -1263,7 +1223,7 @@
 
             var scale = this.scale();
 
-            this._dvselectable = this.pagesContainerElement.dvselectable({
+            this._dvselectable = this.pagesContainerElement.groupdocsSelectable({
                 txtarea: this.selectionContent,
                 pdf2XmlWrapper: this._pdf2XmlWrapper,
                 startNumbers: this.getVisiblePagesNumbers(),
@@ -1281,7 +1241,7 @@
                 useVirtualScrolling: this.useVirtualScrolling,
                 pageLocations: (this.useVirtualScrolling ? this.pages() : null)
             });
-            this._dvselectable.dvselectable("setVisiblePagesNumbers", this.getVisiblePagesNumbers());
+            this._dvselectable.groupdocsSelectable("setVisiblePagesNumbers", this.getVisiblePagesNumbers());
 
             if (!this.docWasLoadedInViewer && (this.usePageNumberInUrlHash === undefined || this.usePageNumberInUrlHash == true)) {
                 var firstPageLocation = location.pathname;
@@ -1557,7 +1517,7 @@
             var numbers = this.loadImagesForVisiblePages();
 
             if (this._dvselectable) {
-                $(this._dvselectable).dvselectable("setVisiblePagesNumbers", numbers);
+                $(this._dvselectable).groupdocsSelectable("setVisiblePagesNumbers", numbers);
             }
             $(this).trigger('onDocumentPageSet', [this.pageInd()]);
             this.documentSpace.trigger("documentScrolledToPage.groupdocs", [this.pageInd()]);
@@ -1780,7 +1740,7 @@
                     this.scale(this.pageImageWidth / pageSize.width * value / 100);
                 }
 
-                this._dvselectable.dvselectable("changeSelectedRowsStyle", this.scale());
+                this._dvselectable.groupdocsSelectable("changeSelectedRowsStyle", this.scale());
                 this.reInitSelectable();
                 if (this.useVirtualScrolling) {
                     this.getSelectableInstance().recalculateSearchPositions(this.scale());
@@ -2119,14 +2079,14 @@
 
         selectTextInRect: function (rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers) {
             if (this._dvselectable) {
-                return $(this._dvselectable).dvselectable('highlightPredefinedArea', rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers);
+                return $(this._dvselectable).groupdocsSelectable('highlightPredefinedArea', rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers);
             }
             return null;
         },
 
         deselectTextInRect: function (rect, deleteStatic, pageNumber, selectionCounter) {
             if (this._dvselectable) {
-                $(this._dvselectable).dvselectable('unhighlightPredefinedArea', rect, deleteStatic, pageNumber, selectionCounter);
+                $(this._dvselectable).groupdocsSelectable('unhighlightPredefinedArea', rect, deleteStatic, pageNumber, selectionCounter);
             }
         },
 
@@ -2140,7 +2100,7 @@
         reInitSelectable: function () {
             var visiblePagesNumbers = this.getVisiblePagesNumbers();
             if (this._dvselectable != null) {
-                this._dvselectable.dvselectable("reInitPages", this.scale(), visiblePagesNumbers,
+                this._dvselectable.groupdocsSelectable("reInitPages", this.scale(), visiblePagesNumbers,
                     this.scrollPosition, this.getPageHeight(), this.pages());
             }
         },
@@ -2172,9 +2132,7 @@
         getSelectableInstance: function () {
             if (this._dvselectable == null)
                 return null;
-            var selectable = this._dvselectable.data("ui-dvselectable"); // jQueryUI 1.9+
-            if (!selectable)
-                selectable = this._dvselectable.data("dvselectable"); // jQueryUI 1.8
+            var selectable = this._dvselectable.data("groupdocsSelectable");
             return selectable;
         },
 
@@ -2349,8 +2307,6 @@
         },
 
         getPageBodyContentsWithReplace: function (pageHtml) {
-            //var matches = pageHtml.match(/(<body)([^>]*>)((?:.|\r?\n)*?)(<\/body>)/);
-            //var bodyContentsFromHtml = "<div" + matches[2] + matches[3] + "</div>";
             var bodStartTag = "<body";
             var bodyTagStartPos = pageHtml.indexOf(bodStartTag);
             var bodyStartPos = bodyTagStartPos + bodStartTag.length;
@@ -2374,23 +2330,6 @@
 
         fixImageReferencesInHtml: function (pageHtml) {
             var bodyContentsFromHtml = this.getPageBodyContents(pageHtml);
-            //var pageElement = $("<div/>").hide();
-            //pageElement.html(bodyContentsFromHtml);
-
-            //var imagesInPage = pageElement.find("object[type='image/svg+xml']");
-            //var svgPath;
-            //var urlForImagesInHtml = this.urlForImagesInHtml;
-            //imagesInPage.each(function () {
-            //    var that = $(this);
-            //    svgPath = that.attr("data");
-            //    svgPath = urlForImagesInHtml.replace("(0)", svgPath);
-            //    that.attr("data", svgPath);
-            //    var embeddedChild = that.children();
-            //    embeddedChild.attr("data", svgPath);
-            //    embeddedChild.attr("src", svgPath);
-            //});
-            //var bodyContentsWithFixedUrls = pageElement.html();
-            //return bodyContentsWithFixedUrls;
             return bodyContentsFromHtml;
         },
 
@@ -2417,8 +2356,6 @@
                 self.initialWidth = pageWidth;
                 page.prop(pageElement.height() / pageWidth);
                 self.pageWidth(pageWidth * self.zoom() / 100);
-                //self.zoome(self.initialZoom);
-                //self.adjustInitialZoom();
                 self.activeTab(number);
                 if (self.supportPageRotation)
                     self.applyPageRotationInBrowser(0, page, page.rotation());
@@ -2439,7 +2376,6 @@
                 this.setZoom(this.getFitHeightZoom());
 
             if (this.pageContentType == "html" && this.zoomToFitWidth) {
-                //this.initialWidth = this.pageImageWidth = this.getFitWidth();
                 var fittingWidth = this.getFitWidth();
                 var originalPageWidth = this.pageWidth();
                 if (!this.onlyShrinkLargePages || originalPageWidth > fittingWidth) {
@@ -2634,11 +2570,6 @@
 
         isRTL: function (s) {
             return false; // Aspose.Words 15.3 fixes RTL text
-            var ltrChars = 'A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF' + '\u2C00-\uFB1C\uFDFE-\uFE6F\uFEFD-\uFFFF',
-                rtlChars = '\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC',
-                rtlDirCheck = new RegExp('^[^' + ltrChars + ']*[' + rtlChars + ']');
-
-            return rtlDirCheck.test(s);
         },
 
         setLoadingState: function (set) {

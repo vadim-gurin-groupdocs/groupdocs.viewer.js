@@ -1,39 +1,15 @@
 ﻿(function ($) {
-    $.fn.groupdocsViewer = function (param) {
-        var viewModel;
-        if (typeof param == "object" || typeof param == "undefined") {
-            viewModel = getViewModel.call(this, param);
-            return this;
-        }
-        //else if (action == "getViewModel")
-        //    return viewModel;
-        else
-            return widgetObject[param].call(widgetObject, arguments);
-    };
-
-    function getViewModel(options) {
-        var viewModel;
-        var pluginDataKey = "groupdocs.viewer.js";
-        var pluginData = this.data(pluginDataKey);
-        if (pluginData === undefined) {
-            widgetObject.element = this;
-            $.extend(widgetObject.options, options);
-            //viewModel = new window.groupdocs.groupdocsViewerViewModel(options);
-            widgetObject._create();
-            this.data(pluginDataKey, { viewModel: widgetObject.viewModel });
-            //ko.applyBindings(viewModel, this.get(0));
-        }
-        else
-            viewModel = pluginData.viewModel;
-        return viewModel;
-    };
-
-    var widgetObject = {
+    $.groupdocsWidget("groupdocsViewer", {
         options: {
             enableViewerInit: true,
             supportTextSelection: true,
             resourcePrefix: "",
-            useHtmlBasedEngine: true
+            useHtmlBasedEngine: true,
+            showThumbnails: true,
+            showPaging: true,
+            showZoom: true,
+            showSearch: true,
+            showViewerStyleControl: true
         },
 
         _create: function () {
@@ -160,7 +136,7 @@
         destroy: function () {
             this._viewModel.destroy();
         }
-    };
+    });
 
     if (!window.groupdocs)
         window.groupdocs = {};
@@ -901,30 +877,10 @@
                 imgElement = $("<img/>").appendTo(printFrame);
                 this.printImageElements.push(imgElement);
             }
-
-            if (!data.lic && groupdocsViewerWrapper.find(".licBanner").length == 0) {
-                viewerMainWrapper.addClass("viewer_mainwrapper_trial");
-
-                this.licElement = $("<div/>");
-                this.licElement.addClass("banner_trial");
-                if (!this.showHeader)
-                    this.licElement.css("top", "0");
-
-                var unlicensedMessage = this._getLocalizedString("This viewer has been created using an unlicensed version of ", "UnlicensedViewer");
-                this.licElement.html(unlicensedMessage + " <a href='http://groupdocs.com' target='_blank'>GroupDocs</a> Viewer for .NET ");
-                this.licElement.appendTo(groupdocsViewerWrapper);
-
-                if (!this.showHeader)
-                    viewerMainWrapper.css("top", this.licElement.height() + "px");
-                this.resizeHandler();
-            }
         },
 
         documentLoadCompleteHandler: function (data, groupdocsViewerWrapper, viewerMainWrapper) {
             var self = this;
-            if (this.showImageWidth) {
-                alert("Image width: " + data.page_size.Width);
-            }
 
             this.downloadUrl = data.url;
             this.pdfDownloadUrl = data.pdfDownloadUrl;
@@ -934,8 +890,6 @@
             var printButton = groupdocsViewerWrapper.find(".print_button");
             downloadButton.unbind();
             printButton.unbind();
-            //var printFrame = this.groupdocsViewerWrapper.find("iframe[name=groupdocsPrintFrame]");
-            //printFrame.remove();
 
             downloadButton.bind({
                 click: function () {

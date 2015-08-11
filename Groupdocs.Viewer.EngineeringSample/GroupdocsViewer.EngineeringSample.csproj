@@ -121,6 +121,14 @@
       <Link>Client\Scripts\jGroupdocs.InitJsInject.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Navigation.js">
+      <Link>Client\Scripts\jGroupdocs.Navigation.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.PartialWordSearch.js">
+      <Link>Client\Scripts\jGroupdocs.PartialWordSearch.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.PdfToJavaScriptWrapper.js">
       <Link>Client\Scripts\jGroupdocs.PdfToJavaScriptWrapper.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -133,12 +141,24 @@
       <Link>Client\Scripts\jGroupdocs.StringExtensions.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Thumbnails.js">
+      <Link>Client\Scripts\jGroupdocs.Thumbnails.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerEventBus.js">
       <Link>Client\Scripts\jGroupdocs.ViewerEventBus.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerPortalService.js">
       <Link>Client\Scripts\jGroupdocs.ViewerPortalService.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.WidgetFactory.js">
+      <Link>Client\Scripts\jGroupdocs.WidgetFactory.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Zooming.js">
+      <Link>Client\Scripts\jGroupdocs.Zooming.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\libs\jquery-1.9.1.min.js">
@@ -163,6 +183,10 @@
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\plugins\rx.jQuery.js">
       <Link>Client\Scripts\plugins\rx.jQuery.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\plugins\scroll-startstop.events.jquery.js">
+      <Link>Client\Scripts\plugins\scroll-startstop.events.jquery.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -241,9 +265,6 @@
       <Project>{6610B9BB-E085-4521-858F-A534B9688655}</Project>
       <Name>Groupdocs.Web.UI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_Layout - Copy.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

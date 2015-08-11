@@ -12,12 +12,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
     zoomViewModel: null,
 
     init: function () {
-        this.thumbnails = null;
-        this.navigation = null;
-        this.search = null;
-        this.zooming = null;
-        this.embedSource = null;
-        this.viewTypeMenu = null;
         this.docSpacePageFlip = null;
 
         var docViewer = null;
@@ -92,8 +86,8 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 instanceId: this.instanceId
             }, this.viewerOptions);
 
-            docViewer = this.docSpace.docViewer(viewerOptions);
-            docViewerViewModel = this.docSpace.docViewer('getViewModel');
+            docViewer = this.docSpace.groupdocsViewingComponent(viewerOptions);
+            docViewerViewModel = this.docSpace.groupdocsViewingComponent('getViewModel');
         }
         else {
             docViewer = this.docSpaceCreator();
