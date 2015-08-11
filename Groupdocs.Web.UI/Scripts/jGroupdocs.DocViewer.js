@@ -1050,9 +1050,6 @@
             }
 
             var pageCount = this.pageCount();
-            if (!response.lic && pageCount > 3)
-                pageCount = 3;
-
             var pagesNotObservable = [];
             var pageDescription;
 

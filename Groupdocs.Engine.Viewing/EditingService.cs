@@ -7,6 +7,7 @@ using System.IO;
 using Groupdocs.Common;
 using Groupdocs.Engine.Documents;
 using Groupdocs.Storage;
+using Groupdocs.Threading;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Engine.Viewing.InstallableViewer
@@ -39,7 +40,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
 
         public int GeneratePageImages(string filePath, ViewingOptions options, string outputFolder = null)
         {
-            return 2;
+            return 86;
         }
 
         public string GetImagesFolder(string filePath, int? quality = null, int? width = null, int? height = null,
@@ -94,12 +95,15 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             bool supportPageRotation = false)
         {
             string fullPath = GetCachedImageFullPath(documentPath, pageIndex, true, null, 100, null);
-            using (Stream imageStream = File.OpenRead(fullPath))
+            using (new InterProcessLock(fullPath))
             {
-                using (MemoryStream imageMemoryStream = new MemoryStream())
+                using (Stream imageStream = File.OpenRead(fullPath))
                 {
-                    imageStream.CopyTo(imageMemoryStream);
-                    return imageMemoryStream.ToArray();
+                    using (MemoryStream imageMemoryStream = new MemoryStream())
+                    {
+                        imageStream.CopyTo(imageMemoryStream);
+                        return imageMemoryStream.ToArray();
+                    }
                 }
             }
         }
@@ -115,7 +119,11 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             bool supportListOfBookmarks = false,
             ProgressDelegate progressCallback = null, IDocument openedDocument = null, int? quality = null)
         {
-            return "{\"pages\":[{\"w\":595.32,\"h\":841.92,\"number\":1},{\"w\":595.32,\"h\":841.92,\"number\":2}],\"maxPageHeight\":841.92,\"widthForMaxHeight\":595.32}";
+            string modificationTimeString = GetModificationTimeString(filePath, true);
+            string path = Path.Combine(filePath, modificationTimeString ?? String.Empty, "desc.js");
+            string fullPath = Path.Combine(@"d:\temp\temp\Processing", path);
+            return File.ReadAllText(fullPath);
+            //return "{\"pages\":[{\"w\":595.32,\"h\":841.92,\"number\":1},{\"w\":595.32,\"h\":841.92,\"number\":2}],\"maxPageHeight\":841.92,\"widthForMaxHeight\":595.32}";
         }
 
         public IDocument GetPdf(Stream fileContents, string fileExtension, string pathToResultPdf)

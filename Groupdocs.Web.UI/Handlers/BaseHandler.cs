@@ -78,14 +78,15 @@ namespace Groupdocs.Web.UI.Handlers
             string[] pageHtml = null, pageCss = null;
             string sharedCss = null;
 
+            int pageCount = 86;
             if (useHtmlBasedEngine)
             {
-                    _viewingService.GetPagesHtml(path, 0, 2, out pageHtml, out pageCss);
+                    _viewingService.GetPagesHtml(path, 0, pageCount, out pageHtml, out pageCss);
                     sharedCss = _viewingService.GetPagesSharedCss(path);
             }
             else
             {
-                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, 2, null, quality, usePdf,
+                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, pageCount, null, quality, usePdf,
                     watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                     ignoreDocumentAbsence,
                     useHtmlBasedEngine, supportPageRotation,
@@ -101,7 +102,7 @@ namespace Groupdocs.Web.UI.Handlers
                 id = "",
                 doc_type = TypesMapper.GetDocumentTypes(extension).FirstOrDefault().ToString(),
                 fileType = TypesMapper.GetFileType(extension).ToString(),
-                pageCount = 2,
+                pageCount = pageCount,
                 url = downloadUrl,
                 pdfDownloadUrl,
                 name = filename,
