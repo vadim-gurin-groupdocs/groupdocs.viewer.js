@@ -227,12 +227,6 @@
                 thumbCss = ".grpdx .thumbnailsContainer .thumb-page{min-height:" + height.toString() + "px}";
             }
 
-            var imageCount = this._viewModel.pageCount();
-            for (var i = 0; i < imageCount; i++) {
-                this._viewModel.thumbnails()[i].url(data.imageUrls[i]);
-                //this.makeThumbnailNotBusy(i);
-            }
-
             this.loadThumbnails();
         },
 
@@ -242,7 +236,32 @@
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
             this._thumbsSelected = this._thumbsCountToShow; //_thumbsSelected = _thumbsCountToShow on start
-            this._onScrollLeftPanel();
+
+            this.retrieveImageUrls(this._viewModel.pageCount());
+        },
+
+        retrieveImageUrls: function (imageCount) {
+            this._portalService.getImageUrlsAsync(this.options.userId, this.options.userKey, this._docGuid,
+                    this._thumbnailWidth.toString() + "x", this._sessionToken, 0, imageCount,
+                    this.options.quality, this.options.use_pdf, this._docVersion, null, null, null, null,
+                    this.options.ignoreDocumentAbsence,
+                    this.options.useHtmlBasedEngine, this.options.supportPageRotation,
+                    function (response) {
+                        for (var i = 0; i < imageCount; i++) {
+                            this._viewModel.thumbnails()[i].url(response.data.image_urls[i]);
+                            //this.makeThumbnailNotBusy(i);
+                        }
+                        this._onScrollLeftPanel();
+
+                    }.bind(this),
+                    function (error) {
+                        for (var i = 0; i < imageCount; i++) {
+                            this.makeThumbnailNotBusy(i);
+                        }
+                    }.bind(this),
+                this.options.instanceIdToken,
+                this.options.locale
+            );
         },
 
         makeThumbnailNotBusy: function (thumbnailIndex) {

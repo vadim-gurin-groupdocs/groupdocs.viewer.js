@@ -106,7 +106,31 @@ namespace Groupdocs.Web.UI.Controllers
             return CreateJsonOrJsonpResponse(data, callback);
         }
 
-        
+        [AcceptVerbs("GET", "POST", "OPTIONS")]
+        public ActionResult GetImageUrls(string guid, string dimension, string token, int firstPage = 0, int pageCount = 0,
+                                         int? quality = null, bool usePdf = true,
+                                         string watermarkText = null, int? watermarkColor = null,
+                                         WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
+                                         bool ignoreDocumentAbsence = false,
+                                         bool useHtmlBasedEngine = false,
+                                         bool supportPageRotation = false,
+                                         string callback = null,
+                                         string instanceIdToken = null, string locale = null)
+        {
+            object data = _baseHandler.GetImageUrls(this,
+                                                   guid, dimension, firstPage, pageCount,
+                                                   quality, usePdf,
+                                                   watermarkText, watermarkColor,
+                                                   watermarkPosition, watermarkWidth,
+                                                   ignoreDocumentAbsence,
+                                                   useHtmlBasedEngine,
+                                                   supportPageRotation,
+                                                   callback, instanceIdToken, locale);
+
+            return CreateJsonOrJsonpResponse(data, callback);
+        }
+
+
         public ActionResult GetDocumentPageImage(string path, int pageIndex, int? width, int? quality, bool usePdf = true,
                                                  string watermarkText = null, int? watermarkColor = null,
                                                  WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,

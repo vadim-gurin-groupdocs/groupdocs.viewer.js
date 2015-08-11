@@ -67,6 +67,7 @@
     <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageImageHandler.cs" />
     <Compile Include="Handlers\GetFileHandler.cs" />
+    <Compile Include="Handlers\GetImageUrlsHandler.cs" />
     <Compile Include="Handlers\GetPdfWithPrintDialogHandler.cs" />
     <Compile Include="Handlers\GetPrintableHtmlHandler.cs" />
     <Compile Include="Handlers\GetResourceForHtmlHandler.cs" />

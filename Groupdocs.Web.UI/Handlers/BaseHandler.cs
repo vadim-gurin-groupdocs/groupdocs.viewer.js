@@ -86,7 +86,7 @@ namespace Groupdocs.Web.UI.Handlers
             }
             else
             {
-                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, pageCount, null, quality, usePdf,
+                imageUrls = urlsCreator.GetImageUrlsInternal(path, 0, pageCount, width, quality, usePdf,
                     watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                     ignoreDocumentAbsence,
                     useHtmlBasedEngine, supportPageRotation,

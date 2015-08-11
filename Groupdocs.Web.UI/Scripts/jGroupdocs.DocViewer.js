@@ -578,7 +578,11 @@
 
             var pageCountToShow = 1;
             if (this.pageContentType == "image") {
-                var pageWidth = null;
+                var pageWidth;
+                if (this.shouldMinimumWidthBeUsed(this.pageImageWidth * this.initialZoom / 100, false))
+                    pageWidth = this.minimumImageWidth;
+                else
+                    pageWidth = Math.round(this.pageImageWidth * this.initialZoom / 100);
 
                 this._model.loadDocument(fileId || this.fileId, pageCountToShow, pageWidth, this.password(), this.fileDisplayName,
                     this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
@@ -747,6 +751,33 @@
             var styleElement = $("<style type='text/css'>" + css + "</style>");
             this.pageCssElement = this.pageCssElement.add(styleElement);
             styleElement.appendTo("head");
+        },
+
+        retrieveImageUrls: function (imageCount) {
+            var i;
+            var pageDimension, pageWidth;
+            if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
+                pageWidth = this.minimumImageWidth;
+            else
+                pageWidth = this.pageWidth();
+
+            pageDimension = Math.floor(pageWidth) + "x";
+
+            this._model.retrieveImageUrls(this.fileId, this._sessionToken, imageCount, pageDimension,
+                this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
+                this.ignoreDocumentAbsence,
+                this.useHtmlBasedEngine, this.supportPageRotation,
+                this.instanceIdToken,
+                function (response) {
+                    for (i = 0; i < imageCount; i++) {
+                        this.pages()[i].url(response.image_urls[i]);
+                        this.loadImagesForVisiblePages();
+                    }
+                }.bind(this),
+                function (error) {
+                    this._onError(error);
+                }.bind(this),
+                this.locale);
         },
 
         _onError: function (error) {
@@ -1715,7 +1746,8 @@
                 this.recalculatePageLeft();
                 this.setPage(this.pageInd());
 
-                this.loadImagesForVisiblePages();
+                if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
+                    this.loadImagesForVisiblePages();
 
                 if (this.options.showHyperlinks) {
                     this._refreshHyperlinkFrames();
@@ -1750,6 +1782,12 @@
                 }
                 else {
                     this.calculatePagePositionsForVirtualMode();
+                }
+
+                if (this.pageContentType == "image") {
+                    var pageCount = this.pageCount();
+                    if (!this.shouldMinimumWidthBeUsed(newWidth, true))
+                        this.retrieveImageUrls(pageCount);
                 }
             }
         },
@@ -2093,6 +2131,16 @@
                 return null;
             var selectable = this._dvselectable.data("groupdocsSelectable");
             return selectable;
+        },
+
+        shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
+            var originalDocumentWidth = null;
+            if (this.use_pdf != 'false' && checkOriginalDocumentWidth) {
+                var pageSize = this._pdf2XmlWrapper.getPageSize();
+                originalDocumentWidth = pageSize.width;
+            }
+            return this.minimumImageWidth != null &&
+                (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
         },
 
         resizeViewerElement: function (viewerLeft) {
