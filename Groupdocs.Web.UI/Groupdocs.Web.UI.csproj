@@ -100,6 +100,8 @@
     <Content Include="Scripts\jGroupdocs.Navigation.js" />
     <Content Include="Scripts\jGroupdocs.Thumbnails.js" />
     <Content Include="Scripts\jGroupdocs.Zooming.js" />
+    <Content Include="Scripts\libs\angular.js" />
+    <Content Include="Scripts\libs\angular.min.js" />
     <Content Include="Scripts\libs\jquery-1.9.1.min.js" />
     <Content Include="Scripts\libs\JsInject.min.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
@@ -130,6 +132,14 @@
       <Project>{7720bd74-31fd-4c06-a005-d7ce6ca75077}</Project>
       <Name>Groupdocs.Threading</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\PT_Sans-Web-Bold.eot" />
+    <None Include="Fonts\PT_Sans-Web-Bold.ttf" />
+    <None Include="Fonts\PT_Sans-Web-Bold.woff" />
+    <None Include="Fonts\PT_Sans-Web-Regular.eot" />
+    <None Include="Fonts\PT_Sans-Web-Regular.ttf" />
+    <None Include="Fonts\PT_Sans-Web-Regular.woff" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

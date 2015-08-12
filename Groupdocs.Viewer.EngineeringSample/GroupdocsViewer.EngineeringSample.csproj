@@ -161,6 +161,14 @@
       <Link>Client\Scripts\jGroupdocs.Zooming.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\angular.js">
+      <Link>Client\Scripts\libs\angular.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\angular.min.js">
+      <Link>Client\Scripts\libs\angular.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\libs\jquery-1.9.1.min.js">
       <Link>Client\Scripts\libs\jquery-1.9.1.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -265,6 +273,32 @@
       <Project>{6610B9BB-E085-4521-858F-A534B9688655}</Project>
       <Name>Groupdocs.Web.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.eot">
+      <Link>Client\Fonts\PT_Sans-Web-Bold.eot</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.ttf">
+      <Link>Client\Fonts\PT_Sans-Web-Bold.ttf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.woff">
+      <Link>Client\Fonts\PT_Sans-Web-Bold.woff</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.eot">
+      <Link>Client\Fonts\PT_Sans-Web-Regular.eot</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.ttf">
+      <Link>Client\Fonts\PT_Sans-Web-Regular.ttf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.woff">
+      <Link>Client\Fonts\PT_Sans-Web-Regular.woff</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
