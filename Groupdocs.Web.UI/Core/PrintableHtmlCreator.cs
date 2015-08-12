@@ -20,7 +20,7 @@ namespace Groupdocs.Web.UI
     }
 
 
-    internal interface IPrintableHtmlCreator
+    public interface IPrintableHtmlCreator
     {
         string GetPrintableHtmlForImageBasedEngine(string path,
                                                    IImageUrlCreator urlCreator,

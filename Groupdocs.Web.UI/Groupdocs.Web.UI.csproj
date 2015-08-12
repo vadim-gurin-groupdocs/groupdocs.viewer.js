@@ -52,6 +52,7 @@
     <Compile Include="Core\FileBrowserTreeDataJS.cs" />
     <Compile Include="Core\FileStorageAdapter.cs" />
     <Compile Include="Core\Helper.cs" />
+    <Compile Include="Core\IBaseHandler.cs" />
     <Compile Include="Core\LargeJsonResult.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\PrintableHtmlCreator.cs" />

@@ -67,17 +67,21 @@ namespace Groupdocs.Web.UI.Handlers
 
                 //string pdfPath = _viewingService.GetPdfWithPrintDialog(path);
 
-                Tuple<byte[], string> bytesAndFileName = GetFile(path, true, true, null,
-                                                                            watermarkText, watermarkColor,
-                                                                            watermarkPosition, watermarkWidth,
-                                                                            false,
-                                                                            useHtmlBasedEngine, supportPageRotation, instanceId);
-                if (bytesAndFileName == null || bytesAndFileName.Item1 == null)
+                byte[] bytes;
+                string fileDisplayName;
+                bool isSuccessful = GetFile(path, true, true,
+                                    out bytes, out fileDisplayName,
+                                    null,
+                                    watermarkText, watermarkColor,
+                                    watermarkPosition, watermarkWidth,
+                                    false,
+                                    useHtmlBasedEngine, supportPageRotation, instanceId);
+                if (!isSuccessful || bytes == null)
                     return;
 
                 context.Response.ContentType = "application/pdf";
                 //context.Response.AddHeader("Content-Disposition", String.Format("attachment;filename={0}", Path.GetFileName(pdfPath)));
-                context.Response.BinaryWrite(bytesAndFileName.Item1);
+                context.Response.BinaryWrite(bytes);
             }
             catch (Exception exception)
             {

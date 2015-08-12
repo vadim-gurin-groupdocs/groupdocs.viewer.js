@@ -254,6 +254,10 @@
                 return event.preventDefault();
             }
 
+            this._mouseStarted =
+				(this._mouseStart(this._mouseDownEvent, event) !== false);
+            (this._mouseStarted ? this._mouseDrag(event) : this._mouseUp(event));
+
             return !this._mouseStarted;
         },
 

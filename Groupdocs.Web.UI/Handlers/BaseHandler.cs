@@ -13,10 +13,11 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Web.UI.Core;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class BaseHandler
+    public class BaseHandler : IBaseHandler
     {
         protected IEditingService _viewingService;
         protected readonly string _rootStoragePath;
@@ -32,12 +33,12 @@ namespace Groupdocs.Web.UI.Handlers
             _viewingService = new EditingService(null, null);
         }
 
-        protected void OnException(Exception exception, HttpContext context)
+        public void OnException(Exception exception, HttpContext context)
         {
         }
 
 
-        internal object ViewDocument(IUrlsCreator urlsCreator, IPrintableHtmlCreator printableHtmlCreator,
+        public object ViewDocument(IUrlsCreator urlsCreator, IPrintableHtmlCreator printableHtmlCreator,
                                         string guid, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
                                          int? count = null, int? width = null,
                                          int? quality = null, bool usePdf = true,
@@ -119,12 +120,12 @@ namespace Groupdocs.Web.UI.Handlers
         }
 
 
-        internal FileBrowserTreeDataJS LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null, bool orderAsc = true, string filter = null, string fileTypes = null, bool extended = false, string callback = null, string instanceId = null)
+        public FileBrowserTreeDataJS LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null, bool orderAsc = true, string filter = null, string fileTypes = null, bool extended = false, string callback = null, string instanceId = null)
         {
             throw new NotImplementedException();
         }
 
-        internal object GetImageUrls(IUrlsCreator urlsCreator,
+        public object GetImageUrls(IUrlsCreator urlsCreator,
                                     string guid, string dimension, int firstPage = 0, int pageCount = 0,
                                          int? quality = null, bool usePdf = true,
                                          string watermarkText = null, int? watermarkColor = null,
@@ -147,7 +148,7 @@ namespace Groupdocs.Web.UI.Handlers
         }
 
 
-        internal byte[] GetDocumentPageImage(string path, int pageIndex, int? width, int? quality, bool usePdf = true,
+        public byte[] GetDocumentPageImage(string path, int pageIndex, int? width, int? quality, bool usePdf = true,
                                                  string watermarkText = null, int? watermarkColor = null,
                                                  WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
                                                  float watermarkFontSize = 0,
@@ -166,7 +167,7 @@ namespace Groupdocs.Web.UI.Handlers
         }
 
 
-        internal void GetDocumentPageHtml(IUrlsCreator urlsCreator,
+        public void GetDocumentPageHtml(IUrlsCreator urlsCreator,
                                             string path, int pageIndex, bool usePngImages,
                                             bool embedImagesIntoHtmlForWordFiles,
                                             out string pageHtml, out string pageCss, string instanceId = null, string locale = null)
@@ -174,36 +175,38 @@ namespace Groupdocs.Web.UI.Handlers
             throw new NotImplementedException();
         }
 
-        internal byte[] GetResourceForHtml(string documentPath, string resourcePath,
+        public byte[] GetResourceForHtml(string documentPath, string resourcePath,
                                            DateTime? clientModifiedSince, out bool isModified, out DateTime? fileModificationDateTime,
                                            bool relativeToOriginal = false, string instanceId = null)
         {
             throw new NotImplementedException();
         }
 
-        internal string GetScript(string name)
+        public string GetScript(string name)
         {
             throw new NotImplementedException();
         }
 
 
-        internal string GetCss(string name)
+        public string GetCss(string name)
         {
             throw new NotImplementedException();
         }
 
-        internal Tuple<byte[], string> GetEmbeddedImage(string name)
+        public void GetEmbeddedImage(string name, out byte[] bytes, out string mimeType)
         {
             throw new NotImplementedException();
         }
 
-        internal Tuple<byte[], string> GetFont(string name)
+        public void GetFont(string name, out byte[] bytes, out string mimeType)
         {
             throw new NotImplementedException();
         }
 
 
-        internal Tuple<byte[], string> GetFile(string path, bool getPdf, bool isPrintable, string displayName = null,
+        public bool GetFile(string path, bool getPdf, bool isPrintable,
+                                      out byte[] bytes, out string mimeType,
+                                      string displayName = null,
                                       string watermarkText = null, int? watermarkColor = null,
                                       WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
                                       float watermarkFontSize = 0,
@@ -216,7 +219,7 @@ namespace Groupdocs.Web.UI.Handlers
         }
 
 
-        internal string[] GetPrintableHtml(IImageUrlCreator imageUrlCreator,
+        public string[] GetPrintableHtml(IImageUrlCreator imageUrlCreator,
                                              string path, bool useHtmlBasedEngine = false,
                                              string displayName = null,
                                              string watermarkText = null, int? watermarkColor = null,
@@ -234,7 +237,7 @@ namespace Groupdocs.Web.UI.Handlers
             throw new NotImplementedException();
         }
 
-        internal int RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceId = null)
+        public int RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceId = null)
         {
             throw new NotImplementedException();
         }

@@ -78,15 +78,18 @@ namespace Groupdocs.Web.UI.Handlers
                 context.Response.ContentType = "application/octet-stream";
                 string instanceId = context.Request.Params[Constants.InstanceIdRequestKey];
 
-                Tuple<byte[], string> bytesAndFileName = GetFile(path, getPdf, false, displayName,
-                                                                        watermarkText, watermarkColor,
-                                                                        watermarkPosition, watermarkWidth,
-                                                                        ignoreDocumentAbsence,
-                                                                        useHtmlBasedEngine, supportPageRotation, instanceId);
-                if (bytesAndFileName == null || bytesAndFileName.Item1 == null)
+                byte[] bytes;
+                string fileDisplayName;
+                bool isSuccessful = GetFile(path, getPdf, false,
+                                    out bytes, out fileDisplayName,
+                                    displayName,
+                                    watermarkText, watermarkColor,
+                                    watermarkPosition, watermarkWidth,
+                                    ignoreDocumentAbsence,
+                                    useHtmlBasedEngine, supportPageRotation, instanceId);
+                if (!isSuccessful || bytes == null)
                     return;
 
-                string fileDisplayName = bytesAndFileName.Item2;
                 context.Response.AddHeader("Content-Disposition",
                                            String.Format("attachment;filename=\"{0}\"", fileDisplayName));
 
@@ -95,7 +98,7 @@ namespace Groupdocs.Web.UI.Handlers
                 jqueryFileDownloadCookie.Value = "true";
                 //aCookie.Expires = DateTime.Now.AddDays(1);
                 context.Response.Cookies.Add(jqueryFileDownloadCookie);
-                context.Response.BinaryWrite(bytesAndFileName.Item1);
+                context.Response.BinaryWrite(bytes);
             }
             catch (Exception exception)
             {

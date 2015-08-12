@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
+using Groupdocs.Web.UI.Core;
 
 namespace Groupdocs.Web.UI.Controllers
 {
@@ -19,7 +20,7 @@ namespace Groupdocs.Web.UI.Controllers
         private readonly IUrlsCreator _urlsCreator;
         private readonly Logger _logger;
         private readonly IRootPathFinder _rootPathFinder;
-        private readonly BaseHandler _baseHandler;
+        private readonly IBaseHandler _baseHandler;
 
         public GroupdocsViewerController(IRootPathFinder rootPathFinder)
         {
@@ -191,21 +192,29 @@ namespace Groupdocs.Web.UI.Controllers
             return Content(css, "text/css");
         }
 
-        public ActionResult GetEmbeddedImage(string name)
-        {
-            Tuple<byte[], string> bytesAndMime = _baseHandler.GetEmbeddedImage(name);
-            byte[] imageBody = bytesAndMime.Item1;
-            string mimeType = bytesAndMime.Item2;
-            return File(imageBody, mimeType);
-        }
+        //public ActionResult GetEmbeddedImage(string name)
+        //{
+        //    ActionResult result = CheckIfCached();
+        //    if (result != null)
+        //        return result;
 
-        public ActionResult GetFont(string name)
-        {
-            Tuple<byte[], string> bytesAndMime = _baseHandler.GetFont(name);
-            byte[] fontContent = bytesAndMime.Item1;
-            string mimeType = bytesAndMime.Item2;
-            return File(fontContent, mimeType);
-        }
+        //    byte[] bytes;
+        //    string mimeType;
+        //    _baseHandler.GetEmbeddedImage(name, out bytes, out mimeType);
+        //    return File(bytes, mimeType);
+        //}
+
+        //public ActionResult GetFont(string name)
+        //{
+        //    ActionResult result = CheckIfCached();
+        //    if (result != null)
+        //        return result;
+
+        //    byte[] bytes;
+        //    string mimeType;
+        //    _baseHandler.GetFont(name, out bytes, out mimeType);
+        //    return File(bytes, mimeType);
+        //}
 
         public ActionResult GetFile(string path, bool getPdf = false, string displayName = null,
                                       string watermarkText = null, int? watermarkColor = null,
@@ -216,17 +225,21 @@ namespace Groupdocs.Web.UI.Controllers
                                       bool supportPageRotation = false,
                                       string instanceIdToken = null)
         {
-            Tuple<byte[], string> bytesAndFileName = _baseHandler.GetFile(path, getPdf, false, displayName,
-                                                                        watermarkText, watermarkColor,
-                                                                        watermarkPosition, watermarkWidth,
-                                                                        ignoreDocumentAbsence,
-                                                                        useHtmlBasedEngine, supportPageRotation,
-                                                                        instanceIdToken);
-            if (bytesAndFileName == null)
+            byte[] bytes;
+            string fileDisplayName;
+            bool isSuccessful = _baseHandler.GetFile(path, getPdf, false,
+                                                    out bytes, out fileDisplayName,
+                                                    displayName,
+                                                    watermarkText, watermarkColor,
+                                                    watermarkPosition, watermarkWidth,
+                                                    ignoreDocumentAbsence,
+                                                    useHtmlBasedEngine, supportPageRotation,
+                                                    instanceIdToken);
+            if (!isSuccessful)
             {
                 return new EmptyResult();
             }
-            if (bytesAndFileName.Item1 == null)
+            if (bytes == null)
             {
                 if (Request != null)
                 {
@@ -245,7 +258,7 @@ namespace Groupdocs.Web.UI.Controllers
                 //jquery.fileDownload uses this cookie to determine that a file download has completed successfully
                 Response.SetCookie(new HttpCookie(Constants.JqueryFileDownloadCookieName, "true") { Path = "/" });
             }
-            return File(bytesAndFileName.Item1, "application/octet-stream", bytesAndFileName.Item2);
+            return File(bytes, "application/octet-stream", fileDisplayName);
         }
 
         public ActionResult GetPdfWithPrintDialog(string path, string displayName = null,
@@ -259,21 +272,24 @@ namespace Groupdocs.Web.UI.Controllers
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new EmptyResult();
 
-            //string pdfPath = _viewingService.GetPdfWithPrintDialog(path);
-            Tuple<byte[], string> bytesAndFileName = _baseHandler.GetFile(path, true, true, displayName,
-                                                                        watermarkText, watermarkColor,
-                                                                        watermarkPosition, watermarkWidth,
-                                                                        false,
-                                                                        useHtmlBasedEngine, supportPageRotation,
-                                                                        instanceIdToken);
+            byte[] bytes;
+            string fileDisplayName;
+            bool isSuccessful = _baseHandler.GetFile(path, true, true,
+                                    out bytes, out fileDisplayName,
+                                    displayName,
+                                    watermarkText, watermarkColor,
+                                    watermarkPosition, watermarkWidth,
+                                    false,
+                                    useHtmlBasedEngine, supportPageRotation,
+                                    instanceIdToken);
 
-            if (bytesAndFileName == null)
+            if (!isSuccessful)
                 return new EmptyResult();
             //string filename = Path.GetFileName(pdfPath);
-            string contentDispositionString = new ContentDisposition { FileName = bytesAndFileName.Item2, Inline = true }.ToString();
+            string contentDispositionString = new ContentDisposition { FileName = fileDisplayName, Inline = true }.ToString();
             Response.AddHeader("Content-Disposition", contentDispositionString);
             //Response.AppendHeader("Content-Disposition", "inline; filename=" + bytesAndFileName.Item2);
-            return File(bytesAndFileName.Item1, "application/pdf");
+            return File(bytes, "application/pdf");
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
