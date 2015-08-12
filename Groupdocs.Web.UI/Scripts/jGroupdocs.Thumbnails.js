@@ -136,7 +136,7 @@
         },
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
             this._sessionToken = data.token;
-            this._docGuid = data.guid;
+            this._docGuid = data.path;
             this._docVersion = data.version;
             this._viewModel.pageCount(data.pageCount);
 

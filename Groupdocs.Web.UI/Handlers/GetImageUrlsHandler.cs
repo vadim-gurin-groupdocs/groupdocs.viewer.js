@@ -6,7 +6,7 @@ using System.Web.Script.Serialization;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetImageUrlsHandler : BaseHandler, IHttpHandler
+    public class GetImageUrlsHandler : CoreHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
@@ -40,7 +40,7 @@ namespace Groupdocs.Web.UI.Handlers
             try
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-                string guid = null;
+                string path = null;
                 string dimension = null;
                 string token = null;
                 int firstPage = 0;
@@ -65,7 +65,7 @@ namespace Groupdocs.Web.UI.Handlers
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
                 Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetParameter(inputParameters, "guid", ref guid);
+                GetParameter(inputParameters, "path", ref path);
                 GetParameter(inputParameters, "dimension", ref dimension);
                 GetParameter(inputParameters, "token", ref token);
                 GetParameter(inputParameters, "firstPage", ref firstPage);
@@ -85,7 +85,7 @@ namespace Groupdocs.Web.UI.Handlers
                 GetParameter(inputParameters, "locale", ref locale);
 
                 object data = GetImageUrls(_urlsCreator,
-                                                       guid, dimension, firstPage, pageCount,
+                                                       path, dimension, firstPage, pageCount,
                                                        quality, usePdf,
                                                        watermarkText, watermarkColor,
                                                        watermarkPosition ?? WatermarkPosition.Diagonal, watermarkWidth ?? 0,

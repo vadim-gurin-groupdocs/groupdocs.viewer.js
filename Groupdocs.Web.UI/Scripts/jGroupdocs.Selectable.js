@@ -131,7 +131,7 @@
             if (this.options.useVirtualScrolling) {
                 this.pageLocations = $.map(this.options.pageLocations,
                     function (page) {
-                        return new jSaaspose.Point(page.left, page.top());
+                        return new groupdocs.Point(page.left, page.top());
                     });
             }
             else
@@ -161,7 +161,7 @@
             if (this.options.bookLayout)
                 offsetY = this.parentElement.offset().top;
             //offsetY += this.parentElement.parent().scrollTop();
-            this._canvasOffset = new jSaaspose.Point(offsetX, offsetY);
+            this._canvasOffset = new groupdocs.Point(offsetX, offsetY);
         },
 
         _mouseInit: function() {
@@ -295,7 +295,7 @@
                                  "'],[id='" + docSpaceId + "-img-" + this.options.startNumbers.end.toString() + "']");
             }
 
-            //this._canvasScroll = new jSaaspose.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
+            //this._canvasScroll = new groupdocs.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
             this._canvasScroll = this.getCanvasScroll();
 
             return $.map(images, function (img) {
@@ -303,15 +303,15 @@
                 var x = imgJquery.offset().left - self._canvasOffset.x + self._canvasScroll.x;
                 //var y = (self.options.bookLayout ? 0 : ($(img).offset().top - self._canvasOffset.y + self._canvasScroll.y));
                 var y = (self.options.bookLayout ? 0 : (imgJquery.offset().top - self.element.offset().top));
-                return new jSaaspose.Point(x, y);
+                return new groupdocs.Point(x, y);
             });
         },
 
         getCanvasScroll: function () {
             if (this.options.bookLayout)
-                return new jSaaspose.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
+                return new groupdocs.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
             else
-                return new jSaaspose.Point(this.element.parent().scrollLeft(), this.element.parent().scrollTop());
+                return new groupdocs.Point(this.element.parent().scrollLeft(), this.element.parent().scrollTop());
         },
 
         clearSelection: function () {
@@ -326,7 +326,7 @@
             var page = null;
 
             this._canvasScroll = this.getCanvasScroll();
-            this._mouseStartPos = new jSaaspose.Point(
+            this._mouseStartPos = new groupdocs.Point(
                 event.pageX - this._canvasOffset.x + this._canvasScroll.x,
                 event.pageY - this._canvasOffset.y + this._canvasScroll.y);
 
@@ -351,7 +351,7 @@
             }
             this.selectionCounter++;
 
-            //this._canvasScroll = new jSaaspose.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
+            //this._canvasScroll = new groupdocs.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
             this._canvasScroll = this.getCanvasScroll();
             if (this.options.bookLayout)
                 this._canvasScroll.y += this.parentElement.parent().scrollTop();
@@ -376,7 +376,7 @@
             }
 
             this.options.txtarea.val("");
-            this.lasso = new jSaaspose.Rect();
+            this.lasso = new groupdocs.Rect();
         },
 
         _mouseDrag: function (event) {
@@ -389,7 +389,7 @@
             var currentX = x2,
                 currentY = y2;
 
-            if (!this._findPageAt(new jSaaspose.Point(currentX, currentY)))
+            if (!this._findPageAt(new groupdocs.Point(currentX, currentY)))
                 return false;
 
             this.dragged = true;
@@ -476,7 +476,7 @@
                     top = Math.max(pageOffset + highestTop, top);
                     bottom = Math.min(pageOffset + lowestBottom, bottom);
                 }
-                var selectionBounds = new jSaaspose.Rect(left, top, right, bottom);
+                var selectionBounds = new groupdocs.Rect(left, top, right, bottom);
                 var selectionBoundsScaled = selectionBounds.clone();
 
                 this.options.txtarea.val($.trim(text)); //.focus().select();
@@ -525,7 +525,7 @@
 
                 var lastX = event.pageX - this._canvasOffset.x + this._canvasScroll.x;
                 var lastY = event.pageY - this._canvasOffset.y + this._canvasScroll.y;
-                var lastPoint = new jSaaspose.Rect(lastX, lastY, lastX, lastY);
+                var lastPoint = new groupdocs.Rect(lastX, lastY, lastX, lastY);
                 var page = this._findPageAt(lastPoint.topLeft);
 
                 if (!page)
@@ -578,7 +578,7 @@
             var pageOffset = pageNumber * this.options.pageHeight;
             pageOffset /= scale;
             selectedRectangle.scale(1 / scale);
-            selectedRectangle.add(new jSaaspose.Point(0, pageOffset));
+            selectedRectangle.add(new groupdocs.Point(0, pageOffset));
             return selectedRectangle;
         },
 
@@ -591,7 +591,7 @@
 
             var pageHeight = this.options.pageHeight;
             var pageNumber = Math.floor(bounds.top() / pageHeight);
-            bounds.subtract(new jSaaspose.Point(0, pageNumber * pageHeight));
+            bounds.subtract(new groupdocs.Point(0, pageNumber * pageHeight));
             if (this.pages.length != 0)
 				bounds.add(this.pages[pageNumber].rect.topLeft);
             return bounds;
@@ -686,7 +686,7 @@
         },
 
         handleDoubleClick: function (event) {
-            this.lasso = new jSaaspose.Rect(event.pageX, event.pageY, event.pageX, event.pageY);
+            this.lasso = new groupdocs.Rect(event.pageX, event.pageY, event.pageX, event.pageY);
             this.initStorage();
             this.findSelectedPages();
         },
@@ -1332,7 +1332,7 @@
                     (lasso.right() > rowRect.right() && lasso.top() < rowRect.top()) ||
                     (lasso.bottom() > rowRect.bottom() && lasso.top() < rowRect.top())) {
 
-                    var bounds = new jSaaspose.Rect(rowRect.left(), rowRect.top() + 1, rowRect.right(), rowRect.bottom() - 1);
+                    var bounds = new groupdocs.Rect(rowRect.left(), rowRect.top() + 1, rowRect.right(), rowRect.bottom() - 1);
                     bounds.subtract(rows[i].pageLocation);
 
                     var r = {
@@ -1449,11 +1449,11 @@
                 objectsToSelect[i].shown = false;
             }
 
-            var bounds = new jSaaspose.Rect(left, top + 1, right, bottom - 1);
+            var bounds = new groupdocs.Rect(left, top + 1, right, bottom - 1);
             bounds.subtract(page.rect.topLeft);
             result.bounds = bounds;
 
-            var originalBounds = new jSaaspose.Rect(originalLeft, originalTop + 1, originalRight, originalBottom - 1);
+            var originalBounds = new groupdocs.Rect(originalLeft, originalTop + 1, originalRight, originalBottom - 1);
             result.originalRect = originalBounds;
 
             // result.length = (objectToSelect.position - result.position + objectToSelect.text.length);
@@ -1542,7 +1542,7 @@
 
             var rect = null;
             this.lasso = bounds.clone();
-            this.lasso = new jSaaspose.Rect(Math.round(this.lasso.left()), Math.round(this.lasso.top()) + 0.001,
+            this.lasso = new groupdocs.Rect(Math.round(this.lasso.left()), Math.round(this.lasso.top()) + 0.001,
                                             Math.round(this.lasso.right()), Math.round(this.lasso.bottom()) - 0.001);
 
             var rects = this._getDocumentHighlightRects();
@@ -1550,7 +1550,7 @@
                 rect = rects[i].bounds;
                 var pageOffsetX = this.pages[rects[i].page].rect.topLeft.x - this.pages[0].rect.topLeft.x;
                 var pageOffsetY = this.pages[rects[i].page].rect.topLeft.y; // -this.pages[0].rect.topLeft.y;
-                rect.add(new jSaaspose.Point(pageOffsetX, pageOffsetY));
+                rect.add(new groupdocs.Point(pageOffsetX, pageOffsetY));
             }
             return rects;
         }

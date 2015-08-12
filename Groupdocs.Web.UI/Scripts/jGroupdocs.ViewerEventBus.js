@@ -216,11 +216,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                     return false;
                 }
             });
-            if (embedSource) {
-                embedSourceViewModel.setGuid(data.guid);
-                embedSourceViewModel.setFileId(docViewerViewModel.getFileId());
-                embedSourceViewModel.password(docViewerViewModel.password());
-            }
 
             if (zooming) {
                 if (docViewerViewModel.isScrollViewerVisible()) {

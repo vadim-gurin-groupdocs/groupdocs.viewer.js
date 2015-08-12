@@ -8,7 +8,7 @@ using Groupdocs.Threading;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetFileHandler : BaseHandler, IHttpHandler
+    public class GetFileHandler : CoreHandler, IHttpHandler
     {
         public GetFileHandler()
         {

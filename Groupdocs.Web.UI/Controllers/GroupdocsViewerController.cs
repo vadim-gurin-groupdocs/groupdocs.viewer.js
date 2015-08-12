@@ -20,7 +20,7 @@ namespace Groupdocs.Web.UI.Controllers
         private readonly IUrlsCreator _urlsCreator;
         private readonly Logger _logger;
         private readonly IRootPathFinder _rootPathFinder;
-        private readonly IBaseHandler _baseHandler;
+        private readonly ICoreHandler _coreHandler;
 
         public GroupdocsViewerController(IRootPathFinder rootPathFinder)
         {
@@ -35,7 +35,7 @@ namespace Groupdocs.Web.UI.Controllers
             _urlsCreator = new UrlsCreator();
             _helper = new Helper();
             _logger = new Logger(_rootPathFinder.GetLogFilePath());
-            _baseHandler = new BaseHandler();
+            _coreHandler = new CoreHandler();
         }
 
         protected override void OnException(ExceptionContext filterContext)
@@ -59,7 +59,7 @@ namespace Groupdocs.Web.UI.Controllers
                                                     bool orderAsc = true, string filter = null, string fileTypes = null,
                                                     bool extended = false, string callback = null, string instanceIdToken = null)
         {
-            object data = _baseHandler.LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
+            object data = _coreHandler.LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
                                                               fileTypes, extended, callback, instanceIdToken);
             if (data == null)
                 return new EmptyResult();
@@ -69,7 +69,7 @@ namespace Groupdocs.Web.UI.Controllers
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult ViewDocument(string guid, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
+        public ActionResult ViewDocument(string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
                                          int? count = null, int? width = null,
                                          int? quality = null, bool usePdf = true,
                                          int? preloadPagesCount = null, bool convertWordDocumentsCompletely = false,
@@ -88,8 +88,8 @@ namespace Groupdocs.Web.UI.Controllers
             //throw new ArgumentException("test exception");
             //return CreateJsonOrJsonpResponse(new { success = false, Reason = "test Message test Message test Message" }, callback);
 
-            object data = _baseHandler.ViewDocument(this, _printableHtmlCreator,
-                                           guid, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
+            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
+                                           path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
                                            count, width,
                                            quality, usePdf,
                                            preloadPagesCount, convertWordDocumentsCompletely,
@@ -108,7 +108,7 @@ namespace Groupdocs.Web.UI.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetImageUrls(string guid, string dimension, string token, int firstPage = 0, int pageCount = 0,
+        public ActionResult GetImageUrls(string path, string dimension, string token, int firstPage = 0, int pageCount = 0,
                                          int? quality = null, bool usePdf = true,
                                          string watermarkText = null, int? watermarkColor = null,
                                          WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
@@ -118,8 +118,8 @@ namespace Groupdocs.Web.UI.Controllers
                                          string callback = null,
                                          string instanceIdToken = null, string locale = null)
         {
-            object data = _baseHandler.GetImageUrls(this,
-                                                   guid, dimension, firstPage, pageCount,
+            object data = _coreHandler.GetImageUrls(this,
+                                                   path, dimension, firstPage, pageCount,
                                                    quality, usePdf,
                                                    watermarkText, watermarkColor,
                                                    watermarkPosition, watermarkWidth,
@@ -141,7 +141,7 @@ namespace Groupdocs.Web.UI.Controllers
                                                  bool rotate = false,
                                                  string instanceIdToken = null, string locale = null)
         {
-            byte[] imageBytes = _baseHandler.GetDocumentPageImage(path, pageIndex, width, quality, usePdf,
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(path, pageIndex, width, quality, usePdf,
                                                                watermarkText, watermarkColor,
                                                                watermarkPosition,
                                                                watermarkWidth,
@@ -158,7 +158,7 @@ namespace Groupdocs.Web.UI.Controllers
                                                 bool embedImagesIntoHtmlForWordFiles, string instanceIdToken = null, string locale = null)
         {
             string pageHtml, pageCss;
-            _baseHandler.GetDocumentPageHtml(this, path, pageIndex, usePngImages, embedImagesIntoHtmlForWordFiles, out pageHtml, out pageCss, instanceIdToken, locale);
+            _coreHandler.GetDocumentPageHtml(this, path, pageIndex, usePngImages, embedImagesIntoHtmlForWordFiles, out pageHtml, out pageCss, instanceIdToken, locale);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }
@@ -168,7 +168,7 @@ namespace Groupdocs.Web.UI.Controllers
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
             DateTime? fileModificationDateTime;
-            byte[] resourceBytes = _baseHandler.GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal, instanceIdToken);
+            byte[] resourceBytes = _coreHandler.GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal, instanceIdToken);
             if (!isModified)
                 return new HttpStatusCodeResult(304, "Not Modified");
 
@@ -182,13 +182,13 @@ namespace Groupdocs.Web.UI.Controllers
 
         public ActionResult GetScript(string name)
         {
-            string script = _baseHandler.GetScript(name);
+            string script = _coreHandler.GetScript(name);
             return new JavaScriptResult() { Script = script };
         }
 
         public ActionResult GetCss(string name)
         {
-            string css = _baseHandler.GetCss(name);
+            string css = _coreHandler.GetCss(name);
             return Content(css, "text/css");
         }
 
@@ -227,7 +227,7 @@ namespace Groupdocs.Web.UI.Controllers
         {
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _baseHandler.GetFile(path, getPdf, false,
+            bool isSuccessful = _coreHandler.GetFile(path, getPdf, false,
                                                     out bytes, out fileDisplayName,
                                                     displayName,
                                                     watermarkText, watermarkColor,
@@ -274,7 +274,7 @@ namespace Groupdocs.Web.UI.Controllers
 
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _baseHandler.GetFile(path, true, true,
+            bool isSuccessful = _coreHandler.GetFile(path, true, true,
                                     out bytes, out fileDisplayName,
                                     displayName,
                                     watermarkText, watermarkColor,
@@ -312,7 +312,7 @@ namespace Groupdocs.Web.UI.Controllers
                 return new HttpStatusCodeResult(400);
             }
 
-            string[] pageArray = _baseHandler.GetPrintableHtml(this,
+            string[] pageArray = _coreHandler.GetPrintableHtml(this,
                                                               path, useHtmlBasedEngine,
                                                               displayName,
                                                               watermarkText, watermarkColor,
@@ -327,7 +327,7 @@ namespace Groupdocs.Web.UI.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceIdToken = null)
         {
-            _baseHandler.ReorderPage(path, oldPosition, newPosition, null, instanceIdToken);
+            _coreHandler.ReorderPage(path, oldPosition, newPosition, null, instanceIdToken);
             var data = new { success = true };
             return CreateJsonOrJsonpResponse(data, callback);
         }
@@ -335,7 +335,7 @@ namespace Groupdocs.Web.UI.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceIdToken = null)
         {
-            int resultAngle = _baseHandler.RotatePage(path, pageNumber, rotationAmount, null, instanceIdToken);
+            int resultAngle = _coreHandler.RotatePage(path, pageNumber, rotationAmount, null, instanceIdToken);
             var data = new { resultAngle, success = true };
             return CreateJsonOrJsonpResponse(data, callback);
         }
@@ -406,7 +406,7 @@ namespace Groupdocs.Web.UI.Controllers
             }
             else
             {
-                pageUrls = _baseHandler.GetPageImageUrlsOnThirdPartyStorage(path, pageCount, quality, pageWidth, null, true);
+                pageUrls = _coreHandler.GetPageImageUrlsOnThirdPartyStorage(path, pageCount, quality, pageWidth, null, true);
             }
 
             return pageUrls;

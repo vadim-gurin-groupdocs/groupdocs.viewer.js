@@ -17,7 +17,7 @@ using Groupdocs.Web.UI.Core;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class BaseHandler : IBaseHandler
+    public class CoreHandler : ICoreHandler
     {
         protected IEditingService _viewingService;
         protected readonly string _rootStoragePath;
@@ -28,7 +28,7 @@ namespace Groupdocs.Web.UI.Handlers
         protected readonly Logger _logger;
         protected IRootPathFinder _rootPathFinder;
 
-        public BaseHandler(string productName = null)
+        public CoreHandler(string productName = null)
         {
             _viewingService = new EditingService(null, null);
         }
@@ -39,7 +39,7 @@ namespace Groupdocs.Web.UI.Handlers
 
 
         public object ViewDocument(IUrlsCreator urlsCreator, IPrintableHtmlCreator printableHtmlCreator,
-                                        string guid, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
+                                        string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
                                          int? count = null, int? width = null,
                                          int? quality = null, bool usePdf = true,
                                          int? preloadPagesCount = null, bool convertWordDocumentsCompletely = false,
@@ -55,8 +55,6 @@ namespace Groupdocs.Web.UI.Handlers
                                          string instanceId = null,
                                          string locale = null)
         {
-            string path = guid;
-
             string pdfDownloadUrl = null;
             string filename = Path.GetFileName(path);
             string[] imageUrls = null;
@@ -99,7 +97,7 @@ namespace Groupdocs.Web.UI.Handlers
             string extension = Path.GetExtension(path);
             var data = new
             {
-                guid,
+                path,
                 id = "",
                 doc_type = TypesMapper.GetDocumentTypes(extension).FirstOrDefault().ToString(),
                 fileType = TypesMapper.GetFileType(extension).ToString(),
@@ -126,7 +124,7 @@ namespace Groupdocs.Web.UI.Handlers
         }
 
         public object GetImageUrls(IUrlsCreator urlsCreator,
-                                    string guid, string dimension, int firstPage = 0, int pageCount = 0,
+                                    string path, string dimension, int firstPage = 0, int pageCount = 0,
                                          int? quality = null, bool usePdf = true,
                                          string watermarkText = null, int? watermarkColor = null,
                                          WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,

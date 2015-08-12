@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Groupdocs.Web.Helpers.JSON;
 
 namespace Groupdocs.Web.UI.Core
 {
-    interface IBaseHandler
+    interface ICoreHandler
     {
         object ViewDocument(IUrlsCreator urlsCreator, IPrintableHtmlCreator printableHtmlCreator,
-            string guid, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
+            string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
             int? count = null, int? width = null,
             int? quality = null, bool usePdf = true,
             int? preloadPagesCount = null, bool convertWordDocumentsCompletely = false,
@@ -28,7 +25,7 @@ namespace Groupdocs.Web.UI.Core
         FileBrowserTreeDataJS LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null, bool orderAsc = true, string filter = null, string fileTypes = null, bool extended = false, string callback = null, string instanceId = null);
 
         object GetImageUrls(IUrlsCreator urlsCreator,
-            string guid, string dimension, int firstPage = 0, int pageCount = 0,
+            string path, string dimension, int firstPage = 0, int pageCount = 0,
             int? quality = null, bool usePdf = true,
             string watermarkText = null, int? watermarkColor = null,
             WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,

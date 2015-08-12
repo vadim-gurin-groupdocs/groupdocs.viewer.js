@@ -888,7 +888,7 @@
             this.downloadUrl = data.url;
             this.pdfDownloadUrl = data.pdfDownloadUrl;
             this.pdfPrintUrl = data.pdfPrintUrl;
-            this.documentPath = data.guid;
+            this.documentPath = data.path;
             var downloadButton = groupdocsViewerWrapper.find(".btn_download");
             var printButton = groupdocsViewerWrapper.find(".print_button");
             downloadButton.unbind();

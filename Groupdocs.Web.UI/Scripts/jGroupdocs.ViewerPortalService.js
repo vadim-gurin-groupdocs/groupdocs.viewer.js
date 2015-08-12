@@ -24,7 +24,7 @@ $.extend(groupdocs.PortalService.prototype, {
             this.useJSONP = true;
     },
 
-    viewDocumentAsHtml: function (userId, privateKey, guid, preloadPagesCount, fileDisplayName, usePngImagesForHtmlBasedEngine,
+    viewDocumentAsHtml: function (userId, privateKey, path, preloadPagesCount, fileDisplayName, usePngImagesForHtmlBasedEngine,
                                   convertWordDocumentsCompletely,
                                   watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                   ignoreDocumentAbsence, supportPageRotation,
@@ -32,7 +32,7 @@ $.extend(groupdocs.PortalService.prototype, {
                                   embedImagesIntoHtmlForWordFiles,
                                   successCallback, errorCallback, useCache, instanceIdToken, locale) {
         var data = {
-            userId: userId, privateKey: privateKey, guid: guid, useHtmlBasedEngine: true,
+            userId: userId, privateKey: privateKey, path: path, useHtmlBasedEngine: true,
             preloadPagesCount: preloadPagesCount,
             fileDisplayName: fileDisplayName,
             usePngImagesForHtmlBasedEngine: usePngImagesForHtmlBasedEngine,
@@ -61,13 +61,13 @@ $.extend(groupdocs.PortalService.prototype, {
         this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetDocumentPageHtml' + this._urlSuffix, data, successCallback, errorCallback, false);
     },
 
-    viewDocument: function (guid, width, quality, usePdf, preloadPagesCount, password, fileDisplayName,
+    viewDocument: function (path, width, quality, usePdf, preloadPagesCount, password, fileDisplayName,
                             watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                             ignoreDocumentAbsence, supportPageRotation,
                             supportListOfContentControls, supportListOfBookmarks,
                             successCallback, errorCallback, useCache, instanceIdToken, locale) {
         var data = {
-            guid: guid, width: width, quality: quality, usePdf: usePdf, preloadPagesCount: preloadPagesCount, password: password, fileDisplayName: fileDisplayName,
+            path: path, width: width, quality: quality, usePdf: usePdf, preloadPagesCount: preloadPagesCount, password: password, fileDisplayName: fileDisplayName,
             watermarkText: watermarkText, watermarkColor: watermarkColor, watermarkPosition: watermarkPosition, watermarkWidth: watermarkWidth,
             ignoreDocumentAbsence: ignoreDocumentAbsence, supportPageRotation: supportPageRotation,
             supportListOfContentControls: supportListOfContentControls, supportListOfBookmarks: supportListOfBookmarks,
@@ -76,14 +76,8 @@ $.extend(groupdocs.PortalService.prototype, {
         };
         this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : false);
     },
-
-
-    getPdf2JavaScript: function (userId, privateKey, guid, descForHtmlBasedEngine, successCallback, errorCallback) {
-        var data = { guid: guid, descForHtmlBasedEngine: descForHtmlBasedEngine };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetPdf2JavaScript' + this._urlSuffix, data, successCallback, errorCallback, false);
-    },
-
-    getImageUrlsAsync: function (userId, privateKey, guid, dimension, token, firstPage, pageCount, quality, usePdf, docVersion,
+    
+    getImageUrlsAsync: function (userId, privateKey, path, dimension, token, firstPage, pageCount, quality, usePdf, docVersion,
                                  watermarkText, watermarkColor, watermarkPosition, watermarkFontSize,
                                  ignoreDocumentAbsence,
                                  useHtmlBasedEngine, supportPageRotation,
@@ -92,7 +86,7 @@ $.extend(groupdocs.PortalService.prototype, {
         var data = {
             userId: userId,
             privateKey: privateKey,
-            guid: guid,
+            path: path,
             dimension: dimension,
             token: token,
             firstPage: firstPage,

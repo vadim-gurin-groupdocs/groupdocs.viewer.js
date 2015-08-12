@@ -43,8 +43,8 @@
                 $(this.element).trigger('_onProcessPages', [data]);
             }.bind(this));
 
-            $(this._viewModel).bind('onProcessPages', function (e, guid) {
-                $(this.element).trigger('onProcessPages', [guid]);
+            $(this._viewModel).bind('onProcessPages', function (e, path) {
+                $(this.element).trigger('onProcessPages', [path]);
             }.bind(this));
 
             $(this._viewModel).bind('onScrollDocView', function (e, data) {
@@ -236,7 +236,7 @@
                                 callback, errorCallback,
                                 locale) {
             var onSucceded = function (response) {
-                if (response.data != null && typeof (response.data.guid) !== "undefined") {
+                if (response.data != null && typeof (response.data.path) !== "undefined") {
                     callback.apply(this, [response.data]);
                 }
                 else {
@@ -268,7 +268,7 @@
                                                    supportListOfContentControls, supportListOfBookmarks,
                                                    embedImagesIntoHtmlForWordFiles,
                 function (response) {
-                    if (response.data && typeof (response.data.guid) !== "undefined") {
+                    if (response.data && typeof (response.data.path) !== "undefined") {
                         callback.apply(this, [response.data]);
                     }
                     else {
@@ -809,7 +809,7 @@
                 userId: this.userId,
                 privateKey: this.userKey,
                 fileId: this.fileId,
-                guid: response.guid,
+                path: response.path,
                 documentDescription: response.documentDescription,
                 callback: callOnDocumentLoaded
             };
@@ -836,7 +836,7 @@
             var self = this;
 
             this._sessionToken = response.token;
-            this.docGuid = response.guid;
+            this.docGuid = response.path;
             this.pageCount(response.pageCount);
             this.documentName(response.name);
             this.docType(response.doc_type);
@@ -1317,7 +1317,7 @@
                     url: this.Url,
                     pageNumber: this.PageNumber,
                     targetPage: this.TargetPage,
-                    rect: new jSaaspose.Rect(this.Bounds.X, this.Bounds.Y, this.Bounds.X + this.Bounds.Width, this.Bounds.Y + this.Bounds.Height)
+                    rect: new groupdocs.Rect(this.Bounds.X, this.Bounds.Y, this.Bounds.X + this.Bounds.Width, this.Bounds.Y + this.Bounds.Height)
                 };
                 l.frame = ko.observable(selectable != null ? selectable.convertPageAndRectToScreenCoordinates(l.pageNumber, l.rect) : l.rect);
                 /*var frame = l.rect.clone().scale(self.scale());

@@ -52,7 +52,7 @@
     <Compile Include="Core\FileBrowserTreeDataJS.cs" />
     <Compile Include="Core\FileStorageAdapter.cs" />
     <Compile Include="Core\Helper.cs" />
-    <Compile Include="Core\IBaseHandler.cs" />
+    <Compile Include="Core\ICoreHandler.cs" />
     <Compile Include="Core\LargeJsonResult.cs" />
     <Compile Include="Core\Logger.cs" />
     <Compile Include="Core\PrintableHtmlCreator.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Core\UrlsCreator.cs" />
     <Compile Include="Core\Viewer.cs" />
     <Compile Include="Core\ViewingServiceCreator.cs" />
-    <Compile Include="Handlers\BaseHandler.cs" />
+    <Compile Include="Handlers\CoreHandler.cs" />
     <Compile Include="Handlers\CrossOriginHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageImageHandler.cs" />

@@ -7,7 +7,7 @@ using Groupdocs.Engine.Viewing;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetPdfWithPrintDialogHandler : BaseHandler, IHttpHandler
+    public class GetPdfWithPrintDialogHandler : CoreHandler, IHttpHandler
     {
         public GetPdfWithPrintDialogHandler()
         {

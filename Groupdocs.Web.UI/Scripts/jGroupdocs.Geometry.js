@@ -1,18 +1,17 @@
-﻿window.jSaaspose = {};
-//
+﻿//
 // Point class
 //
-jSaaspose.Point = function (x, y) {
+groupdocs.Point = function (x, y) {
     this.x = x || 0;
     this.y = y || 0;
 }
 
-$.extend(jSaaspose.Point.prototype, {
+$.extend(groupdocs.Point.prototype, {
     x: 0,
     y: 0,
 
     clone: function () {
-        return new jSaaspose.Point(this.x, this.y);
+        return new groupdocs.Point(this.x, this.y);
     },
 
     round: function () {
@@ -27,25 +26,25 @@ $.extend(jSaaspose.Point.prototype, {
 //
 // Rectangle class
 //
-jSaaspose.Rect = function (x1, y1, x2, y2, normalize) {
+groupdocs.Rect = function (x1, y1, x2, y2, normalize) {
     this.set(x1, y1, x2, y2, normalize);
 }
 
-$.extend(jSaaspose.Rect.prototype, {
+$.extend(groupdocs.Rect.prototype, {
     topLeft: null,
     bottomRight: null,
 
     clone: function () {
-        return new jSaaspose.Rect(this.topLeft.x, this.topLeft.y, this.bottomRight.x, this.bottomRight.y, false);
+        return new groupdocs.Rect(this.topLeft.x, this.topLeft.y, this.bottomRight.x, this.bottomRight.y, false);
     },
 
     set: function (x1, y1, x2, y2, normalize) {
         if (!this.topLeft) {
-            this.topLeft = new jSaaspose.Point();
+            this.topLeft = new groupdocs.Point();
         }
 
         if (!this.bottomRight) {
-            this.bottomRight = new jSaaspose.Point();
+            this.bottomRight = new groupdocs.Point();
         }
 
         this.topLeft.x = x1;

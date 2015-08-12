@@ -9,7 +9,7 @@ using Groupdocs.Engine.Viewing.InstallableViewer;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class ReorderPageHandler : BaseHandler, IHttpHandler
+    public class ReorderPageHandler : CoreHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

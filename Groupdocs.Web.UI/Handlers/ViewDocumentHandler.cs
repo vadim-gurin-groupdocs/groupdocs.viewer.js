@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class ViewDocumentHandler : BaseHandler, IHttpHandler
+    public class ViewDocumentHandler : CoreHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
@@ -47,7 +47,7 @@ namespace Groupdocs.Web.UI.Handlers
                     MaxJsonLength = CommonConstants.MaxJsonLength
                 };
 
-                string guid = null;
+                string path = null;
                 bool useHtmlBasedEngine = false;
                 bool usePngImagesForHtmlBasedEngine = false;
                 int? count = null;
@@ -82,7 +82,7 @@ namespace Groupdocs.Web.UI.Handlers
                     }
                 }
                 Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetParameter(inputParameters, "guid", ref guid);
+                GetParameter(inputParameters, "path", ref path);
                 GetParameter(inputParameters, "useHtmlBasedEngine", ref useHtmlBasedEngine);
                 GetParameter(inputParameters, "usePngImagesForHtmlBasedEngine", ref usePngImagesForHtmlBasedEngine);
                 GetParameter(inputParameters, "convertWordDocumentsCompletely", ref convertWordDocumentsCompletely);
@@ -107,7 +107,7 @@ namespace Groupdocs.Web.UI.Handlers
                 GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
 
                 object data = ViewDocument(_urlsCreator, _printableHtmlCreator,
-                                           guid, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
+                                           path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
                                            count, width,
                                            quality, usePdf,
                                            preloadPagesCount, convertWordDocumentsCompletely,

@@ -14,7 +14,7 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
     options: {
         userId: 0,
         privateKey: '',
-        guid: ''
+        path: ''
     },
     init: function () {
         var self = this;
@@ -43,7 +43,7 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
         //}
         //else {
         //    this._portalService.getPdf2JavaScript(this.options.userId, this.options.privateKey,
-        //        this.options.guid, this.options.descForHtmlBasedEngine,
+        //        this.options.path, this.options.descForHtmlBasedEngine,
         //        successHandler, null);
         //}
     },
@@ -149,7 +149,7 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
                 pages.push({
                     pageId: pageId,
                     rows: pageRows,
-                    rect: new jSaaspose.Rect(ploc.x, ploc.y, right, bottom),
+                    rect: new groupdocs.Rect(ploc.x, ploc.y, right, bottom),
                     originalWidth: pageWidth,
                     rotation: page.rotation
                 });
@@ -242,8 +242,8 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
                     words: rowWords,
                     chars: rowChars,
                     pageLocation: ploc,
-                    originalRect: new jSaaspose.Rect(rowLeft, rowTop, rowLeft + rowWidth, rowTop + rowHeight),
-                    rect: new jSaaspose.Rect(left, top, left + width, top + height)
+                    originalRect: new groupdocs.Rect(rowLeft, rowTop, rowLeft + rowWidth, rowTop + rowHeight),
+                    rect: new groupdocs.Rect(left, top, left + width, top + height)
                 });
             }
         }
@@ -285,8 +285,8 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
             children.push({
                 text: words[i],
                 pageLocation: ploc,
-                originalRect: new jSaaspose.Rect(wordLeft, wordTop, wordLeft + wordWidth, wordTop + wordHeight),
-                rect: new jSaaspose.Rect(left, top, left + width, top + height)
+                originalRect: new groupdocs.Rect(wordLeft, wordTop, wordLeft + wordWidth, wordTop + wordHeight),
+                rect: new groupdocs.Rect(left, top, left + width, top + height)
             });
         }
 
@@ -348,8 +348,8 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
                     text: wordsLine.charAt(i),
                     isLastWordChar: isLastWordCharFlags[i],
                     pageLocation: ploc,
-                    originalRect: new jSaaspose.Rect(charLeft, charTop, charLeft + charWidth, charTop + charHeight),
-                    rect: new jSaaspose.Rect(left, top, left + width, top + height)
+                    originalRect: new groupdocs.Rect(charLeft, charTop, charLeft + charWidth, charTop + charHeight),
+                    rect: new groupdocs.Rect(left, top, left + width, top + height)
                 });
             }
         }
