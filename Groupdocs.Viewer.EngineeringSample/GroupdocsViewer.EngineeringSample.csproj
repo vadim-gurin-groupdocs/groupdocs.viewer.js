@@ -121,6 +121,14 @@
       <Link>Client\Scripts\jGroupdocs.InitJsInject.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.MVVMProvider.Angular.js">
+      <Link>Client\Scripts\jGroupdocs.MVVMProvider.Angular.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.MVVMProvider.Knockout.js">
+      <Link>Client\Scripts\jGroupdocs.MVVMProvider.Knockout.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Navigation.js">
       <Link>Client\Scripts\jGroupdocs.Navigation.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -155,6 +163,10 @@
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.WidgetFactory.js">
       <Link>Client\Scripts\jGroupdocs.WidgetFactory.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Zooming.Angular.js">
+      <Link>Client\Scripts\jGroupdocs.Zooming.Angular.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Zooming.js">
