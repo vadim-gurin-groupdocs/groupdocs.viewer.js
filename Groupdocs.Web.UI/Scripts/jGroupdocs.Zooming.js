@@ -5,11 +5,12 @@
         },
         _viewModel: null,
         _create: function () {
-            this._viewModel = this.getViewModel();
 
             if (this.options.createHtml) {
                 this._createHtml();
             }
+            this._viewModel = this.getViewModel();
+            window.groupdocs.bindingProvider.applyBindings(this._viewModel, this.element);
         },
 
         getViewModel: function () {
@@ -25,7 +26,8 @@
             var root = this.element;
             //this.element = $(
             //).appendTo(root);
-            window.groupdocs.bindingProvider.createHtmlAndApplyBindings("paging", this._viewModel, this.element);
+            //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("paging", this._viewModel, this.element);
+            window.groupdocs.bindingProvider.createHtml("paging", this.element);
 
             root.trigger("onHtmlCreated");
         }

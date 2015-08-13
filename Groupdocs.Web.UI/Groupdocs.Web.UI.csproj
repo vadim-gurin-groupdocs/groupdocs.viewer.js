@@ -101,7 +101,6 @@
     <Content Include="Scripts\jGroupdocs.WidgetFactory.js" />
     <Content Include="Scripts\jGroupdocs.Navigation.js" />
     <Content Include="Scripts\jGroupdocs.Thumbnails.js" />
-    <Content Include="Scripts\jGroupdocs.Zooming.Angular.js" />
     <Content Include="Scripts\jGroupdocs.Zooming.js" />
     <Content Include="Scripts\libs\angular.js" />
     <Content Include="Scripts\libs\angular.min.js" />
