@@ -25,7 +25,7 @@ window.groupdocs.bindingProvider = {
     },
 
     componentHtml: {
-        "paging": function (options) {
+        "zooming": function (options) {
             return '<div class="left">' +
 '    <a class="new_head_tools_btn h_t_i_zoomin" href="#" data-bind="click: zoomIn" data-tooltip="Zoom In" data-localize-tooltip="ZoomIn"> </a>' +
 '    <a class="new_head_tools_btn h_t_i_zoomout" href="#" data-bind="click: zoomOut" data-tooltip="Zoom Out" data-localize-tooltip="ZoomOut"> </a>' +

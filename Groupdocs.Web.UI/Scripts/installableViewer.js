@@ -581,7 +581,7 @@
                     navigationOptions: { createHtml: true },
                     thumbnails: thumbnails,
                     thumbnailsOptions: thumbnailsOptions,
-                    zooming: zoomingWrapper,
+                    zooming: settings.showZoom ? zoomingWrapper : null,
                     zoomingOptions: { createHtml: true },
                     //search: settings.showSearch ? searchWrapper : null,
                     search: searchWrapper,
