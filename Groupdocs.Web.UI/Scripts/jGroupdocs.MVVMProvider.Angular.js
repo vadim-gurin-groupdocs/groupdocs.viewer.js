@@ -28,14 +28,14 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         });
     },
 
-    getValue: function(variable) {
-        return variable; // AngularJS uses regular variables - not observables
-    },
-    setValue: function (object, property, value) {
-        object[property] = value;
-        if (this.scope)
-            this.scope.$digest();
-    },
+    //getValue: function(variable) {
+    //    return variable; // AngularJS uses regular variables - not observables
+    //},
+    //setValue: function (object, property, value) {
+    //    object[property] = value;
+    //    if (this.scope)
+    //        this.scope.$digest();
+    //},
 
     //getObservable: function(initialValue) {
     //    return initialValue;
@@ -52,8 +52,12 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 return value;
             else {
                 value = param;
-                if (self.scope)
-                    self.scope.$digest();
+                if (self.scope) {
+                    var phase = self.scope.$root.$$phase;
+                    if (phase != '$apply' && phase != '$digest') {
+                        self.scope.$digest();
+                    }
+                }
             }
         };
     },
@@ -74,6 +78,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                     self.scope.$digest();
             }
         };
+
         observableArray.push = function (valueToPush) {
             value.push(valueToPush);
             if (self.scope)
@@ -107,10 +112,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '    <a class="new_head_tools_btn h_t_i_zoomin" href="#" data-ng-click="viewModel.zoomIn()" data-tooltip="Zoom In" data-localize-tooltip="ZoomIn"> </a>' +
 '    <a class="new_head_tools_btn h_t_i_zoomout" href="#" data-ng-click="viewModel.zoomOut()" data-tooltip="Zoom Out" data-localize-tooltip="ZoomOut"> </a>' +
 '    <div class="new_head_tools_dropdown_wrapper">' +
-'        <a class="new_head_tools_btn head_tool_dropdown_btn h_t_i_zoom" href="#" data-ng-click="viewModel.toggleDropDownMenu()" data-tooltip="Zoom Level" data-localize-tooltip="ZoomLevel">' +
+'        <a class="new_head_tools_btn head_tool_dropdown_btn h_t_i_zoom" href="#" data-ng-click="viewModel.toggleDropDownMenu(viewModel, $event)" data-tooltip="Zoom Level" data-localize-tooltip="ZoomLevel">' +
 '        </a>' +
-'        <ul class="dropdown-menu head_tool_dropdown" data-ng-style="{display: (viewModel.dropDownMenuIsVisible ? \'block\' : \'none\')}" data-bind="style: {display: (dropDownMenuIsVisible() ? \'block\' : \'none\')}, foreach: zooms">' +
-'            <li data-ng-repeat="zoom in zoomingViewModel.zooms">' +
+'        <ul class="dropdown-menu head_tool_dropdown" data-ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}" >' +
+'            <li data-ng-repeat="zoom in viewModel.zooms()">' +
 '                <a href="#" data-ng-click="viewModel.setZoom(zoom)" data-bind="text: name, event: { mousedown: function(item, e) { $parent.setZoom(item, e); } }, attr: {\'data-localize\': $data.localizationKey }">{{zoom.name}}</a>' +
 '            </li>' +
 '        </ul>' +

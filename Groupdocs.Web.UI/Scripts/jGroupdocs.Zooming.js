@@ -5,11 +5,14 @@
         },
         _viewModel: null,
         _create: function () {
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            this.options.bindingProvider = this.bindingProvider;
+
             if (this.options.createHtml) {
                 this._createHtml();
             }
             this._viewModel = this.getViewModel();
-            window.groupdocs.bindingProvider.prototype.applyBindings(this._viewModel, this.element);
+            this.bindingProvider.applyBindings(this._viewModel, this.element);
         },
 
         getViewModel: function () {
@@ -26,7 +29,7 @@
             //this.element = $(
             //).appendTo(root);
             //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("paging", this._viewModel, this.element);
-            window.groupdocs.bindingProvider.prototype.createHtml("zooming", this.element);
+            this.bindingProvider.createHtml("zooming", this.element);
 
             root.trigger("onHtmlCreated");
         }
@@ -51,18 +54,15 @@
         dropDownMenuClicked: false,
 
         _init: function (options) {
-            this.bindingProvider = new window.groupdocs.bindingProvider();
-            //this.bindingProvider = window.groupdocs.bindingProvider;
             this._currentZoom = this.bindingProvider.getObservable(100);
             this.zooms = this.bindingProvider.getObservableArray([]);
             this.dropDownMenuIsVisible = this.bindingProvider.getObservable(false);
-
             var zoomValue;
             for (var i = options.zoomValues.length - 1; i >= 0; i--) {
                 zoomValue = options.zoomValues[i];
                 this.zooms.push({ name: zoomValue.toString() + "%", value: zoomValue });
 
-                if (zoomValue == this.bindingProvider.getValue(this._currentZoom)) {
+                if (zoomValue == this._currentZoom()) {
                     this._currentZoomIndex = this.zooms.length - 1;
                 }
             }
@@ -73,7 +73,7 @@
         setFitWidthZoom: function (fitWidthZoom) {
             var fitWidthItem = { name: "Fit Width", value: fitWidthZoom, localizationKey: "FitWidth", fitWidth: true };
             var found = false;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             for (var i = 0; i < this.zooms.length; i++) {
                 if (zooms[i].fitWidth) {
                     //this.zooms.splice(i, 1, fitWidthItem);
@@ -90,7 +90,7 @@
         setFitHeightZoom: function (fitHeightZoom) {
             var fitHeightItem = { name: "Fit Height", value: fitHeightZoom, localizationKey: "FitHeight", fitHeight: true };
             var found = false;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             for (var i = 0; i < zooms.length; i++) {
                 if (zooms[i].fitHeight) {
                     zooms[i].value = fitHeightZoom;
@@ -104,12 +104,12 @@
         },
 
         getZoom: function () {
-            return this.bindingProvider.getValue(this._currentZoom);
+            return this._currentZoom();
         },
 
         getFitWidthZoomValue: function () {
             var zoomItem;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             for (var i = 0; i < zooms.length; i++) {
                 zoomItem = zooms[i];
                 if (zoomItem.fitWidth) {
@@ -120,7 +120,7 @@
 
         getFitHeightZoomValue: function () {
             var zoomItem;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             for (var i = 0; i < zooms.length; i++) {
                 zoomItem = zooms[i];
                 if (zoomItem.fitHeight) {
@@ -133,7 +133,7 @@
             var zoom = item.value;
             var index = this._indexOfZoom(zoom);
 
-            this.bindingProvider.setValue(this, "_currentZoom", zoom);
+            this._currentZoom(zoom);
             if (index >= 0) {
                 this._currentZoomIndex = index;
             }
@@ -147,7 +147,7 @@
         setZoomWithoutEvent: function (zoom) {
             var index = this._indexOfZoom(zoom);
             if (index >= 0) {
-                this.bindingProvider.setValue(this, "_currentZoom", zoom);
+                this._currentZoom(zoom);
                 this._currentZoomIndex = index;
             }
         },
@@ -155,7 +155,7 @@
         zoomIn: function () {
             var changed = false;
             var currentZoomIndex = this._currentZoomIndex;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
 
             if (this._isFitToBounds()) {
                 currentZoomIndex = this._indexOfNearestZoom(zooms[this._currentZoomIndex].value, true);
@@ -169,16 +169,16 @@
 
             if (changed) {
                 this._currentZoomIndex = currentZoomIndex;
-                this.bindingProvider.setValue(this, "_currentZoom", zooms[this._currentZoomIndex].value);
-                this.element.trigger('onSetZoom', this.bindingProvider.getValue(this._currentZoom));
-                this.element.trigger("zoomSet.groupdocs", this.bindingProvider.getValue(this._currentZoom));
+                this._currentZoom(zooms[this._currentZoomIndex].value);
+                this.element.trigger('onSetZoom', this._currentZoom());
+                this.element.trigger("zoomSet.groupdocs", this._currentZoom());
             }
         },
 
         zoomOut: function () {
             var changed = false;
             var currentZoomIndex = this._currentZoomIndex;
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
 
             if (this._isFitToBounds()) {
                 currentZoomIndex = this._indexOfNearestZoom(zooms[this._currentZoomIndex].value, false);
@@ -193,14 +193,14 @@
 
             if (changed) {
                 this._currentZoomIndex = currentZoomIndex;
-                this.bindingProvider.setValue(this, "_currentZoom", zooms[this._currentZoomIndex].value);
-                this.element.trigger('onSetZoom', this.bindingProvider.getValue(this._currentZoom));
-                this.element.trigger("zoomSet.groupdocs", this.bindingProvider.getValue(this._currentZoom));
+                this._currentZoom(zooms[this._currentZoomIndex].value);
+                this.element.trigger('onSetZoom', this._currentZoom());
+                this.element.trigger("zoomSet.groupdocs", this._currentZoom());
             }
         },
 
         _indexOfZoom: function (value) {
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             for (i = 0; i < zooms.length; i++) {
                 if (zooms[i].value == value) {
                     return i;
@@ -211,7 +211,7 @@
         },
 
         _indexOfNearestZoom: function (value, greater) {
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             var startIndex = zooms.length - 1;
             var nearestGreaterValue = null, nearestGreaterValueIndex = null,
                 nearestSmallerValue = null, nearestSmallerValueIndex = null;
@@ -247,16 +247,16 @@
         },
 
         _isFitToBounds: function () {
-            var zooms = this.bindingProvider.getValue(this.zooms);
+            var zooms = this.zooms();
             return (zooms[this._currentZoomIndex].fitWidth || zooms[this._currentZoomIndex].fitHeight);
         },
 
         showDropDownMenu: function (show) {
-            this.bindingProvider.setValue(this, "dropDownMenuIsVisible", show);
+            this.dropDownMenuIsVisible(show);
         },
 
         toggleDropDownMenu: function (viewModel, event) {
-            this.bindingProvider.setValue(this, "dropDownMenuIsVisible", !this.bindingProvider.getValue(this.dropDownMenuIsVisible));
+            this.dropDownMenuIsVisible(!this.dropDownMenuIsVisible());
             this.dropDownMenuClicked = true;
             this.element.trigger("onMenuClicked");
             if (event)

@@ -19,12 +19,14 @@
                 documentSpace: this.element,
                 emptyImageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
             });
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            this.options.bindingProvider = this.bindingProvider;
+
             if (this.options.createHtml) {
                 this._createHtml();
             }
             this._viewModel = this.getViewModel();
-            window.groupdocs.bindingProvider.prototype.applyBindings(this._viewModel, this.element);
-            //ko.applyBindings(this._viewModel, this.element.get(0));
+            this.bindingProvider.applyBindings(this._viewModel, this.element);
         },
 
         _init: function () {
@@ -94,7 +96,7 @@
             var root = this.element;
             //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("viewing", this._viewModel, this.element, this.options);
             //var viewerHtml = window.groupdocs.bindingProvider.componentHtml["viewing"](this.options);
-            window.groupdocs.bindingProvider.prototype.createHtml("viewing", this.element, this.options);
+            this.bindingProvider.createHtml("viewing", this.element, this.options);
             //$(viewerHtml).appendTo(root);
             root.trigger("onHtmlCreated");
         }
@@ -355,7 +357,6 @@
             var defaultPageImageHeight = 1100;
             this.pageImageWidth = defaultPageImageWidth;
 
-            this.bindingProvider = new window.groupdocs.bindingProvider();
             this.pages = this.bindingProvider.getObservableArray([]);
             this.scale = this.bindingProvider.getObservable(this.initialZoom / 100);
             this.inprogress = this.bindingProvider.getObservable(false),
