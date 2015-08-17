@@ -5,12 +5,11 @@
         },
         _viewModel: null,
         _create: function () {
-
             if (this.options.createHtml) {
                 this._createHtml();
             }
             this._viewModel = this.getViewModel();
-            window.groupdocs.bindingProvider.applyBindings(this._viewModel, this.element);
+            window.groupdocs.bindingProvider.prototype.applyBindings(this._viewModel, this.element);
         },
 
         getViewModel: function () {
@@ -27,7 +26,7 @@
             //this.element = $(
             //).appendTo(root);
             //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("paging", this._viewModel, this.element);
-            window.groupdocs.bindingProvider.createHtml("paging", this.element);
+            window.groupdocs.bindingProvider.prototype.createHtml("zooming", this.element);
 
             root.trigger("onHtmlCreated");
         }
@@ -52,7 +51,8 @@
         dropDownMenuClicked: false,
 
         _init: function (options) {
-            this.bindingProvider = window.groupdocs.bindingProvider;
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            //this.bindingProvider = window.groupdocs.bindingProvider;
             this._currentZoom = this.bindingProvider.getObservable(100);
             this.zooms = this.bindingProvider.getObservableArray([]);
             this.dropDownMenuIsVisible = this.bindingProvider.getObservable(false);

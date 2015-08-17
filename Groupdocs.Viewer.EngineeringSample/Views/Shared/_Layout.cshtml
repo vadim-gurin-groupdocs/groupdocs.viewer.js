@@ -28,8 +28,19 @@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Thumbnails.js")"></script>
 
     <script type="text/javascript">
-        if (angular)
-            angular.module("groupdocsViewer", []);
+        if (angular) {
+            var mainModule = angular.module("groupdocsViewer", []);
+            mainModule.config(
+                function ($controllerProvider, $provide, $compileProvider) {
+                    // Provider-based directive.
+                    window.groupdocs.bindingProvider.prototype.directive = function (name, factory) {
+                        $compileProvider.directive(name, factory);
+                        return (this);
+                    };
+                }
+            );
+        }
+
     </script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Zooming.js")"></script>
 

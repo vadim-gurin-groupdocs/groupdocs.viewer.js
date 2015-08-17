@@ -1,11 +1,32 @@
 ﻿if (!window.groupdocs)
     window.groupdocs = {};
 
-window.groupdocs.bindingProvider = function() {
+window.groupdocs.bindingProvider = function () {
+    this.create();
 };
 
 $.extend(window.groupdocs.bindingProvider.prototype, {
     scope: null,
+
+    create: function () {
+        window.groupdocs.bindingProvider.prototype.directive("ngScrollable", function () {
+            return {
+                restrict: "A",
+                link: function (scope, elem, attr, ctrl) {
+                    elem.bind("scrollstop", function (e, data) {
+                        scope.viewModel.ScrollDocViewEnd(data, e);
+                        e.returnValue = false;
+                        return true;
+                    })
+                        .bind("scroll", function (e, data) {
+                            scope.viewModel.ScrollDocView(data, e);
+                            e.returnValue = false;
+                            return true;
+                        });
+                }
+            }
+        });
+    },
 
     getValue: function(variable) {
         return variable; // AngularJS uses regular variables - not observables
@@ -15,11 +36,50 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         if (this.scope)
             this.scope.$digest();
     },
-    getObservable: function(initialValue) {
-        return initialValue;
+
+    //getObservable: function(initialValue) {
+    //    return initialValue;
+    //},
+    //getObservableArray: function(initialValue) {
+    //    return initialValue;
+    //},
+
+    getObservable: function (initialValue) {
+        var value = initialValue;
+        var self = this;
+        return function (param) {
+            if (typeof param == "undefined")
+                return value;
+            else {
+                value = param;
+                if (self.scope)
+                    self.scope.$digest();
+            }
+        };
     },
-    getObservableArray: function(initialValue) {
-        return initialValue;
+
+    getObservableArray: function (initialValue) {
+        var value;
+        if (typeof param == "undefined")
+            value = new Array();
+        else
+            value = initialValue;
+        var self = this;
+        var observableArray = function (param) {
+            if (typeof param == "undefined")
+                return value;
+            else {
+                value = param;
+                if (self.scope)
+                    self.scope.$digest();
+            }
+        };
+        observableArray.push = function (valueToPush) {
+            value.push(valueToPush);
+            if (self.scope)
+                self.scope.$digest();
+        };
+        return observableArray;
     },
 
     createHtml: function (componentName, element, options) {
@@ -30,9 +90,9 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
     applyBindings: function (viewModel, element) {
         var self = this;
-        angular.element(element[0]).injector().invoke(['$compile', function ($compile) {
+        angular.element(element[0]).injector().invoke(["$rootScope", "$compile", function ($rootScope, $compile) {
             var angularElement = angular.element(element[0]);
-            var scope = angularElement.scope().$new(true);
+            var scope = $rootScope.$new(true);
             scope.viewModel = viewModel;
             self.scope = scope;
             var compiled = $compile(angularElement);
@@ -115,8 +175,8 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
 //    '<!-- ko foreach: { data: $root.useVirtualScrolling ? pages.slice(firstVisiblePageForVirtualMode(), lastVisiblePageForVirtualMode() + 1) : pages, afterRender: function(){$root.highlightSearch();} } -->' +
-    '<div data-ng-repeat="page in viewModel.pages" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" data-bind="attr: {id: viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}, style: viewModel.pageElementStyle($index), css: {cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" >' +
-'       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner || viewModel.inprogress || !page.visible) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress || !page.visible ? 2 : 0), width: viewModel.pageWidth + \'px\', height: viewModel.autoHeight ? \'100%\' : (viewModel.pageWidth * page.prop + \'px\'), backgroundColor: (viewModel.inprogress || !page.visible ? \'\' : \'transparent\')}" data-bind="visible: ($root.alwaysShowLoadingSpinner() || $root.inprogress() || !visible()), style: { zIndex: ($root.inprogress() || !visible() ? 2 : 0), width: $root.pageWidth() + \'px\', height: $root.autoHeight() ? \'100%\' : ($parent.pageWidth() * $data.prop() + \'px\'), backgroundColor: ($root.inprogress() || !visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
+    '<div data-ng-repeat="page in viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" data-bind="attr: {id: viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}, style: viewModel.pageElementStyle($index), css: {cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" >' +
+'       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" data-bind="visible: ($root.alwaysShowLoadingSpinner() || $root.inprogress() || !visible()), style: { zIndex: ($root.inprogress() || !visible() ? 2 : 0), width: $root.pageWidth() + \'px\', height: $root.autoHeight() ? \'100%\' : ($parent.pageWidth() * $data.prop() + \'px\'), backgroundColor: ($root.inprogress() || !visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
 '           <div class="loading_overlay_message">' +
 '               <span class="progresspin"></span>' +
 '               <p data-localize="LoadingYourContent">Loading your content...</p>' +
@@ -132,7 +192,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '           <div class="highlight-pane"></div>' +
 '           <div class="custom-pane"></div>' +
 '           <div class="search-pane"></div>' +
-'           <img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible ? page.url : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }" data-bind="attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (viewModel.visible ? page.url : viewModel.emptyImageUrl) }, ' +
+'           <img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" data-bind="attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (viewModel.visible ? page.url : viewModel.emptyImageUrl) }, ' +
 '           style: { width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }"/>'
 ) +
 
