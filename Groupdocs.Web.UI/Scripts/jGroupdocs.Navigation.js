@@ -140,12 +140,7 @@
         _createHtml: function () {
             var root = this.element;
             this.bindingProvider.createHtml("navigation", this.element, this.options);
-
-            //root.addClass('left');
-            //$().appendTo(root);
             root.trigger("onHtmlCreated");
         }
-
-        
     });
 })(jQuery);

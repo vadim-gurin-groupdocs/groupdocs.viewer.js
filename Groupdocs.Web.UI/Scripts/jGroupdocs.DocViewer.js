@@ -2506,6 +2506,14 @@
             return result;
         },
 
+        pagesContainerStyle: function () {
+            var layout = this.layout();
+            return { height: this.useVirtualScrolling ? (this.documentHeight() + "px") : "auto",
+                width: (layout == this.Layouts.TwoPagesInRow || layout == this.Layouts.CoverThenTwoPagesInRow) ?
+                        (this.pageWidth() + this.imageHorizontalMargin) * 2 + "px" : "auto"
+            };
+        },
+
         setLayout: function (layout) {
             this.layout(layout);
             this.calculatePagePositionsForVirtualMode();

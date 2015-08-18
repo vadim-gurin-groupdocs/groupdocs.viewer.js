@@ -102,7 +102,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '            </div>' + htmlBasedWatermarkMarkup;
 
             var useHtmlBasedEngine = (options.pageContentType == "html");
-            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-bind="style: { height: $root.useVirtualScrolling ? ($root.documentHeight() + \'px\') : \'auto\', width: ($root.layout() == $root.Layouts.TwoPagesInRow || $root.layout() == $root.Layouts.CoverThenTwoPagesInRow) ? ($root.pageWidth() + $root.imageHorizontalMargin) * 2 + \'px\': \'auto\'}"';
+            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-bind="style: pagesContainerStyle()"';
 
             var viewerHtml =
 
@@ -154,7 +154,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '          <a class="new_head_tools_btn h_t_i_download btn_download" data-tooltip="Download" data-localize-tooltip="Download"></a>' +
                 '          <a class="new_head_tools_btn h_t_i_print print_button" data-tooltip="Print" data-localize-tooltip="Print"></a>' +
                 '      </div>' +
-                '      <div class="navigation-bar' + (options.browserIsIE8 ? " ie8" : "") + '">' +
+                '      <div class="navigation-bar left' + (options.browserIsIE8 ? " ie8" : "") + '">' +
                 '      </div>' +
                 '      <div class="new_head_tools_wrapper zoom_wrappper">' +
                 '      </div>' +

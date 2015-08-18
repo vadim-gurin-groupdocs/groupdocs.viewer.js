@@ -118,7 +118,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '        </a>' +
 '        <ul class="dropdown-menu head_tool_dropdown" data-ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}" >' +
 '            <li data-ng-repeat="zoom in viewModel.zooms()">' +
-'                <a href="#" data-ng-click="viewModel.setZoom(zoom)" data-ng-attr-data-localize="{{zoom.localizationKey}}"  data-bind="text: name, event: { mousedown: function(item, e) { $parent.setZoom(item, e); } }, attr: {\'data-localize\': $data.localizationKey }">{{zoom.name}}</a>' +
+'                <a href="#" data-ng-click="viewModel.setZoom(zoom)" data-ng-attr-data-localize="{{zoom.localizationKey}}"  data-bind="event: { mousedown: function(item, e) { $parent.setZoom(item, e); } }">{{zoom.name}}</a>' +
 '            </li>' +
 '        </ul>' +
 '    </div>' +
@@ -175,13 +175,13 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '            </div>' + htmlBasedWatermarkMarkup;
 
             var useHtmlBasedEngine = (options.pageContentType == "html");
-            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-style="{ height: viewModel.useVirtualScrolling ? (viewModel.documentHeight() + \'px\') : \'auto\', width: (viewModel.layout() == viewModel.Layouts.TwoPagesInRow || viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow) ? (viewModel.pageWidth() + viewModel.imageHorizontalMargin) * 2 + \'px\': \'auto\'}" ';
+            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-style="viewModel.pagesContainerStyle()" ';
 
             var viewerHtml =
 
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
 //    '<!-- ko foreach: { afterRender: function(){$root.highlightSearch();} } -->' +
-    '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages.slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" data-bind="attr: {id: viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}, style: viewModel.pageElementStyle($index), css: {cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" >' +
+    '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages.slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" >' +
 '       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
 '           <div class="loading_overlay_message">' +
 '               <span class="progresspin"></span>' +
@@ -198,7 +198,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '           <div class="highlight-pane"></div>' +
 '           <div class="custom-pane"></div>' +
 '           <div class="search-pane"></div>' +
-'           <img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" data-bind="attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (viewModel.visible ? page.url : viewModel.emptyImageUrl) }, ' +
+'           <img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" ' +
 '           style: { width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }"/>'
 ) +
 
@@ -232,36 +232,36 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '      </div>' +
                 '      <div class="new_head_tools_dropdown_wrapper viewTypeMenu">' +
                 '			<a class="new_head_tools_btn head_tool_dropdown_btn h_t_i_singlepage" data-ng-click="viewModel.toggleDropDownMenu(null, $event)" href="#" data-tooltip="View Mode" data-localize-tooltip="ViewMode"></a>' +
-                '			<ul class="dropdown-menu head_tool_dropdown" style="display: none;" ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}">' +
+                '			<ul class="dropdown-menu head_tool_dropdown" style="display: none;" data-ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}">' +
                 '				<li style="display: inline">' +
-                '					<a ng-click="viewModel.openScrollView()" href="#">' +
+                '					<a data-ng-click="viewModel.openScrollView()" href="#">' +
                 '						<span class="h_t_d_i_scroll"></span>' +
                 '						<p data-localize="ScrollView">Scroll View</p>' +
                 '					</a>' +
                 '				</li>' +
                 '				<li style="display: inline" name="openDoublePageFlipViewMenuItem">' +
-                '					<a ng-click="viewModel.openDoublePageFlipView()" href="#">' +
+                '					<a data-ng-click="viewModel.openDoublePageFlipView()" href="#">' +
                 '						<span class="h_t_d_i_double"></span>' +
                 '						<p data-localize="BookMode">Double Page Flip</p>' +
                 '					</a>' +
                 '				</li>' +
 
                 '				<li style="display: inline">' +
-                '					<a ng-click="viewModel.openOnePageInRowView()" href="#">' +
+                '					<a data-ng-click="viewModel.openOnePageInRowView()" href="#">' +
                 '						<span class="h_t_d_i_scroll"></span>' +
                 '						<p data-localize="OnePageInRow">One Page in Row</p>' +
                 '					</a>' +
                 '				</li>' +
 
                 '				<li style="display: inline">' +
-                '					<a ng-click="viewModel.openTwoPagesInRowView()" href="#">' +
+                '					<a data-ng-click="viewModel.openTwoPagesInRowView()" href="#">' +
                 '						<span class="h_t_d_i_double"></span>' +
                 '						<p data-localize="TwoPagesInRow">Two Pages in Row</p>' +
                 '					</a>' +
                 '				</li>' +
 
                 '				<li style="display: inline">' +
-                '					<a ng-click="viewModel.openCoverThenTwoPagesInRowView()" href="#">' +
+                '					<a data-ng-click="viewModel.openCoverThenTwoPagesInRowView()" href="#">' +
                 '						<span class="h_t_d_i_double"></span>' +
                 '						<p data-localize="CoverThenTwoPagesInRow">Cover then Two Pages in Row</p>' +
                 '					</a>' +
@@ -289,7 +289,6 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '   </div>' +
                 (options.showThumbnails ? '   <a class="thumbs_btn" href="#"></a>' : '') +
                 '</div>' +
-            //'<a class="thumbs_btn" href="#"></a>' +
                 '<div name="jGDerror" class="modal_dialog_wrapper jerrorwrapper">' +
                 '   <div class="modal_dialog_overlay">' +
                 '       &nbsp;' +
@@ -335,7 +334,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         {
             return '<span class="new_head_tools_btn h_t_i_nav1" data-ng-click="viewModel.selectPage(1)" data-ng-class="{disabled: viewModel.pageInd() <= 1}" data-tooltip="First Page" data-localize-tooltip="FirstPage"></span>' +
               '<span class="new_head_tools_btn h_t_i_nav2" data-ng-click="viewModel.up()" data-ng-class="{disabled: viewModel.pageInd() <= 1}" data-tooltip="Previous Page" data-localize-tooltip="PreviousPage"></span>' +
-              '<input class="new_head_input" type="text" style="width: 17px;" data-ng-model-options="{getterSetter: true}" data-ng-model="viewModel.pageInd" data-bind=", valueUpdate: [\'afterkeydown\'], event: { keyup: onKeyPress }" />' +
+              '<input class="new_head_input" type="text" style="width: 17px;" data-ng-model-options="{getterSetter: true, updateOn: \'afterkeydown\'}" data-ng-model="viewModel.pageInd" data-bind="event: { keyup: onKeyPress }" />' +
               '<p class="new_head_of" data-localize="Of">of</p>' +
               '<p class="new_head_of">{{viewModel.pageCount()}}</p>' +
               '<span class="new_head_tools_btn h_t_i_nav3" data-ng-click="viewModel.down()" data-ng-class="{disabled: viewModel.pageInd() >= viewModel.pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
