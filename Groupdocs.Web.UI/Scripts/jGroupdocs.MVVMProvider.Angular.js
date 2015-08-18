@@ -28,22 +28,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         });
     },
 
-    //getValue: function(variable) {
-    //    return variable; // AngularJS uses regular variables - not observables
-    //},
-    //setValue: function (object, property, value) {
-    //    object[property] = value;
-    //    if (this.scope)
-    //        this.scope.$digest();
-    //},
-
-    //getObservable: function(initialValue) {
-    //    return initialValue;
-    //},
-    //getObservableArray: function(initialValue) {
-    //    return initialValue;
-    //},
-
+    
     getObservable: function (initialValue) {
         var value = initialValue;
         var self = this;
@@ -87,6 +72,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         return observableArray;
     },
 
+    getComputedObservable: function (functionParam) {
+        return functionParam;
+    },
+
     createHtml: function (componentName, element, options) {
         var markup = this.componentHtml[componentName](options);
         var angularElement = angular.element(markup);
@@ -96,11 +85,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     applyBindings: function (viewModel, element) {
         var self = this;
         angular.element(element[0]).injector().invoke(["$rootScope", "$compile", function ($rootScope, $compile) {
-            var angularElement = angular.element(element[0]);
             var scope = $rootScope.$new(true);
             scope.viewModel = viewModel;
             self.scope = scope;
-            var compiled = $compile(angularElement);
+            var compiled = $compile(element);
             compiled(scope);
             scope.$digest();
         }]);
@@ -214,6 +202,123 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 //'</ul>' +
 //'</div>';
             return viewerHtml;
+        },
+
+        "initializationComponent": function (options) {
+            return '<div dir="ltr" class="groupdocs_viewer_wrapper grpdx ' + options.classWithNumber + /*browserDependentCssClass + */'">' +
+                '<div class="viewer_header header_sidescroll" ' + options.headerStyle + '>' +
+                '   <div class="viewer_header_wrapper">' +
+                '      <a class="btnOpen new_head_tools_btn h_t_i_browser" data-tooltip="Open File" data-localize-tooltip="OpenFile"></a>' +
+                '      <div name="printAndDownloadToolbar" class="new_head_tools_wrapper left">' +
+                '          <a class="new_head_tools_btn h_t_i_download btn_download" data-tooltip="Download" data-localize-tooltip="Download"></a>' +
+                '          <a class="new_head_tools_btn h_t_i_print print_button" data-tooltip="Print" data-localize-tooltip="Print"></a>' +
+                '      </div>' +
+                '      <div class="navigation-bar' + (options.browserIsIE8 ? " ie8" : "") + '">' +
+                '      </div>' +
+                '      <div class="new_head_tools_wrapper zoom_wrappper">' +
+                '      </div>' +
+                '      <div class="new_head_tools_dropdown_wrapper viewTypeMenu">' +
+                '			<a class="new_head_tools_btn head_tool_dropdown_btn h_t_i_singlepage" data-ng-click="viewModel.toggleDropDownMenu(null, $event)" href="#" data-tooltip="View Mode" data-localize-tooltip="ViewMode"></a>' +
+                '			<ul class="dropdown-menu head_tool_dropdown" style="display: none;" ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}">' +
+                '				<li style="display: inline">' +
+                '					<a ng-click="viewModel.openScrollView()" href="#">' +
+                '						<span class="h_t_d_i_scroll"></span>' +
+                '						<p data-localize="ScrollView">Scroll View</p>' +
+                '					</a>' +
+                '				</li>' +
+                '				<li style="display: inline" name="openDoublePageFlipViewMenuItem">' +
+                '					<a ng-click="viewModel.openDoublePageFlipView()" href="#">' +
+                '						<span class="h_t_d_i_double"></span>' +
+                '						<p data-localize="BookMode">Double Page Flip</p>' +
+                '					</a>' +
+                '				</li>' +
+
+                '				<li style="display: inline">' +
+                '					<a ng-click="viewModel.openOnePageInRowView()" href="#">' +
+                '						<span class="h_t_d_i_scroll"></span>' +
+                '						<p data-localize="OnePageInRow">One Page in Row</p>' +
+                '					</a>' +
+                '				</li>' +
+
+                '				<li style="display: inline">' +
+                '					<a ng-click="viewModel.openTwoPagesInRowView()" href="#">' +
+                '						<span class="h_t_d_i_double"></span>' +
+                '						<p data-localize="TwoPagesInRow">Two Pages in Row</p>' +
+                '					</a>' +
+                '				</li>' +
+
+                '				<li style="display: inline">' +
+                '					<a ng-click="viewModel.openCoverThenTwoPagesInRowView()" href="#">' +
+                '						<span class="h_t_d_i_double"></span>' +
+                '						<p data-localize="CoverThenTwoPagesInRow">Cover then Two Pages in Row</p>' +
+                '					</a>' +
+                '				</li>' +
+                
+                '			</ul>' +
+                '		</div>' +
+
+                '      <div name="search_wrapper" class="new_head_tools_wrapper" data-bind="visible:visible">' +
+                '      </div>' +
+
+                (options.supportPageRotation ?
+                '<div class="new_head_tools_wrapper">' +
+                '      <a name="rotateClockwise" class="h_t_i_rotatecl new_head_tools_btn" data-tooltip="Rotate Clockwise" data-localize-tooltip="RotateClockwise"></a>' +
+                '      <a name="rotateCounterClockwise" class="h_t_i_rotatecon new_head_tools_btn" data-tooltip="Rotate Counter-Clockwise" data-localize-tooltip="RotateCounterClockwise"></a>' +
+                '</div>'
+                : "") +
+                '   </div>' +
+                '</div>' +
+                '<div class="fileOpenDialogWrapper" style="display: none"></div>' +
+                '<div class="viewer_mainwrapper ' + options.browserDependentCssClass + '">' +
+                '   <div id=' + options.docViewerId + ' class="doc_viewer" data-ng-scrollable data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e);e.returnValue = false;return true; } }">' +
+                '   </div>' +
+                '   <div class="doc_viewer_wrapper_page_flip" style="overflow: auto; top: -50000px; position: absolute;height: 100%">' +
+                '   </div>' +
+                (options.showThumbnails ? '   <a class="thumbs_btn" href="#"></a>' : '') +
+                '</div>' +
+            //'<a class="thumbs_btn" href="#"></a>' +
+                '<div name="jGDerror" class="modal_dialog_wrapper jerrorwrapper">' +
+                '   <div class="modal_dialog_overlay">' +
+                '       &nbsp;' +
+                '   </div>' +
+                '   <div class="modal_dialog_content_wrapper">' +
+                '       <div class="modal_dialog_header">' +
+                '          Error' +
+                '       </div>' +
+                '       <div class="modal_dialog_content">' +
+                '       </div>' +
+                '   </div>' +
+                '</div>' +
+
+                '<div name="messageDialog" class="modal_dialog_content_wrapper modal_progressbar" style="display:none">' +
+                '   <a name="minimizeButton" class="icon_minimize" href="#">&ndash;</a>' +
+                '   <a name="maximizeButton" class="icon_maximize" href="#">+</a>' +
+                '   <div class="modal_dialog_header">' +
+                '      <span name="alwaysVisibleTitle">Printing </span>' +
+                '      <span name="visibleWhenMinimizedTitle" class="percent">0%</span>' +
+                '   </div>' +
+                '   <div class="modal_dialog_content">' +
+                '      <p name="message">Preparing page </p>' +
+                '      <div class="progressbar">' +
+                '      <div style="width: 50%" class="progress"></div></div>' +
+                '   </div>' +
+                '</div>' +
+
+                '<div name="messageDialogPdf" class="modal_dialog_content_wrapper modal_progressbar" style="display:none">' +
+                '   <a name="minimizeButtonPdf" class="icon_minimize" href="#">&ndash;</a>' +
+                '   <a name="maximizeButtonPdf" class="icon_maximize" href="#">+</a>' +
+                '   <div class="modal_dialog_header">' +
+                '      <span name="alwaysVisibleTitlePdf">Printing </span>' +
+                '   </div>' +
+                '   <div class="modal_dialog_content">' +
+                '      <p name="messagePdf">Preparing page </p>' +
+                '   </div>' +
+                '</div>' +
+
+            '</div>';
+
         }
+
+
     }
 });

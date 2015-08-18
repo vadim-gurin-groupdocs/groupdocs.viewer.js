@@ -4,7 +4,7 @@
 window.groupdocs.getWidgetInstance = function (pluginDataKey, widgetObject, options) {
     var widgetInstance;
     var pluginData = this.data(pluginDataKey);
-    if (pluginData === undefined) {
+    if (pluginData == undefined) {
         widgetInstance = $.extend({}, widgetObject);
         widgetInstance.element = this;
         if (widgetInstance.options == undefined)

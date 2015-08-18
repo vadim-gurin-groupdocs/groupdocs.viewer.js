@@ -377,24 +377,14 @@
             this.autoHeight = this.bindingProvider.getObservable(false);
             this.isHtmlDocument = this.bindingProvider.getObservable(false);
             this.alwaysShowLoadingSpinner = this.bindingProvider.getObservable(false);
-            this.rotatedWidth = ko.computed(function () {
-                if (this.useTabsForPages()) {
-                    var width;
-                    //if (this.supportPageRotation && this.pages) {
-                    //var page = this.pages()[0];
-                    //if (page && page.rotation() % 180 > 0)
-                    //    width = this.pageWidth() * page.prop();
-                    //else
-                    //    width = this.pageWidth();
-                    //}
-                    //else
-                    width = this.pageWidth();
-
-                    return width / this.zoom() * 100.0 + "px";
+            this.rotatedWidth = this.bindingProvider.getComputedObservable(function () {
+                if (self.useTabsForPages()) {
+                    var width = self.pageWidth();
+                    return width / self.zoom() * 100.0 + "px";
                 }
                 else
                     return "auto";
-            }, this);
+            });
 
             this.layout = this.bindingProvider.getObservable(this.viewerLayout);
             this.firstVisiblePageForVirtualMode = this.bindingProvider.getObservable(0);
@@ -2820,57 +2810,59 @@
         },
 
         initCustomBindings: function () {
-            if (!ko.bindingHandlers.searchText) {
-                ko.bindingHandlers.searchText = {
-                    update: function (element, valueAccessor, allBindings, viewModelParam, bindingContext) {
-                        var viewModel = bindingContext.$root;
-                        var page = bindingContext.$data;
-                        if (!page.searched) {
-                            var value = ko.utils.unwrapObservable(valueAccessor());
-                            viewModel.parseSearchParameters(element, value);
-                        }
-                        page.searched = false;
-                    }
-                };
-            }
-
-            if (!ko.bindingHandlers.parsedHtml) {
-                ko.bindingHandlers.parsedHtml = {
-                    init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                        var modelValue = valueAccessor();
-                        var jqueryElement = $(element);
-                        var elementValue = jqueryElement.html();
-
-                        if (ko.isWriteableObservable(modelValue)) {
-                            modelValue(elementValue);
-                        }
-                        else { //handle non-observable one-way binding
-                            var allBindings = allBindingsAccessor();
-                            if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].parsedHtml)
-                                allBindings['_ko_property_writers'].parsedHtml(elementValue);
-                        }
-                    },
-                    update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                        var value = ko.unwrap(valueAccessor()) || "";
-                        var page = bindingContext.$data;
-                        var jqueryElement = $(element);
-                        jqueryElement.empty();
-                        if (value) {
-                            if (typeof page.currentValue == "undefined"
-                                || page.currentValue === null
-                                || page.currentValue != value) {
-                                var trimmedValue = value.replace(/^[\r\n\s]+|[\r\n\s]+$/g, "");
-                                page.parsedHtmlElement = $(trimmedValue);
-                                page.currentValue = value;
+            if (window.ko) {
+                if (!ko.bindingHandlers.searchText) {
+                    ko.bindingHandlers.searchText = {
+                        update: function(element, valueAccessor, allBindings, viewModelParam, bindingContext) {
+                            var viewModel = bindingContext.$root;
+                            var page = bindingContext.$data;
+                            if (!page.searched) {
+                                var value = ko.utils.unwrapObservable(valueAccessor());
+                                viewModel.parseSearchParameters(element, value);
                             }
-                            jqueryElement.append(page.parsedHtmlElement);
+                            page.searched = false;
                         }
-                        else {
-                            page.parsedHtmlElement = null;
-                            page.currentValue = null;
+                    };
+                }
+
+                if (!ko.bindingHandlers.parsedHtml) {
+                    ko.bindingHandlers.parsedHtml = {
+                        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                            var modelValue = valueAccessor();
+                            var jqueryElement = $(element);
+                            var elementValue = jqueryElement.html();
+
+                            if (ko.isWriteableObservable(modelValue)) {
+                                modelValue(elementValue);
+                            }
+                            else { //handle non-observable one-way binding
+                                var allBindings = allBindingsAccessor();
+                                if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].parsedHtml)
+                                    allBindings['_ko_property_writers'].parsedHtml(elementValue);
+                            }
+                        },
+                        update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                            var value = ko.unwrap(valueAccessor()) || "";
+                            var page = bindingContext.$data;
+                            var jqueryElement = $(element);
+                            jqueryElement.empty();
+                            if (value) {
+                                if (typeof page.currentValue == "undefined"
+                                    || page.currentValue === null
+                                    || page.currentValue != value) {
+                                    var trimmedValue = value.replace(/^[\r\n\s]+|[\r\n\s]+$/g, "");
+                                    page.parsedHtmlElement = $(trimmedValue);
+                                    page.currentValue = value;
+                                }
+                                jqueryElement.append(page.parsedHtmlElement);
+                            }
+                            else {
+                                page.parsedHtmlElement = null;
+                                page.currentValue = null;
+                            }
                         }
-                    }
-                };
+                    };
+                }
             }
         },
 

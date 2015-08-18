@@ -26,9 +26,6 @@
 
         _createHtml: function () {
             var root = this.element;
-            //this.element = $(
-            //).appendTo(root);
-            //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("paging", this._viewModel, this.element);
             this.bindingProvider.createHtml("zooming", this.element);
 
             root.trigger("onHtmlCreated");
