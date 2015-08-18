@@ -87,7 +87,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             else {
                 htmlBasedWatermarkMarkup = "";
             }
-            var htmlPageContentsWithTransformScaling =
+            var htmlPageContents =
 '           <div class="html_page_contents"' +
 '                 data-bind="' + (options.useVirtualScrolling ? 'parsedHtml' : 'html') + ': htmlContent(), ' +
                          'attr: { id:\'' + options.docViewerId + 'pageHtml-\' + number }, ' +
@@ -100,8 +100,6 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '                                 \'-webkit-transform\': \'scale(\' + $data.heightRatio() * $root.zoom() / 100.0  + \')\' ' + rotationMarkup +
 '                               }">' +
 '            </div>' + htmlBasedWatermarkMarkup;
-
-            var htmlPageContents = htmlPageContentsWithTransformScaling;
 
             var useHtmlBasedEngine = (options.pageContentType == "html");
             var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-bind="style: { height: $root.useVirtualScrolling ? ($root.documentHeight() + \'px\') : \'auto\', width: ($root.layout() == $root.Layouts.TwoPagesInRow || $root.layout() == $root.Layouts.CoverThenTwoPagesInRow) ? ($root.pageWidth() + $root.imageHorizontalMargin) * 2 + \'px\': \'auto\'}"';

@@ -31,11 +31,11 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             return {
                 restrict: "A",
                 link: function (scope, elem, attr, ctrl) {
-                    elem.bind("keypress", function (e, data) {
-                        scope.viewModel.keyPressed(data, e);
+                    elem.bind("keypress", function (e) {
+                        scope.viewModel.keyPressed(scope.viewModel, e);
                     })
-                    .bind("keydown", function (e, data) {
-                        scope.viewModel.keyDown(data, e);
+                    .bind("keydown", function (e) {
+                        scope.viewModel.keyDown(scope.viewModel, e);
                     });
                 }
             }
@@ -118,7 +118,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '        </a>' +
 '        <ul class="dropdown-menu head_tool_dropdown" data-ng-style="{display: (viewModel.dropDownMenuIsVisible() ? \'block\' : \'none\')}" >' +
 '            <li data-ng-repeat="zoom in viewModel.zooms()">' +
-'                <a href="#" data-ng-click="viewModel.setZoom(zoom)" data-bind="text: name, event: { mousedown: function(item, e) { $parent.setZoom(item, e); } }, attr: {\'data-localize\': $data.localizationKey }">{{zoom.name}}</a>' +
+'                <a href="#" data-ng-click="viewModel.setZoom(zoom)" data-ng-attr-data-localize="{{zoom.localizationKey}}"  data-bind="text: name, event: { mousedown: function(item, e) { $parent.setZoom(item, e); } }, attr: {\'data-localize\': $data.localizationKey }">{{zoom.name}}</a>' +
 '            </li>' +
 '        </ul>' +
 '    </div>' +
@@ -165,7 +165,6 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '                 data-bind="' + (options.useVirtualScrolling ? 'parsedHtml' : 'html') + ': htmlContent(), ' +
                          'attr: { id:\'' + options.docViewerId + 'pageHtml-\' + number }, ' +
                          'searchText: searchText, ' +
-//'                        css: {chrome: $root.browserIsChrome(), \'page-image\': !$root.useTabsForPages(), child_invisible: !$data.visible()}, ' +
 '                        css: {chrome: $root.browserIsChrome(), \'page-image\': !$root.useTabsForPages()}, ' +
 '                        style: { ' +
 '                                 width: $root.rotatedWidth(), ' +
@@ -181,9 +180,9 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var viewerHtml =
 
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
-//    '<!-- ko foreach: { data: $root.useVirtualScrolling ? pages.slice(firstVisiblePageForVirtualMode(), lastVisiblePageForVirtualMode() + 1) : pages, afterRender: function(){$root.highlightSearch();} } -->' +
-    '<div data-ng-repeat="page in viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" data-bind="attr: {id: viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}, style: viewModel.pageElementStyle($index), css: {cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" >' +
-'       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" data-bind="visible: ($root.alwaysShowLoadingSpinner() || $root.inprogress() || !visible()), style: { zIndex: ($root.inprogress() || !visible() ? 2 : 0), width: $root.pageWidth() + \'px\', height: $root.autoHeight() ? \'100%\' : ($parent.pageWidth() * $data.prop() + \'px\'), backgroundColor: ($root.inprogress() || !visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
+//    '<!-- ko foreach: { afterRender: function(){$root.highlightSearch();} } -->' +
+    '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages.slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" data-bind="attr: {id: viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index + 1)}, style: viewModel.pageElementStyle($index), css: {cover_page: (viewModel.layout == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode : 0) + $index == 0)}" >' +
+'       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
 '           <div class="loading_overlay_message">' +
 '               <span class="progresspin"></span>' +
 '               <p data-localize="LoadingYourContent">Loading your content...</p>' +
@@ -344,10 +343,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         },
 
         "search": function () {
-            return '<input type="text" placeholder="Search" class="input_search" data-localize-ph="Search" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-attr-dir="{dir: useRtl ? \'rtl\' : \'ltr\'}" data-ng-model-options="{getterSetter: true, updateOn: \'keydown propertychange input\'}" data-ng-model="searchValue" data-ng-groupdocs-search-input="">' +
+            return '<input type="text" placeholder="Search" class="input_search" data-localize-ph="Search" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-attr-dir="{dir: useRtl ? \'rtl\' : \'ltr\'}" data-ng-model-options="{getterSetter: true, updateOn: \'default keydown propertychange input\'}" data-ng-model="viewModel.searchValue" data-ng-groupdocs-search-input="">' +
 '<span class="input_search_clear" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.clearValue()" data-bind=", clickBubble: false"></span>' +
-'<span class="new_head_tools_btn h_t_i_nav2" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click: viewModel.findPreviousFromUI()" data-ng-class="{disabled:!viewModel.previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
-'<span class="new_head_tools_btn h_t_i_nav3" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click: viewModel.findNextFromUI()" data-ng-class="{disabled:!viewModel.nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
+'<span class="new_head_tools_btn h_t_i_nav2" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.findPreviousFromUI()" data-ng-class="{disabled:!viewModel.previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
+'<span class="new_head_tools_btn h_t_i_nav3" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.findNextFromUI()" data-ng-class="{disabled:!viewModel.nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
         }
     }
 });
