@@ -8,11 +8,13 @@
 
         _create: function () {
             $.extend(this.options, { element: this.element });
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            this.options.bindingProvider = this.bindingProvider;
             if (this.options.createHtml) {
                 this._createHtml();
             }
             this._viewModel = this.getViewModel();
-            ko.applyBindings(this._viewModel, this.element.get(0));
+            this.bindingProvider.applyBindings(this._viewModel, this.element);
         },
 
         _init: function () {
@@ -31,19 +33,9 @@
             return vm;
         },
 
-        applyBindings: function () {
-            ko.applyBindings(this._viewModel, this.element.get(0));
-        },
-
         _createHtml: function () {
-            var elementsHtml =
-'<input type="text" placeholder="Search" class="input_search" data-localize-ph="Search" data-bind="visible: visible, attr: {dir: useRtl ? \'rtl\' : \'ltr\'}, value: searchValue, valueUpdate: [\'afterkeydown\', \'propertychange\', \'input\'], event: { keypress: keyPressed, keydown: keyDown }">' +
-'<span class="input_search_clear" data-bind="visible: visible, click: function(){$root.clearValue();}, clickBubble: false"></span>' +
-'<span class="new_head_tools_btn h_t_i_nav2" data-bind="visible: visible, click: findPreviousFromUI, css:{disabled:!previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
-'<span class="new_head_tools_btn h_t_i_nav3" data-bind="visible: visible, click: findNextFromUI, css:{disabled:!nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
-
+            this.bindingProvider.createHtml("search", this.element, this.options);
             var root = this.element;
-            $(elementsHtml).appendTo(root);
             root.trigger("onHtmlCreated");
         }
     });
@@ -92,10 +84,10 @@
         },
 
         _init: function (options) {
-            this.searchValue = ko.observable("");
-            this.previousEnabled = ko.observable(true);
-            this.nextEnabled = ko.observable(true);
-            this.visible = ko.observable(this.searchIsVisible);
+            this.searchValue = this.bindingProvider.getObservable("");
+            this.previousEnabled = this.bindingProvider.getObservable(true);
+            this.nextEnabled = this.bindingProvider.getObservable(true);
+            this.visible = this.bindingProvider.getObservable(this.searchIsVisible);
         },
 
         triggerSearchEvent: function (isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch) {

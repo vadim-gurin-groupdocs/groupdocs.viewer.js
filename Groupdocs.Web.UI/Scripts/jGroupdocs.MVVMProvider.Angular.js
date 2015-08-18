@@ -9,7 +9,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     scope: null,
 
     create: function () {
-        window.groupdocs.bindingProvider.prototype.directive("ngScrollable", function () {
+        window.groupdocs.bindingProvider.prototype.directive("ngGroupdocsScrollable", function () {
             return {
                 restrict: "A",
                 link: function (scope, elem, attr, ctrl) {
@@ -18,11 +18,25 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                         e.returnValue = false;
                         return true;
                     })
-                        .bind("scroll", function (e, data) {
-                            scope.viewModel.ScrollDocView(data, e);
-                            e.returnValue = false;
-                            return true;
-                        });
+                    .bind("scroll", function (e, data) {
+                        scope.viewModel.ScrollDocView(data, e);
+                        e.returnValue = false;
+                        return true;
+                    });
+                }
+            }
+        });
+
+        window.groupdocs.bindingProvider.prototype.directive("ngGroupdocsSearchInput", function () {
+            return {
+                restrict: "A",
+                link: function (scope, elem, attr, ctrl) {
+                    elem.bind("keypress", function (e, data) {
+                        scope.viewModel.keyPressed(data, e);
+                    })
+                    .bind("keydown", function (e, data) {
+                        scope.viewModel.keyDown(data, e);
+                    });
                 }
             }
         });
@@ -270,7 +284,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '</div>' +
                 '<div class="fileOpenDialogWrapper" style="display: none"></div>' +
                 '<div class="viewer_mainwrapper ' + options.browserDependentCssClass + '">' +
-                '   <div id=' + options.docViewerId + ' class="doc_viewer" data-ng-scrollable data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e);e.returnValue = false;return true; } }">' +
+                '   <div id=' + options.docViewerId + ' class="doc_viewer" data-ng-groupdocs-scrollable data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e);e.returnValue = false;return true; } }">' +
                 '   </div>' +
                 '   <div class="doc_viewer_wrapper_page_flip" style="overflow: auto; top: -50000px; position: absolute;height: 100%">' +
                 '   </div>' +
@@ -327,6 +341,13 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
               '<p class="new_head_of">{{viewModel.pageCount()}}</p>' +
               '<span class="new_head_tools_btn h_t_i_nav3" data-ng-click="viewModel.down()" data-ng-class="{disabled: viewModel.pageInd() >= viewModel.pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
               '<span class="new_head_tools_btn h_t_i_nav4" data-ng-click="viewModel.selectPage(viewModel.pageCount())" data-ng-class="{disabled: viewModel.pageInd() >= viewModel.pageCount()}" data-tooltip="Last Page" data-localize-tooltip="LastPage"></span>';
+        },
+
+        "search": function () {
+            return '<input type="text" placeholder="Search" class="input_search" data-localize-ph="Search" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-attr-dir="{dir: useRtl ? \'rtl\' : \'ltr\'}" data-ng-model-options="{getterSetter: true, updateOn: \'keydown propertychange input\'}" data-ng-model="searchValue" data-ng-groupdocs-search-input="">' +
+'<span class="input_search_clear" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.clearValue()" data-bind=", clickBubble: false"></span>' +
+'<span class="new_head_tools_btn h_t_i_nav2" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click: viewModel.findPreviousFromUI()" data-ng-class="{disabled:!viewModel.previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
+'<span class="new_head_tools_btn h_t_i_nav3" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click: viewModel.findNextFromUI()" data-ng-class="{disabled:!viewModel.nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
         }
     }
 });

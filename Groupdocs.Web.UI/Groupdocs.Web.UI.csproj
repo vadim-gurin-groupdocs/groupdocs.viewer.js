@@ -92,7 +92,7 @@
     <Content Include="Scripts\jGroupdocs.InitJsInject.js" />
     <Content Include="Scripts\jGroupdocs.MVVMProvider.Knockout.js" />
     <Content Include="Scripts\jGroupdocs.MVVMProvider.Angular.js" />
-    <Content Include="Scripts\jGroupdocs.PartialWordSearch.js" />
+    <Content Include="Scripts\jGroupdocs.Search.js" />
     <Content Include="Scripts\jGroupdocs.PdfToJavaScriptWrapper.js" />
     <Content Include="Scripts\jGroupdocs.Selectable.js" />
     <Content Include="Scripts\jGroupdocs.ViewerEventBus.js" />

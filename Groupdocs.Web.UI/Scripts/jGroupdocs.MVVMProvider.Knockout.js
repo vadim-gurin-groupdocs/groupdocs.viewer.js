@@ -271,6 +271,13 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
               '<p class="new_head_of" data-bind="text: pageCount()"></p>' +
               '<span class="new_head_tools_btn h_t_i_nav3" data-bind="click: down, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
               '<span class="new_head_tools_btn h_t_i_nav4" data-bind="click: function() { selectPage(this.pageCount()); }, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Last Page" data-localize-tooltip="LastPage"></span>';
+        },
+
+        "search": function () {
+            return '<input type="text" placeholder="Search" class="input_search" data-localize-ph="Search" data-bind="visible: visible, attr: {dir: useRtl ? \'rtl\' : \'ltr\'}, value: searchValue, valueUpdate: [\'afterkeydown\', \'propertychange\', \'input\'], event: { keypress: keyPressed, keydown: keyDown }">' +
+'<span class="input_search_clear" data-bind="visible: visible, click: function(){$root.clearValue();}, clickBubble: false"></span>' +
+'<span class="new_head_tools_btn h_t_i_nav2" data-bind="visible: visible, click: findPreviousFromUI, css:{disabled:!previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
+'<span class="new_head_tools_btn h_t_i_nav3" data-bind="visible: visible, click: findNextFromUI, css:{disabled:!nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
         }
     }
 });
