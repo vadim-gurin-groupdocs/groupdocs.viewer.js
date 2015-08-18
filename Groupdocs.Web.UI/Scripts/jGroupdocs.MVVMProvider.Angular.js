@@ -213,7 +213,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '          <a class="new_head_tools_btn h_t_i_download btn_download" data-tooltip="Download" data-localize-tooltip="Download"></a>' +
                 '          <a class="new_head_tools_btn h_t_i_print print_button" data-tooltip="Print" data-localize-tooltip="Print"></a>' +
                 '      </div>' +
-                '      <div class="navigation-bar' + (options.browserIsIE8 ? " ie8" : "") + '">' +
+                '      <div class="navigation-bar left' + (options.browserIsIE8 ? " ie8" : "") + '">' +
                 '      </div>' +
                 '      <div class="new_head_tools_wrapper zoom_wrappper">' +
                 '      </div>' +
@@ -316,9 +316,17 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '</div>' +
 
             '</div>';
+        },
 
+        "navigation": function()
+        {
+            return '<span class="new_head_tools_btn h_t_i_nav1" data-ng-click="viewModel.selectPage(1)" data-ng-class="{disabled: viewModel.pageInd() <= 1}" data-tooltip="First Page" data-localize-tooltip="FirstPage"></span>' +
+              '<span class="new_head_tools_btn h_t_i_nav2" data-ng-click="viewModel.up()" data-ng-class="{disabled: viewModel.pageInd() <= 1}" data-tooltip="Previous Page" data-localize-tooltip="PreviousPage"></span>' +
+              '<input class="new_head_input" type="text" style="width: 17px;" data-ng-model-options="{getterSetter: true}" data-ng-model="viewModel.pageInd" data-bind=", valueUpdate: [\'afterkeydown\'], event: { keyup: onKeyPress }" />' +
+              '<p class="new_head_of" data-localize="Of">of</p>' +
+              '<p class="new_head_of">{{viewModel.pageCount()}}</p>' +
+              '<span class="new_head_tools_btn h_t_i_nav3" data-ng-click="viewModel.down()" data-ng-class="{disabled: viewModel.pageInd() >= viewModel.pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
+              '<span class="new_head_tools_btn h_t_i_nav4" data-ng-click="viewModel.selectPage(viewModel.pageCount())" data-ng-class="{disabled: viewModel.pageInd() >= viewModel.pageCount()}" data-tooltip="Last Page" data-localize-tooltip="LastPage"></span>';
         }
-
-
     }
 });

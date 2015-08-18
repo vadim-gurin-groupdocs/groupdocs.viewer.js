@@ -1,7 +1,14 @@
 ﻿if (!window.groupdocs)
     window.groupdocs = {};
 
-window.groupdocs.bindingProvider = {
+window.groupdocs.bindingProvider = function () {
+    this.create();
+};
+
+$.extend(window.groupdocs.bindingProvider.prototype, {
+    create: function() {
+    },
+
     getValue: function(variable) {
         return variable(); // KnockoutJS uses functions
     },
@@ -13,6 +20,10 @@ window.groupdocs.bindingProvider = {
     },
     getObservableArray: function(initialValue) {
         return ko.observableArray(initialValue);
+    },
+
+    getComputedObservable: function (functionParam) {
+        return ko.computed(functionParam);
     },
 
     createHtml: function (componentName, element, options) {
@@ -250,6 +261,16 @@ window.groupdocs.bindingProvider = {
 
             '</div>';
 
+        },
+
+        "navigation": function () {
+            return '<span class="new_head_tools_btn h_t_i_nav1" data-bind="click: function() { selectPage(1); }, css: {disabled: pageInd() <= 1}" data-tooltip="First Page" data-localize-tooltip="FirstPage"></span>' +
+              '<span class="new_head_tools_btn h_t_i_nav2" data-bind="click: up, css: {disabled: pageInd() <= 1}" data-tooltip="Previous Page" data-localize-tooltip="PreviousPage"></span>' +
+              '<input class="new_head_input" type="text" style="width: 17px;" data-bind="value: pageInd, valueUpdate: [\'afterkeydown\'], event: { keyup: onKeyPress }" />' +
+              '<p class="new_head_of" data-localize="Of">of</p>' +
+              '<p class="new_head_of" data-bind="text: pageCount()"></p>' +
+              '<span class="new_head_tools_btn h_t_i_nav3" data-bind="click: down, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
+              '<span class="new_head_tools_btn h_t_i_nav4" data-bind="click: function() { selectPage(this.pageCount()); }, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Last Page" data-localize-tooltip="LastPage"></span>';
         }
     }
-};
+});

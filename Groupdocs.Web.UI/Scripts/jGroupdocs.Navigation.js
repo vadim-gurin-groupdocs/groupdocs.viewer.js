@@ -4,6 +4,9 @@
         _pageCount: 0,
 
         _create: function () {
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            this.options.bindingProvider = this.bindingProvider;
+
             if (this.options.createHtml) {
                 this._createHtml();
             }
@@ -11,12 +14,12 @@
                 this._createEmbeddedHtml();
             }
             this._viewModel = this.getViewModel();
-            ko.applyBindings(this._viewModel, this.element.get(0));
+            this.bindingProvider.applyBindings(this._viewModel, this.element);
         },
         _createViewModel: function () {
             var viewModel = {
-                pageInd: ko.observable(0),
-                pageCount: ko.observable(0)
+                pageInd: this.bindingProvider.getObservable(0),
+                pageCount: this.bindingProvider.getObservable(0)
             };
 
             viewModel.up = function () {
@@ -136,33 +139,13 @@
 
         _createHtml: function () {
             var root = this.element;
-            root.addClass('left');
+            this.bindingProvider.createHtml("navigation", this.element, this.options);
 
-            $('<span class="new_head_tools_btn h_t_i_nav1" data-bind="click: function() { selectPage(1); }, css: {disabled: pageInd() <= 1}" data-tooltip="First Page" data-localize-tooltip="FirstPage"></span>' +
-              '<span class="new_head_tools_btn h_t_i_nav2" data-bind="click: up, css: {disabled: pageInd() <= 1}" data-tooltip="Previous Page" data-localize-tooltip="PreviousPage"></span>' +
-              '<input class="new_head_input" type="text" style="width: 17px;" data-bind="value: pageInd, valueUpdate: [\'afterkeydown\'], event: { keyup: onKeyPress }" />' +
-              '<p class="new_head_of" data-localize="Of">of</p>' +
-              '<p class="new_head_of" data-bind="text: pageCount()"></p>' +
-            //'<p class="new_head_of" data-bind="text: \'of \' + pageCount()"></p>' +
-              '<span class="new_head_tools_btn h_t_i_nav3" data-bind="click: down, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Next Page" data-localize-tooltip="NextPage"></span>' +
-              '<span class="new_head_tools_btn h_t_i_nav4" data-bind="click: function() { selectPage(this.pageCount()); }, css: {disabled: pageInd() >= pageCount()}" data-tooltip="Last Page" data-localize-tooltip="LastPage"></span>').appendTo(root);
-            root.trigger("onHtmlCreated");
-        },
-
-        _createEmbeddedHtml: function () {
-            var root = this.element;
-            root.addClass('left');
-
-            $('<span class="embed_viewer_icons icon1" data-bind="click: function() { selectPage(1); }"></span>' +
-              '<span class="embed_viewer_icons icon2" data-bind="click: up"></span>' +
-              '<p>Page</p>' +
-              '<input type="text" name="textfield" class="page_nmbr" data-bind="value: pageInd, valueUpdate: [\'afterkeydown\'],  event: { keyup: onKeyPress }"/>' +
-              '<p>of <span data-bind="text: pageCount()" ></span></p>' +
-              '<span class="embed_viewer_icons icon3" data-bind="click: down"></span>' +
-              '<span class="embed_viewer_icons icon4" data-bind="click: function() { selectPage(this.pageCount()); }"></span>'
-                ).appendTo(root);
+            //root.addClass('left');
+            //$().appendTo(root);
             root.trigger("onHtmlCreated");
         }
 
+        
     });
 })(jQuery);
