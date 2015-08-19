@@ -98,7 +98,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
     applyBindings: function (viewModel, element) {
         var self = this;
-        angular.element(element[0]).injector().invoke(["$rootScope", "$compile", function ($rootScope, $compile) {
+        element.injector().invoke(["$rootScope", "$compile", function ($rootScope, $compile) {
             var scope = $rootScope.$new(true);
             scope.viewModel = viewModel;
             self.scope = scope;

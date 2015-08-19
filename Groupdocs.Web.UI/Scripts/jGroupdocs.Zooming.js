@@ -27,7 +27,6 @@
         _createHtml: function () {
             var root = this.element;
             this.bindingProvider.createHtml("zooming", this.element);
-
             root.trigger("onHtmlCreated");
         }
     });
@@ -71,7 +70,7 @@
             var fitWidthItem = { name: "Fit Width", value: fitWidthZoom, localizationKey: "FitWidth", fitWidth: true };
             var found = false;
             var zooms = this.zooms();
-            for (var i = 0; i < this.zooms.length; i++) {
+            for (var i = 0; i < zooms.length; i++) {
                 if (zooms[i].fitWidth) {
                     //this.zooms.splice(i, 1, fitWidthItem);
                     zooms[i].value = fitWidthZoom;
