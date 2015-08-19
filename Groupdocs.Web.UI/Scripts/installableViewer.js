@@ -475,7 +475,6 @@
                     initialZoom: settings.initialZoom,
                     viewerWidth: viewerWidth,
                     viewerHeight: viewerMainWrapper.height(),
-                    //alwaysOnePageInRow: true,
                     docViewerId: settings.docViewerId,
                     zoomToFitWidth: settings.zoomToFitWidth,
                     zoomToFitHeight: settings.zoomToFitHeight,
@@ -485,7 +484,6 @@
                     thumbnailsOptions: thumbnailsOptions,
                     zooming: settings.showZoom ? zoomingWrapper : null,
                     zoomingOptions: { createHtml: true },
-                    //search: settings.showSearch ? searchWrapper : null,
                     search: settings.showSearch ? searchWrapper : null,
                     searchOptions: searchOptions,
                     preloadPagesCount: settings.preloadPagesCount,
@@ -871,27 +869,21 @@
             if (this.showHeader) {
                 var viewerHeaderNewHeight = this.viewerHeader.outerHeight(true);
 
-                var licElementHeight = 0;
-                if (this.licElement) {
-                    licElementHeight = this.licElement.height();
-                }
-
-                if (viewerHeaderNewHeight != this.viewerMainWrapper.position().top - licElementHeight) {
+                if (viewerHeaderNewHeight != this.viewerMainWrapper.position().top) {
                     var newTop = viewerHeaderNewHeight;
 
-                    if (this.licElement) {
-                        this.licElement.css("top", newTop.toString() + "px");
-                        newTop += licElementHeight;
-                    }
                     this.viewerMainWrapper.css("top", newTop.toString() + "px");
                     //this.viewerHeaderHeight = viewerHeaderNewHeight;
                     if (this.viewMode == this.viewModes.BookMode)
                         this.viewerAdapter.docViewerPageFlipViewModel.reInitSelectable();
-                    else {
-                        this.viewerAdapter.docViewerViewModel.reInitSelectable();
-                    }
                 }
             }
+
+            if (this.viewMode != this.viewModes.BookMode) {
+                this.viewerAdapter.docViewerViewModel.calculatePagePositions();
+                this.viewerAdapter.docViewerViewModel.reInitSelectable();
+            }
+
             if (this.useInnerThumbnails) {
                 var thumbnailPanelWidth = 0;
                 var thumbnailsViewModel = this.viewerAdapter.thumbnailsViewModel;
@@ -916,13 +908,10 @@
             this.resizeTimeoutId = window.setTimeout(function () {
                 self.resizeHandler();
             }, 1000);
-            //}
         },
 
         setWidth: function (width) {
             this.groupdocsViewerWrapper.width(width);
-            //this.loadImagesForVisiblePages();
-            //this.loadImagesForVisiblePagesIe();
             this.resizeHandler();
             this.resizeHandlerWithDelay();
         },

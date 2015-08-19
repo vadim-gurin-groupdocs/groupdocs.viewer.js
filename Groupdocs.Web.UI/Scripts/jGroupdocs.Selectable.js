@@ -127,19 +127,11 @@
 
             this._initialized = true;
 
-            var locations;
-            if (this.options.useVirtualScrolling) {
-                this.pageLocations = $.map(this.options.pageLocations,
-                    function (page) {
-                        return new groupdocs.Point(page.left, page.top());
-                    });
-            }
-            else
-                this.pageLocations = this._getPageLocations();
-            locations = this.pageLocations;
+            this.pageLocations = this._getPageLocations();
+            var locations = this.pageLocations;
 
             if (this.options.pdf2XmlWrapper != null) {
-                if (this.options.bookLayout /*|| this.options.useVirtualScrolling*/) {
+                if (this.options.bookLayout) {
                     this.pages = this.options.pdf2XmlWrapper.getPages(this.options.proportion, locations,
                         this.options.startNumbers.start - 1, this.options.startNumbers.end - 1, this.options.useVirtualScrolling);
                 }
@@ -151,16 +143,11 @@
 
         initCanvasOffset: function () {
             this.parentElement = this.options.docSpace.parent();
-            //if (this.options.bookLayout)
-            //    this.parentElement.parent().scrollTop(0);
-            //var offsetX = this.element.offset().left, offsetY = this.element.offset().top;
-            //var offsetX = this.parentElement.parent().offset().left, offsetY = this.parentElement.parent().offset().top;
             var offset = this.element.parent().offset();
             var offsetX = offset.left, offsetY = offset.top;
 
             if (this.options.bookLayout)
                 offsetY = this.parentElement.offset().top;
-            //offsetY += this.parentElement.parent().scrollTop();
             this._canvasOffset = new groupdocs.Point(offsetX, offsetY);
         },
 
@@ -285,26 +272,35 @@
             return this.pages;
         },
 
-        _getPageLocations: function () {
+        _getPageLocations: function() {
             var self = this;
             var docSpaceId = this.options.docSpace.attr("id");
             var imagesSelector = ".page-image";
             var images = this.element.find(imagesSelector);
             if (this.options.bookLayout) {
                 images = images.filter("[id='" + docSpaceId + "-img-" + this.options.startNumbers.start.toString() +
-                                 "'],[id='" + docSpaceId + "-img-" + this.options.startNumbers.end.toString() + "']");
+                    "'],[id='" + docSpaceId + "-img-" + this.options.startNumbers.end.toString() + "']");
             }
 
-            //this._canvasScroll = new groupdocs.Point(this.parentElement.scrollLeft(), this.parentElement.scrollTop());
             this._canvasScroll = this.getCanvasScroll();
 
-            return $.map(images, function (img) {
-                var imgJquery = $(img);
-                var x = imgJquery.offset().left - self._canvasOffset.x + self._canvasScroll.x;
-                //var y = (self.options.bookLayout ? 0 : ($(img).offset().top - self._canvasOffset.y + self._canvasScroll.y));
-                var y = (self.options.bookLayout ? 0 : (imgJquery.offset().top - self.element.offset().top));
-                return new groupdocs.Point(x, y);
-            });
+            var pageLocations;
+            if (this.options.bookLayout) {
+                pageLocations = $.map(images, function(img) {
+                    var imgJquery = $(img);
+                    var x = imgJquery.offset().left - self._canvasOffset.x + self._canvasScroll.x;
+                    var y = (self.options.bookLayout ? 0 : (imgJquery.offset().top - self.element.offset().top));
+                    return new groupdocs.Point(x, y);
+                });
+            }
+            else {
+                pageLocations =
+                    $.map(this.options.pageLocations,
+                        function(page) {
+                            return new groupdocs.Point(page.left, page.top());
+                        });
+            }
+            return pageLocations;
         },
 
         getCanvasScroll: function () {

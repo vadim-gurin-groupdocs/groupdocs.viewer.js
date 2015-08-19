@@ -4,11 +4,12 @@
 
 <h2>GroupDocs.Viewer Sample</h2>
 
-<div id="test" ng-app="groupdocsViewer" style="overflow: hidden; margin-bottom: 20px;background-color: gray;height:700px;width:100%"></div>
+<div id="test" ng-app="groupdocsViewer" style="overflow: hidden; margin-bottom: 20px;background-color: gray;height:900px;width:1314px"></div>
 	
 <script type="text/javascript">
 	$(function () {
-$("#test").groupdocsViewer({
+	    var containerElement = $("#test");
+	    $("#test").groupdocsViewer({
 	        //filePath: "candy.pdf",
 	        filePath: "Deutschland201207Arbeit.pdf",
 	        showHeader: true,
@@ -18,8 +19,19 @@ $("#test").groupdocsViewer({
             showSearch: true,
             showPaging: true,
             useHtmlBasedEngine: false,
-            supportTextSelection: true
-	    });
+            supportTextSelection: true,
+            useVirtualScrolling: false
+        });
+
+        window.onresize = resize;
+        function resize() {
+            var width = containerElement.width();
+            containerElement.groupdocsViewer("setWidth", width);
+            var height = containerElement.height();
+            containerElement.groupdocsViewer("setHeight", height);
+            //containerElement.groupdocsViewer("setZoom", window.groupdocs.FitWidth);
+            //containerElement.groupdocsViewer("setZoom", window.groupdocs.FitHeight);
+        }
 	});
 </script>
 

@@ -94,10 +94,7 @@
 
         _createHtml: function () {
             var root = this.element;
-            //window.groupdocs.bindingProvider.createHtmlAndApplyBindings("viewing", this._viewModel, this.element, this.options);
-            //var viewerHtml = window.groupdocs.bindingProvider.componentHtml["viewing"](this.options);
             this.bindingProvider.createHtml("viewing", this.element, this.options);
-            //$(viewerHtml).appendTo(root);
             root.trigger("onHtmlCreated");
         }
     });
@@ -425,22 +422,19 @@
             this.serverPages = [{ w: this.initialWidth, h: 100 }];
 
             var pageDescription;
-            if (this.pages().length == 0) {
-                pageDescription = { number: 1, visible: this.bindingProvider.getObservable(false), url: this.bindingProvider.getObservable(this.emptyImageUrl), htmlContent: this.bindingProvider.getObservable(""), searchText: this.bindingProvider.getObservable(null) };
-                if (this.supportPageRotation)
-                    pageDescription.rotation = this.bindingProvider.getObservable(0);
-                if (this.variableHeightPageSupport) {
-                    pageDescription.prop = this.bindingProvider.getObservable(1);
-                    pageDescription.heightRatio = this.bindingProvider.getObservable(1);
-                }
-                if (this.useVirtualScrolling) {
-                    pageDescription.left = 0;
-                    pageDescription.top = this.bindingProvider.getObservable(0);
-                }
-                this.pages.push(pageDescription);
+            pageDescription = { number: 1, visible: this.bindingProvider.getObservable(false), url: this.bindingProvider.getObservable(this.emptyImageUrl), htmlContent: this.bindingProvider.getObservable(""), searchText: this.bindingProvider.getObservable(null) };
+            if (this.supportPageRotation)
+                pageDescription.rotation = this.bindingProvider.getObservable(0);
+            if (this.variableHeightPageSupport) {
+                pageDescription.prop = this.bindingProvider.getObservable(1);
+                pageDescription.heightRatio = this.bindingProvider.getObservable(1);
             }
+            pageDescription.left = 0;
+            pageDescription.top = this.bindingProvider.getObservable(0);
+            this.pages.push(pageDescription);
             this.pagesContainerElement = this.documentSpace.find(".pages_container");
             this.contentControlsFromHtml = new Array();
+            this.getScrollbarWidth();
 
             if (options.fileId) {
                 this.loadDocument();
@@ -587,27 +581,6 @@
                 this.parseSearchParameters(page.parsedHtmlElement.not("style")[0], searchParameters);
             }
             page.searchText(searchParameters);
-
-            //                        if (this.preloadPagesOnBrowserSide) {
-            //                            var preloadPagesCount = this.preloadPagesCount;
-            //                            if (preloadPagesCount === null)
-            //                                preloadPagesCount = this.pageCount();
-            //                            var pages = this.pages();
-            //                            var areAllLoaded = true;
-            //                            var pageNum;
-            //                            for (pageNum = 0; pageNum < preloadPagesCount; pageNum++) {
-            //                                if (pages[pageNum].htmlContent() == null) {
-            //                                    areAllLoaded = false;
-            //                                    break;
-            //                                }
-            //                            }
-            //                            if (areAllLoaded) {
-            //                                for (pageNum = 0; pageNum < preloadPagesCount; pageNum++) {
-            //                                    pages[pageNum].visible(true);
-            //                                }
-            //                            }
-            //                        }
-            //                        else
             page.visible(true);
             page.startedDownloadingPage = false;
             this.markContentControls(pageNumber);
@@ -996,29 +969,19 @@
                         pageDescription.rotation = this.bindingProvider.getObservable(rotationFromServer);
                         this.applyPageRotationInBrowser(i, pageDescription, rotationFromServer);
                     }
-                    if (this.useVirtualScrolling) {
-                        pageDescription.left = 0;
-                        pageDescription.top = this.bindingProvider.getObservable(0);
-                    }
+                    pageDescription.left = 0;
+                    pageDescription.top = this.bindingProvider.getObservable(0);
 
                     pagesNotObservable.push(pageDescription);
                 }
             }
             else if (this.pageContentType == "html") {
                 this.serverPages = pages = this._pdf2XmlWrapper.documentDescription.pages;
-                //this.pages.splice(1, this.pages().length - 1);
-                //var documentHeight = 0;
-                //var pageTop = 0;
 
                 pageWidth = this.pageWidth();
                 pageDescription = this.pages()[0];
-                //var layout = this.layout();
-                //if (layout != this.Layouts.TwoPagesInRow)
-                //    pageTop += pageWidth * pageDescription.prop();
-                //documentHeight += pageWidth * pageDescription.prop();
                 pagesNotObservable.push(pageDescription);
                 var proportion;
-                //var cssForAllPages = "";
                 for (i = 1; i < pageCount; i++) {
                     scaleRatio = this.getScaleRatioForPage(pageSize.width, pageSize.height, pages[i].w, pages[i].h);
                     proportion = pages[i].h / pages[i].w;
@@ -1031,14 +994,6 @@
                         heightRatio: this.bindingProvider.getObservable(scaleRatio),
                         searchText: this.bindingProvider.getObservable(null)
                     };
-
-                    //var pageHtml = this.preloadedPages && this.preloadedPages.html[i];
-                    //if (pageHtml) {
-                    //    pageDescription.htmlContent(pageHtml);
-                    //    if (this.preloadedPages.css[i])
-                    //        cssForAllPages += this.preloadedPages.css[i];
-                    //    pageDescription.visible(true);
-                    //}
 
                     if (this.supportPageRotation) {
                         rotationFromServer = this.serverPages[i].rotation;
@@ -1076,7 +1031,7 @@
             }
 
             this.pages(pagesNotObservable);
-            this.calculatePagePositionsForVirtualMode();
+            this.calculatePagePositions();
 
             this._firstPage = this.documentSpace.find("#" + this.pagePrefix + "1");
             if (this.pages().length > 0 && this._firstPage.length == 0 && !this.useVirtualScrolling) // viewer destroyed while loading document
@@ -1114,7 +1069,7 @@
                 preventTouchEventsBubbling: this.preventTouchEventsBubbling,
                 highlightColor: this.options.highlightColor,
                 useVirtualScrolling: this.useVirtualScrolling,
-                pageLocations: (this.useVirtualScrolling ? this.pages() : null)
+                pageLocations: this.pages()
             });
             this._dvselectable.groupdocsSelectable("setVisiblePagesNumbers", this.getVisiblePagesNumbers());
 
@@ -1615,10 +1570,11 @@
                     this.scale(this.pageImageWidth / pageSize.width * value / 100);
                 }
 
-                this._dvselectable.groupdocsSelectable("changeSelectedRowsStyle", this.scale());
+                var selectable = this.getSelectableInstance();
+                selectable.changeSelectedRowsStyle(this.scale());
                 this.reInitSelectable();
                 if (this.useVirtualScrolling) {
-                    this.getSelectableInstance().recalculateSearchPositions(this.scale());
+                    selectable.recalculateSearchPositions(this.scale());
                     this.highlightSearch();
                 }
                 this.recalculatePageLeft();
@@ -1659,7 +1615,7 @@
                     this.autoHeight(autoHeight);
                 }
                 else {
-                    this.calculatePagePositionsForVirtualMode();
+                    this.calculatePagePositions();
                 }
 
                 if (this.pageContentType == "image") {
@@ -1974,8 +1930,9 @@
 
         reInitSelectable: function () {
             var visiblePagesNumbers = this.getVisiblePagesNumbers();
-            if (this._dvselectable != null) {
-                this._dvselectable.groupdocsSelectable("reInitPages", this.scale(), visiblePagesNumbers,
+            var selectable = this.getSelectableInstance();
+            if (selectable != null) {
+                selectable.reInitPages(this.scale(), visiblePagesNumbers,
                     this.scrollPosition, this.getPageHeight(), this.pages());
             }
         },
@@ -2147,7 +2104,7 @@
                     page.heightRatio(scaleRatio);
                 }
             }
-            this.calculatePagePositionsForVirtualMode();
+            this.calculatePagePositions();
             this.reInitSelectable();
             var selectable = this.getSelectableInstance();
             if (selectable != null)
@@ -2516,65 +2473,77 @@
 
         setLayout: function (layout) {
             this.layout(layout);
-            this.calculatePagePositionsForVirtualMode();
+            this.calculatePagePositions();
             this.loadImagesForVisiblePages();
         },
 
-        calculatePagePositionsForVirtualMode: function () {
-            if (this.useVirtualScrolling) {
-                var pageVerticalMargin = 15; // pixels
-                var pageHorizontalMargin = 2 * 7; // pixels
-                var pages = this.pages();
-                var width = this.pageWidth();
-                var documentHeight = 0;
-                var page, proportion, pageHeight;
-                var pageLeft = 0, pageTop = 0;
-                var rowHeight = 0;
-                var pagesInRow;
-                var layout = this.layout();
-                switch (layout) {
-                    case this.Layouts.ScrollMode:
-                        pagesInRow = Math.floor(this.pagesContainerElement.width() / this.pageWidth());
-                        if (pagesInRow == 0)
-                            pagesInRow = 1;
-                        break;
-                    case this.Layouts.OnePageInRow:
+        calculatePagePositions: function () {
+            var pageVerticalMargin = 15 + 0; // pixels (margin + border)
+            var pageHorizontalMargin = 7 + 0; // pixels (margin + border) from left
+            var border = 0;
+            var pages = this.pages();
+            var width = this.pageWidth();
+            var documentHeight = 0;
+            var page, proportion, pageHeight;
+            var pageLeft = 0, pageTop = 0;
+            var rowHeight = 0;
+            var pagesInRow;
+            var layout = this.layout();
+            switch (layout) {
+                case this.Layouts.ScrollMode:
+                    var widthWithMargin = width + pageHorizontalMargin;
+                    var documentSpaceWidth = this.pagesContainerElement.get(0).getBoundingClientRect().width;
+                    pagesInRow = Math.floor(documentSpaceWidth / widthWithMargin);
+                    if (pagesInRow == 0)
                         pagesInRow = 1;
-                        break;
-                    case this.Layouts.TwoPagesInRow:
-                    case this.Layouts.CoverThenTwoPagesInRow:
-                        pagesInRow = 2;
-                        break;
-                }
 
-                var isFirstPageInRow, isLastPageInRow;
-                for (var i = 0; i < pages.length; i++) {
-                    page = pages[i];
-                    proportion = page.prop();
-                    pageHeight = width * proportion;
-                    page.left = pageLeft;
-                    page.top(pageTop);
-                    isFirstPageInRow = (layout != this.Layouts.CoverThenTwoPagesInRow && i % pagesInRow == 0)
-                        || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 1));
-
-                    isLastPageInRow = layout == this.Layouts.OnePageInRow
-                        || (layout == this.Layouts.TwoPagesInRow && i % pagesInRow == 1)
-                        || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 0))
-                        || (layout == this.Layouts.ScrollMode && i % pagesInRow == pagesInRow - 1);
-
-                    if (isFirstPageInRow || (!isFirstPageInRow && pageHeight > rowHeight))
-                        rowHeight = pageHeight;
-                    documentHeight = pageTop + rowHeight + pageVerticalMargin;
-
-                    if (isLastPageInRow) {
-                        pageTop += rowHeight + pageVerticalMargin;
-                        pageLeft = 0;
-                    }
-                    else
-                        pageLeft += width + pageHorizontalMargin;
-                }
-                this.documentHeight(documentHeight);
+                    //var height = this.pageHeight();
+                    //var heightWithMargin = height + pageVerticalMargin;
+                    //var documentSpaceHeight = this.documentSpace.height();
+                    //if (heightWithMargin + border > documentSpaceHeight || Math.ceil(pages.length / pagesInRow) * heightWithMargin + border > documentSpaceHeight) {
+                    //    pagesInRow = Math.floor((documentSpaceWidth - this.getScrollbarWidth() - border) / widthWithMargin);
+                    //    if (pagesInRow == 0)
+                    //        pagesInRow = 1;
+                    //}
+                    console.log(documentSpaceWidth, widthWithMargin);
+                    console.log(pagesInRow);
+                    break;
+                case this.Layouts.OnePageInRow:
+                    pagesInRow = 1;
+                    break;
+                case this.Layouts.TwoPagesInRow:
+                case this.Layouts.CoverThenTwoPagesInRow:
+                    pagesInRow = 2;
+                    break;
             }
+
+            var isFirstPageInRow, isLastPageInRow;
+            for (var i = 0; i < pages.length; i++) {
+                page = pages[i];
+                proportion = page.prop();
+                pageHeight = width * proportion;
+                page.left = pageLeft;
+                page.top(pageTop);
+                isFirstPageInRow = (layout != this.Layouts.CoverThenTwoPagesInRow && i % pagesInRow == 0)
+                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 1));
+
+                isLastPageInRow = layout == this.Layouts.OnePageInRow
+                    || (layout == this.Layouts.TwoPagesInRow && i % pagesInRow == 1)
+                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 0))
+                    || (layout == this.Layouts.ScrollMode && i % pagesInRow == pagesInRow - 1);
+
+                if (isFirstPageInRow || (!isFirstPageInRow && pageHeight > rowHeight))
+                    rowHeight = pageHeight;
+                documentHeight = pageTop + rowHeight + pageVerticalMargin;
+
+                if (isLastPageInRow) {
+                    pageTop += rowHeight + pageVerticalMargin;
+                    pageLeft = 0;
+                }
+                else
+                    pageLeft += width + pageHorizontalMargin;
+            }
+            this.documentHeight(documentHeight);
         },
 
         clearContentControls: function () {

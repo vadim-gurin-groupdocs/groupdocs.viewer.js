@@ -9,7 +9,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     scope: null,
 
     create: function () {
-        window.groupdocs.bindingProvider.prototype.directive("ngGroupdocsScrollable", function () {
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScrollable", function () {
             return {
                 restrict: "A",
                 link: function (scope, elem, attr, ctrl) {
@@ -27,7 +27,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             }
         });
 
-        window.groupdocs.bindingProvider.prototype.directive("ngGroupdocsSearchInput", function () {
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchInput", function () {
             return {
                 restrict: "A",
                 link: function (scope, elem, attr, ctrl) {
@@ -98,14 +98,12 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
     applyBindings: function (viewModel, element) {
         var self = this;
-        element.injector().invoke(["$rootScope", "$compile", function ($rootScope, $compile) {
-            var scope = $rootScope.$new(true);
-            scope.viewModel = viewModel;
-            self.scope = scope;
-            var compiled = $compile(element);
-            compiled(scope);
-            scope.$digest();
-        }]);
+        var scope = window.groupdocs.bindingProvider.prototype.$rootScope.$new(true);
+        scope.viewModel = viewModel;
+        self.scope = scope;
+        var compiled = window.groupdocs.bindingProvider.prototype.$compile(element);
+        compiled(scope);
+        scope.$digest();
     },
 
     componentHtml: {
@@ -181,7 +179,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
 //    '<!-- ko foreach: { afterRender: function(){$root.highlightSearch();} } -->' +
-    '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages.slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" >' +
+    '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages().slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" >' +
 '       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
 '           <div class="loading_overlay_message">' +
 '               <span class="progresspin"></span>' +

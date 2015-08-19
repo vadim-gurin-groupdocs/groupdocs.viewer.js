@@ -72,7 +72,6 @@
             var zooms = this.zooms();
             for (var i = 0; i < zooms.length; i++) {
                 if (zooms[i].fitWidth) {
-                    //this.zooms.splice(i, 1, fitWidthItem);
                     zooms[i].value = fitWidthZoom;
                     found = true;
                     break;

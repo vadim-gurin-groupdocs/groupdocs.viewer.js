@@ -128,7 +128,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         }
 
         if (this.search) {
-            //search = this.search;
             search = this.search.search($.extend(this.searchOptions, { viewerViewModel: docViewerViewModel }));
             searchViewModel = this.search.search('getViewModel');
         }
@@ -208,14 +207,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         docViewer.bind('onDocumentLoadComplete', function (e, data, pdf2XmlWrapper) {
             if (docViewerPageFlipViewModel)
                 docViewerPageFlipViewModel._onDocumentLoaded(data, pdf2XmlWrapper);
-
-            var url = data.url;
-            $("#btnDownload,#btnDownload2").bind({
-                click: function () {
-                    window.location.href = url;
-                    return false;
-                }
-            });
 
             if (zooming) {
                 if (docViewerViewModel.isScrollViewerVisible()) {
