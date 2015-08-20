@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Groupdocs.Common;
 using Groupdocs.Engine.Documents;
 using Groupdocs.Storage;
@@ -120,7 +121,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             ProgressDelegate progressCallback = null, IDocument openedDocument = null, int? quality = null)
         {
             string modificationTimeString = GetModificationTimeString(filePath, true);
-            string path = Path.Combine(filePath, modificationTimeString ?? String.Empty, "desc.js");
+            string path = Path.Combine(filePath, modificationTimeString ?? String.Empty, "desc" + (descForHtmlBasedEngine ? "_htmlEngine" : "") + ".js");
             string fullPath = Path.Combine(@"d:\temp\temp\Processing", path);
             return File.ReadAllText(fullPath);
             //return "{\"pages\":[{\"w\":595.32,\"h\":841.92,\"number\":1},{\"w\":595.32,\"h\":841.92,\"number\":2}],\"maxPageHeight\":841.92,\"widthForMaxHeight\":595.32}";
@@ -237,22 +238,75 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
         public void GetPagesHtml(string filePath, int startPageIndex, int pageCount, out string[] pageHtml,
             out string[] pageCss)
         {
-            throw new NotImplementedException();
+            string basePath = @"d:\temp\temp\Cache";
+            pageHtml = new string[pageCount];
+            pageCss = new string[pageCount];
+
+            string modificationTimeString = GetModificationTimeString(filePath);
+            string pathToDirectoryWithConvertedFile = Path.Combine(basePath, filePath, modificationTimeString ?? String.Empty);
+
+            for (int i = 0; i < pageCount; i++)
+            {
+                string fullPathToHtml = Path.Combine(pathToDirectoryWithConvertedFile, String.Format("p{0}.html", startPageIndex + i));
+                string htmlPageContents;
+                using (new InterProcessLock(fullPathToHtml))
+                {
+                    htmlPageContents = File.ReadAllText(fullPathToHtml);
+                    pageHtml[i] = htmlPageContents;
+                }
+
+                string pathToCssDir = Path.Combine(pathToDirectoryWithConvertedFile, String.Format("p{0}_files", startPageIndex + i));
+                string pathToCss = Path.Combine(pathToCssDir, "style.css");
+                string cssPageContents = null;
+                using (new InterProcessLock(fullPathToHtml))
+                {
+                    cssPageContents = File.ReadAllText(pathToCss);
+                    pageCss[i] = cssPageContents;
+                }
+            }
         }
 
         public byte[] GetResourceForHtml(string documentPath,
-            string imagePath,
-            DateTime? clientModifiedSince,
-            out bool isModified,
-            out DateTime? fileModificationDateTime,
-            bool relativeToOriginal)
+                                         string resourcePath,
+                                         DateTime? clientModifiedSince,
+                                         out bool isModified,
+                                         out DateTime? fileModificationDateTime,
+                                         bool relativeToOriginal)
         {
-            throw new NotImplementedException();
+            string basePath = @"d:\temp\temp\Cache";
+            DateTime? lastModificationTime = null;
+            byte[] resourceContents = null;
+            isModified = true;
+            fileModificationDateTime = null;
+            if (relativeToOriginal)
+            {
+                string documentDirPath = Path.GetDirectoryName(documentPath);
+                string resourcePathInStorage = Path.Combine(documentDirPath, resourcePath);
+
+                if (File.Exists(resourcePathInStorage))
+                {
+                    resourceContents = Encoding.UTF8.GetBytes(File.ReadAllText(resourcePathInStorage));
+                }
+                return resourceContents;
+            }
+
+            string modificationTimeString = GetModificationTimeString(documentPath);
+            string pathToDirectoryWithConvertedFile = Path.Combine(basePath, documentPath, modificationTimeString ?? String.Empty);
+            string pathToResource = Path.Combine(pathToDirectoryWithConvertedFile, resourcePath);
+
+            using (new InterProcessLock(pathToResource))
+            {
+                if (File.Exists(pathToResource))
+                {
+                    resourceContents = File.ReadAllBytes(pathToResource);
+                }
+            }
+            return resourceContents;
         }
 
         public string GetPagesSharedCss(string filePath)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
 
