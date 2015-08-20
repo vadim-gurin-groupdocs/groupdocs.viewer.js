@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Groupdocs.Common;
 using Groupdocs.Engine.Documents;
@@ -24,6 +25,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
         protected const string _imagesFolderTemplate = "{0}@{1}";
         protected const string _pageImageFileNameTemplate = "page_{0}.jpg";
         private const string _rootStorageFolder = @"d:\temp";
+        string _baseCachePath = @"d:\temp\temp\Cache";
 
         public EditingService(string storageFolder, string workingFolder = null)
         {
@@ -41,7 +43,12 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
 
         public int GeneratePageImages(string filePath, ViewingOptions options, string outputFolder = null)
         {
-            return 86;
+            string modificationTimeString = GetModificationTimeString(filePath);
+            //string pathToDirectoryWithConvertedFile = Path.Combine(_baseCachePath, filePath, modificationTimeString ?? String.Empty);
+            string imageFolderPath = GetImagesFolder(filePath, 100, null, null, true);
+            string fullImageFolderPath = Path.Combine(_baseCachePath, imageFolderPath);
+            var files = Directory.EnumerateFiles(fullImageFolderPath, "*.jpg");
+            return files.Count();
         }
 
         public string GetImagesFolder(string filePath, int? quality = null, int? width = null, int? height = null,
@@ -83,7 +90,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
         {
             string imageFolderPath = GetImagesFolder(documentPath, quality, width, height, usePdf);
             string pageRelativePath = Path.Combine(imageFolderPath, String.Format(_pageImageFileNameTemplate, pageIndex));
-            string fullImagePath = Path.Combine(@"d:\temp\temp\Cache", pageRelativePath);
+            string fullImagePath = Path.Combine(_baseCachePath, pageRelativePath);
             return fullImagePath;
         }
 
@@ -232,7 +239,11 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             bool supportListOfBookmarks,
             bool embedImagesIntoHtmlForWordFiles)
         {
-            throw new NotImplementedException();
+            string modificationTimeString = GetModificationTimeString(filePath);
+            string pathToDirectoryWithConvertedFile = Path.Combine(_baseCachePath, filePath, modificationTimeString ?? String.Empty);
+
+            var files = Directory.EnumerateFiles(pathToDirectoryWithConvertedFile, "*.html");
+            return files.Count();
         }
 
         public void GetPagesHtml(string filePath, int startPageIndex, int pageCount, out string[] pageHtml,

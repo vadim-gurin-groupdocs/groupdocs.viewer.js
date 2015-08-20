@@ -57,6 +57,27 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 }
             }
         });
+
+
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchText", function () {
+            return {
+                restrict: "A",
+                link: function (scope, element, attr, ctrl) {
+                    var page = scope.page;
+                    if (!page.searched) {
+                        var value = scope.$eval(attr.ngGroupdocsSearchText);
+                        scope.viewModel.parseSearchParameters(element.get(0), value);
+                    }
+                    scope.$watch(attr.ngGroupdocsSearchText, function (newValue, oldValue) {
+                        if (newValue && newValue !== oldValue) {
+                            scope.viewModel.parseSearchParameters(element.get(0), newValue);
+                        }
+                    });
+                    page.searched = false;
+                }
+            }
+        });
+        
     },
 
     
@@ -150,20 +171,20 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         "viewing": function (options) {
             var rotationMarkup;
             if (options.supportPageRotation) {
-                rotationMarkup = ' + \' translateY(\' + ((viewModel.isHtmlDocument && $data.rotation() == 180) ? \'100%\' : \'0\') + \') \' +' +
-                    ' \'rotate(\' + $data.rotation() + \'deg)\' +' +
-                    ' \' translateX(\' + (($data.rotation() == 180 || $data.rotation() == 270) ? \'-100%\' : \'0\') + \')\' +' +
-                    ' \' translateY(\' + (($data.rotation() == 90 || (!$root.isHtmlDocument() && $data.rotation() == 180)) ? \'-100%\' : \'0\') + \') \'  ';
+                rotationMarkup = ' + \' translateY(\' + ((viewModel.isHtmlDocument() && page.rotation() == 180) ? \'100%\' : \'0\') + \') \' +' +
+                    ' \'rotate(\' + page.rotation() + \'deg)\' +' +
+                    ' \' translateX(\' + ((page.rotation() == 180 || page.rotation() == 270) ? \'-100%\' : \'0\') + \')\' +' +
+                    ' \' translateY(\' + ((page.rotation() == 90 || (!viewModel.isHtmlDocument() && page.rotation() == 180)) ? \'-100%\' : \'0\') + \') \'  ';
             }
             else {
                 rotationMarkup = "";
             }
 
-            var msScale = '\'-ms-transform\': \'scale(\' + $data.heightRatio() * $root.zoom() / 100.0 + \')\' ';
+            var msScale = '\'-ms-transform\': \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0 + \')\' ';
 
             if (options.pageContentType == "html" && $.browser.msie) {
                 if ($.browser.version == 8)
-                    msScale = 'zoom: $data.heightRatio() * $root.zoom() / 100.0 ';
+                    msScale = 'zoom: page.heightRatio() * viewModel.zoom() / 100.0 ';
                 else {
                     msScale += rotationMarkup;
                 }
@@ -173,10 +194,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var htmlBasedWatermarkMarkup;
             if (options.watermarkText) {
                 htmlBasedWatermarkMarkup =
-                '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-bind="attr:{width: $root.pageWidth() + $root.imageHorizontalMargin + \'px\', height: $root.pageWidth() * $data.prop() + \'px\', viewBox:\'0 0 100 \' + 100 * $data.prop()}" pointer-events="none">' +
-                        '<text data-bind="text:$root.watermarkText, style:{fill:$root.intToColor($root.watermarkColor)}, ' +
-                        'attr:{transform:$root.watermarkTransform($data, $element), ' +
-                        'y:$root.watermarkPosition.indexOf(\'Top\') == -1 ? 100 * $data.prop() :\'10\'}" font-family="Verdana" font-size="10" x="0" y="0" ></text>' +
+                '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-ng-attr-width="{{viewModel.pageWidth() + viewModel.imageHorizontalMargin + \'px\'}}" data-ng-attr-height="{{viewModel.pageWidth() * page.prop() + \'px\'}}" data-ng-attr-view-box="{{\'0 0 100 \' + 100 * page.prop()}}" pointer-events="none">' +
+                        '<text data-ng-style="{fill: viewModel.intToColor(viewModel.watermarkColor)}" ' +
+                        'data-ng-attr-transform="{{viewModel.watermarkTransform(page, $element)}}" ' +
+                        'data-ng-attr-y="{{viewModel.watermarkPosition.indexOf(\'Top\') == -1 ? 100 * page.prop() :\'10\'}}" font-family="Verdana" font-size="10" x="0" y="0" >{{viewModel.watermarkText}}</text>' +
                         '</svg>';
             }
             else {
@@ -185,8 +206,8 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var htmlPageContents =
 '           <div class="html_page_contents"' +
 '                 data-ng-groupdocs-html="page.htmlContent()" ' +
-                         'data-ng-attr-id="\'' + options.docViewerId + 'pageHtml-\' + page.number" ' +
-                         'data-ng-searchText="page.searchText()" ' +
+                         'data-ng-attr-id="{{\'' + options.docViewerId + 'pageHtml-\' + page.number}}" ' +
+                         'data-ng-groupdocs-search-text="page.searchText()" ' +
 '                        data-ng-class="{chrome: viewModel.browserIsChrome(), \'page-image\': !viewModel.useTabsForPages()}" ' +
 '                        data-ng-style=" { ' +
 '                                 width: viewModel.rotatedWidth(), ' +

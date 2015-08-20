@@ -78,7 +78,12 @@ namespace Groupdocs.Web.UI.Handlers
             string[] pageHtml = null, pageCss = null;
             string sharedCss = null;
 
-            int pageCount = 86;
+            int pageCount;
+            if (useHtmlBasedEngine)
+                pageCount = _viewingService.GenerateHtml(path, null, null, null, null, null, true, false, true, false, false, false, false, false);
+            else
+                pageCount = _viewingService.GeneratePageImages(path, new ViewingOptions());
+
             if (useHtmlBasedEngine)
             {
                     _viewingService.GetPagesHtml(path, 0, pageCount, out pageHtml, out pageCss);

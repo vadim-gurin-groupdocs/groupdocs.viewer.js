@@ -1434,28 +1434,11 @@
                 }
                 else if (this.pageContentType == "html") {
                     if (!isPageVisible) {
-                        var pageHtml = this.preloadedPages && this.preloadedPages.html[i - 1];
-                        if (pageHtml) {
-                            page.htmlContent(pageHtml);
-                            if (this.preloadedPages.css[i - 1])
-                                cssForAllPages += this.preloadedPages.css[i - 1];
-                            page.visible(true);
-                            continue;
-                        }
-                        else
-                            this.getDocumentPageHtml(i - 1);
+                        this.getDocumentPageHtml(i - 1);
                     }
                 }
                 page.visible(true);
             }
-
-            if (this.pageContentType == "html" && cssForAllPages != "")
-                this.addPageCss(cssForAllPages);
-
-            //for (var i = start; i <= end; i++) {
-            //    page = pages[i - 1];
-            //    page.visible(true);
-            //}
         },
 
         setPage: function (index) {
@@ -1806,7 +1789,6 @@
                 !/(script|style)/i.test(node.tagName) && // ignore script and style nodes
                 !(node.tagName === nodeName.toUpperCase() && node.className === className)) { // skip if already highlighted
                 var startNodeNum = 0;
-                //var endNodeNum = node.childNodes.length;
                 var i;
 
                 for (i = startNodeNum; i < node.childNodes.length; i++) {
@@ -1838,8 +1820,6 @@
             if (highlightElementName)
                 highlightJquery.attr("name", highlightElementName);
             highlightJquery.attr("data-page-num", pageNumber.toString());
-            //var wordNode = node.splitText(match.index);
-            //wordNode.splitText(match[0].length);
 
             var wordNode = node.splitText(matchIndex);
             wordNode.splitText(matchLength);
