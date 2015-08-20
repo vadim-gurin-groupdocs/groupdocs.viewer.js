@@ -40,6 +40,23 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 }
             }
         });
+
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsHtml", function() {
+            return {
+                restrict: "A",
+                link: function (scope, elem, attr, ctrl) {
+                    if (attr.ngGroupdocsHtml) {
+                        elem.html(scope.$eval(attr.ngGroupdocsHtml));
+                    }
+
+                    scope.$watch(attr.ngGroupdocsHtml, function (newValue, oldValue) {
+                        if (newValue && newValue !== oldValue) {
+                            elem.html(newValue);
+                        }
+                    });
+                }
+            }
+        });
     },
 
     
@@ -62,27 +79,34 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     },
 
     getObservableArray: function (initialValue) {
-        var value;
+        var internalArray;
         if (typeof param == "undefined")
-            value = new Array();
+            internalArray = new Array();
         else
-            value = initialValue;
+            internalArray = initialValue;
         var self = this;
         var observableArray = function (param) {
             if (typeof param == "undefined")
-                return value;
+                return internalArray;
             else {
-                value = param;
+                internalArray = param;
                 if (self.scope)
                     self.scope.$digest();
             }
         };
 
         observableArray.push = function (valueToPush) {
-            value.push(valueToPush);
+            internalArray.push(valueToPush);
             if (self.scope)
                 self.scope.$digest();
         };
+
+        observableArray.removeAll = function () {
+            internalArray.length = 0;
+            if (self.scope)
+                self.scope.$digest();
+        };
+        
         return observableArray;
     },
 
@@ -160,15 +184,15 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             }
             var htmlPageContents =
 '           <div class="html_page_contents"' +
-'                 data-bind="' + (options.useVirtualScrolling ? 'parsedHtml' : 'html') + ': htmlContent(), ' +
-                         'attr: { id:\'' + options.docViewerId + 'pageHtml-\' + number }, ' +
-                         'searchText: searchText, ' +
-'                        css: {chrome: $root.browserIsChrome(), \'page-image\': !$root.useTabsForPages()}, ' +
-'                        style: { ' +
-'                                 width: $root.rotatedWidth(), ' +
+'                 data-ng-groupdocs-html="page.htmlContent()" ' +
+                         'data-ng-attr-id="\'' + options.docViewerId + 'pageHtml-\' + page.number" ' +
+                         'data-ng-searchText="page.searchText()" ' +
+'                        data-ng-class="{chrome: viewModel.browserIsChrome(), \'page-image\': !viewModel.useTabsForPages()}" ' +
+'                        data-ng-style=" { ' +
+'                                 width: viewModel.rotatedWidth(), ' +
             msScale +
-'                                 MozTransform: \'scale(\' + $data.heightRatio() * $root.zoom() / 100.0  + \')\' ' + rotationMarkup + ', ' +
-'                                 \'-webkit-transform\': \'scale(\' + $data.heightRatio() * $root.zoom() / 100.0  + \')\' ' + rotationMarkup +
+'                                 MozTransform: \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup + ', ' +
+'                                 \'-webkit-transform\': \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup +
 '                               }">' +
 '            </div>' + htmlBasedWatermarkMarkup;
 

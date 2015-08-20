@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Web.Helpers;
 using Groupdocs.Web.UI.Core;
 
 namespace Groupdocs.Web.UI.Handlers
@@ -120,7 +121,9 @@ namespace Groupdocs.Web.UI.Handlers
 
         public FileBrowserTreeDataJS LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null, bool orderAsc = true, string filter = null, string fileTypes = null, bool extended = false, string callback = null, string instanceId = null)
         {
-            throw new NotImplementedException();
+            FileBrowserTreeDataJS data = new FileBrowserTreeDataJS();
+            data.nodes = new JsTreeNode[] { new JsTreeNode() {name = "candy.pdf", docType = "Pdf", fileType = "Pdf", size = 123} };
+            return data;
         }
 
         public object GetImageUrls(IUrlsCreator urlsCreator,
@@ -135,8 +138,6 @@ namespace Groupdocs.Web.UI.Handlers
                                          string instanceId = null,
                                          string locale = null)
         {
-            
-
             var data = new
                 {
                     imageUrls = new[ ]{"", ""}
@@ -177,7 +178,17 @@ namespace Groupdocs.Web.UI.Handlers
                                            DateTime? clientModifiedSince, out bool isModified, out DateTime? fileModificationDateTime,
                                            bool relativeToOriginal = false, string instanceId = null)
         {
-            throw new NotImplementedException();
+            if (relativeToOriginal)
+            {
+                resourcePath = HttpUtility.UrlDecode(resourcePath);
+            }
+            else
+            {
+                string resourceFileName = Path.GetFileName(resourcePath);
+                resourcePath = Path.Combine(CommonConstants.HtmlResourceDirectory, resourceFileName);
+            }
+            byte[] resourceBytes = _viewingService.GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal);
+            return resourceBytes;
         }
 
         public string GetScript(string name)
