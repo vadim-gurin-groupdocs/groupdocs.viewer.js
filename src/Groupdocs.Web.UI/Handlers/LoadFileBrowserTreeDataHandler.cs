@@ -10,7 +10,7 @@ namespace Groupdocs.Web.UI.Handlers
     /// <summary>
     /// Returns information about all files and folders, which can be opened via "Document Browser" button on toolbar, in a form of JSON
     /// </summary>
-    public class LoadFileBrowserTreeDataHandler : CoreHandler, IHttpHandler
+    public class LoadFileBrowserTreeDataHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

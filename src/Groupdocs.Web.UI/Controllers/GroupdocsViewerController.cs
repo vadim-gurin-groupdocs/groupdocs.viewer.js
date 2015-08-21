@@ -17,8 +17,6 @@ namespace Groupdocs.Web.UI.Controllers
         private readonly IApplicationPathFinder _applicationPathFinder;
         private readonly IPrintableHtmlCreator _printableHtmlCreator;
         private readonly IHelper _helper;
-        private readonly IUrlsCreator _urlsCreator;
-        private readonly Logger _logger;
         private readonly IRootPathFinder _rootPathFinder;
         private readonly ICoreHandler _coreHandler;
 
@@ -28,42 +26,36 @@ namespace Groupdocs.Web.UI.Controllers
 
             _applicationPathFinder = new ApplicationPathFinder();
             _printableHtmlCreator = new PrintableHtmlCreator();
-            _urlsCreator = new UrlsCreator();
             _helper = new Helper();
-            _logger = new Logger(_rootPathFinder.GetLogFilePath());
             _coreHandler = new CoreHandler();
         }
 
         public GroupdocsViewerController(IRootPathFinder rootPathFinder,
                                         IApplicationPathFinder applicationPathFinder,
                                         IPrintableHtmlCreator printableHtmlCreator,
-                                        IUrlsCreator urlsCreator,
                                         IHelper helper,
                                         ICoreHandler coreHandler)
         {
             _rootPathFinder = rootPathFinder;
             _applicationPathFinder = applicationPathFinder;
             _printableHtmlCreator = printableHtmlCreator;
-            _urlsCreator = urlsCreator;
             _helper = helper;
-            //_logger = new Logger(_rootPathFinder.GetLogFilePath());
             _coreHandler = coreHandler;
         }
 
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            string pathsMessage = String.Format("Exception\r\nRoot Storage Path:{0}\r\nProcessing Path:{1}",
-                _rootPathFinder.GetRootStoragePath(), _rootPathFinder.GetCachePath());
-            _logger.LogMessage(pathsMessage);
-            _logger.LogException(filterContext.Exception);
-            if (!_helper.AreExceptionDetailsShownOnClient())
-            {
-                filterContext.Result =
-                    CreateJsonOrJsonpResponse(new { success = false, Reason = filterContext.Exception.Message }, null);
-                filterContext.ExceptionHandled = true;
-                //base.OnException(filterContext);
-            }
-        }
+        //protected override void OnException(ExceptionContext filterContext)
+        //{
+        //    string pathsMessage = String.Format("Exception\r\nRoot Storage Path:{0}\r\nProcessing Path:{1}",
+        //        _rootPathFinder.GetRootStoragePath(), _rootPathFinder.GetCachePath());
+        //    _logger.LogMessage(pathsMessage);
+        //    _logger.LogException(filterContext.Exception);
+        //    if (!_helper.AreExceptionDetailsShownOnClient())
+        //    {
+        //        filterContext.Result =
+        //            CreateJsonOrJsonpResponse(new { success = false, Reason = filterContext.Exception.Message }, null);
+        //        filterContext.ExceptionHandled = true;
+        //    }
+        //}
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
@@ -320,7 +312,6 @@ namespace Groupdocs.Web.UI.Controllers
 
             if (path == null)
             {
-                _logger.LogMessage("The path to the document being printed is null");
                 return new HttpStatusCodeResult(400);
             }
 

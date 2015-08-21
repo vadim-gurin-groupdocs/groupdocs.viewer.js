@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
-using Groupdocs.Engine.Viewing;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetPdfWithPrintDialogHandler : CoreHandler, IHttpHandler
+    public class GetPdfWithPrintDialogHandler : BaseAspNetHandler, IHttpHandler
     {
         public GetPdfWithPrintDialogHandler()
         {

@@ -4,7 +4,7 @@ using System.Web;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetDocumentPageImageHandler : CoreHandler, IHttpHandler
+    public class GetDocumentPageImageHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

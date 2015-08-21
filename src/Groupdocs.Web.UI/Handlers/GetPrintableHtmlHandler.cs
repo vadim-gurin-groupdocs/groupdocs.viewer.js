@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetPrintableHtmlHandler : CoreHandler, IHttpHandler
+    public class GetPrintableHtmlHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

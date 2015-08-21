@@ -40,7 +40,7 @@ namespace Groupdocs.Web.UI
         string GetHtmlWithImage(string path, IImageUrlCreator urlCreator);
     }
 
-    internal class PrintableHtmlCreator : IPrintableHtmlCreator
+    public class PrintableHtmlCreator : IPrintableHtmlCreator
     {
         private readonly IViewingService _viewingService;
         private readonly IUrlsCreator _urlsCreator;

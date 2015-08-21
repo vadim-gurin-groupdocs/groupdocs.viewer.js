@@ -6,7 +6,7 @@ using System.Web.Script.Serialization;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetImageUrlsHandler : CoreHandler, IHttpHandler
+    public class GetImageUrlsHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

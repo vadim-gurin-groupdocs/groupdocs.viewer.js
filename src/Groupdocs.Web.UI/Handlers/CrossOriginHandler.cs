@@ -3,7 +3,7 @@ using System.Web;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class CrossOriginHandler : CoreHandler, IHttpHandler
+    public class CrossOriginHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

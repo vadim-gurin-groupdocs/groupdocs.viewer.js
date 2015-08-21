@@ -33,37 +33,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionFilters\AllowCrossDomainAttribute.cs" />
     <Compile Include="Controllers\GroupdocsViewerController.cs" />
-    <Compile Include="Core\ApplicationPathFinder.cs" />
     <Compile Include="Core\AssemblyConstants.cs" />
-    <Compile Include="Core\Constants.cs" />
-    <Compile Include="Core\FileBrowserTreeDataJS.cs" />
-    <Compile Include="Core\FileStorageAdapter.cs" />
-    <Compile Include="Core\Helper.cs" />
-    <Compile Include="Core\ICoreHandler.cs" />
     <Compile Include="Core\LargeJsonResult.cs" />
-    <Compile Include="Core\Logger.cs" />
-    <Compile Include="Core\PrintableHtmlCreator.cs" />
-    <Compile Include="Core\RootPathFinder.cs" />
     <Compile Include="Core\StringProvider.cs" />
-    <Compile Include="Core\SupportedStorageProvider.cs" />
-    <Compile Include="Core\Tree.cs" />
-    <Compile Include="Core\UrlsCreator.cs" />
     <Compile Include="Core\Viewer.cs" />
-    <Compile Include="Core\ViewingServiceCreator.cs" />
-    <Compile Include="Handlers\CoreHandler.cs" />
+    <Compile Include="Handlers\BaseAspNetHandler.cs" />
     <Compile Include="Handlers\CrossOriginHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageImageHandler.cs" />
@@ -118,21 +100,9 @@
       <Project>{91c486ad-1971-4256-a8ab-661ba34907cb}</Project>
       <Name>Groupdocs.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.Engine.Viewing\Groupdocs.Engine.Viewing.csproj">
-      <Project>{f2afa5be-8718-4f72-9b5b-9cab3ed1c214}</Project>
-      <Name>Groupdocs.Engine.Viewing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.Engine\Groupdocs.Engine.csproj">
-      <Project>{6f028cbe-9e2e-422a-8766-c21e612e8cfa}</Project>
-      <Name>Groupdocs.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.Storage\Groupdocs.Storage.csproj">
-      <Project>{9049c637-5afb-4efa-b394-69262f61acc5}</Project>
-      <Name>Groupdocs.Storage</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.Threading\Groupdocs.Threading.csproj">
-      <Project>{7720bd74-31fd-4c06-a005-d7ce6ca75077}</Project>
-      <Name>Groupdocs.Threading</Name>
+    <ProjectReference Include="..\Groupdocs.CoreHandler\Groupdocs.CoreHandler.csproj">
+      <Project>{25af850f-6f55-4fd8-824d-fe273ae96780}</Project>
+      <Name>Groupdocs.CoreHandler</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

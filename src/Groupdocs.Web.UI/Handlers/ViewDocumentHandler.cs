@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class ViewDocumentHandler : CoreHandler, IHttpHandler
+    public class ViewDocumentHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

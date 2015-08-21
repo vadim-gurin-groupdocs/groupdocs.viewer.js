@@ -91,44 +91,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Aspose.BarCode">
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.BarCode.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Cells, Version=7.2.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Cells.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Diagram">
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Diagram.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Email">
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Email.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Imaging">
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Imaging.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Pdf, Version=6.9.0.0, Culture=neutral, PublicKeyToken=47b2d0fcacdd3eb6, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Pdf.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Slides, Version=6.2.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Slides.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Tasks">
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Words, Version=11.3.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dependencies\Aspose\Aspose.Words.dll</HintPath>
-    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\dependencies\Microsoft\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\dependencies\Misc\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -4,7 +4,7 @@ using System.Web;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetResourceForHtmlHandler : CoreHandler, IHttpHandler
+    public class GetResourceForHtmlHandler : BaseAspNetHandler, IHttpHandler
     {
         public GetResourceForHtmlHandler()
         {

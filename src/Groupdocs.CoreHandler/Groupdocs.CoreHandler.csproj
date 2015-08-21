@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{25AF850F-6F55-4FD8-824D-FE273AE96780}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Groupdocs.CoreHandler</RootNamespace>
+    <AssemblyName>Groupdocs.CoreHandler</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationPathFinder.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="CoreHandler.cs" />
+    <Compile Include="FileBrowserTreeDataJS.cs" />
+    <Compile Include="FileStorageAdapter.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="ICoreHandler.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="PrintableHtmlCreator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RootPathFinder.cs" />
+    <Compile Include="SupportedStorageProvider.cs" />
+    <Compile Include="Tree.cs" />
+    <Compile Include="UrlsCreator.cs" />
+    <Compile Include="ViewingServiceCreator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Groupdocs.Common\Groupdocs.Common.csproj">
+      <Project>{91c486ad-1971-4256-a8ab-661ba34907cb}</Project>
+      <Name>Groupdocs.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Engine.Viewing\Groupdocs.Engine.Viewing.csproj">
+      <Project>{f2afa5be-8718-4f72-9b5b-9cab3ed1c214}</Project>
+      <Name>Groupdocs.Engine.Viewing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Engine\Groupdocs.Engine.csproj">
+      <Project>{6F028CBE-9E2E-422A-8766-C21E612E8CFA}</Project>
+      <Name>Groupdocs.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Storage\Groupdocs.Storage.csproj">
+      <Project>{9049c637-5afb-4efa-b394-69262f61acc5}</Project>
+      <Name>Groupdocs.Storage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Threading\Groupdocs.Threading.csproj">
+      <Project>{7720bd74-31fd-4c06-a005-d7ce6ca75077}</Project>
+      <Name>Groupdocs.Threading</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

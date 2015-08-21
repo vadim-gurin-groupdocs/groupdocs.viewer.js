@@ -4,12 +4,10 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
-using Groupdocs.Engine.Viewing;
-using Groupdocs.Engine.Viewing.InstallableViewer;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class ReorderPageHandler : CoreHandler, IHttpHandler
+    public class ReorderPageHandler : BaseAspNetHandler, IHttpHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 

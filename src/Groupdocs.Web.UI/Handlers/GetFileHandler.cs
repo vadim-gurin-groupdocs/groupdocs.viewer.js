@@ -3,12 +3,10 @@ using System.IO;
 using System.Text;
 using System.Web;
 using Groupdocs.Common;
-using Groupdocs.Engine.Viewing;
-using Groupdocs.Threading;
 
 namespace Groupdocs.Web.UI.Handlers
 {
-    public class GetFileHandler : CoreHandler, IHttpHandler
+    public class GetFileHandler : BaseAspNetHandler, IHttpHandler
     {
         public GetFileHandler()
         {
