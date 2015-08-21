@@ -3,7 +3,7 @@ using Groupdocs.Web.Helpers.JSON;
 
 namespace Groupdocs.Web.UI.Core
 {
-    interface ICoreHandler
+    public interface ICoreHandler
     {
         object ViewDocument(IUrlsCreator urlsCreator, IPrintableHtmlCreator printableHtmlCreator,
             string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,

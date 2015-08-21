@@ -1,0 +1,44 @@
+﻿@{  
+    ViewBag.Title = "Index";
+}
+
+<h2>GroupDocs.Viewer Sample</h2>
+
+<div id="test" ng-app="groupdocsViewer" style="overflow: hidden; margin-bottom: 20px;background-color: gray;height:700px;width:1314px"></div>
+	
+<script type="text/javascript">
+	$(function () {
+	    var containerElement = $("#test");
+	    $("#test").groupdocsViewer({
+	        //filePath: "candy.pdf",
+	        filePath: "Deutschland201207Arbeit.pdf",
+	        //filePath: "Налоговый кодекс Республики Беларусь - общая часть.doc" ,
+	        //filePath: "Excel\\excel.xls",
+	        //filePath: "Excel\\excel-examples.xls",
+	        showHeader: true,
+	        showFolderBrowser: false,
+            showThumbnails: true,
+            showZoom: true,
+            showSearch: true,
+            showPaging: true,
+            useInnerThumbnails: true,
+            useHtmlBasedEngine: true,
+            supportTextSelection: true,
+            useVirtualScrolling: false,
+            preloadPageCount: null,
+            supportPageRotation: true
+        });
+
+        window.onresize = resize;
+        function resize() {
+            var width = containerElement.width();
+            containerElement.groupdocsViewer("setWidth", width);
+            var height = containerElement.height();
+            containerElement.groupdocsViewer("setHeight", height);
+            //containerElement.groupdocsViewer("setZoom", window.groupdocs.FitWidth);
+            //containerElement.groupdocsViewer("setZoom", window.groupdocs.FitHeight);
+        }
+	});
+</script>
+
+

@@ -22,10 +22,6 @@ namespace Groupdocs.Web.UI.Controllers
         private readonly IRootPathFinder _rootPathFinder;
         private readonly ICoreHandler _coreHandler;
 
-        public GroupdocsViewerController(IRootPathFinder rootPathFinder)
-        {
-        }
-
         public GroupdocsViewerController()
         {
             _rootPathFinder = new RootPathFinder();
@@ -36,6 +32,22 @@ namespace Groupdocs.Web.UI.Controllers
             _helper = new Helper();
             _logger = new Logger(_rootPathFinder.GetLogFilePath());
             _coreHandler = new CoreHandler();
+        }
+
+        public GroupdocsViewerController(IRootPathFinder rootPathFinder,
+                                        IApplicationPathFinder applicationPathFinder,
+                                        IPrintableHtmlCreator printableHtmlCreator,
+                                        IUrlsCreator urlsCreator,
+                                        IHelper helper,
+                                        ICoreHandler coreHandler)
+        {
+            _rootPathFinder = rootPathFinder;
+            _applicationPathFinder = applicationPathFinder;
+            _printableHtmlCreator = printableHtmlCreator;
+            _urlsCreator = urlsCreator;
+            _helper = helper;
+            //_logger = new Logger(_rootPathFinder.GetLogFilePath());
+            _coreHandler = coreHandler;
         }
 
         protected override void OnException(ExceptionContext filterContext)
