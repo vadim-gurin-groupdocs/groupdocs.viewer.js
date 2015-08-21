@@ -119,7 +119,7 @@
                                 callback, errorCallback,
                                 locale) {
             var onSucceded = function (response) {
-                if (response.data != null && typeof (response.data.path) !== "undefined") {
+                if (response.data != null) {
                     callback.apply(this, [response.data]);
                 }
                 else {
@@ -151,7 +151,7 @@
                                                    supportListOfContentControls, supportListOfBookmarks,
                                                    embedImagesIntoHtmlForWordFiles,
                 function (response) {
-                    if (response.data && typeof (response.data.path) !== "undefined") {
+                    if (response.data) {
                         callback.apply(this, [response.data]);
                     }
                     else {

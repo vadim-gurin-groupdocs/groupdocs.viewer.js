@@ -66,6 +66,16 @@ namespace Groupdocs.Web.UI
                );
         }
 
+        /// <summary>
+        /// Sets the path to a license file.
+        /// </summary>
+        /// <param name="licensePath"></param>
+        public static void SetLicensePath(string licensePath)
+        {
+            HttpContext context = HttpContext.Current;
+            HttpApplicationState application = context.Application;
+            application[Constants.GroupdocsLicensePathKey] = licensePath;
+        }
 
         /// <summary>
         /// Sets the storage provider used by Viewer.

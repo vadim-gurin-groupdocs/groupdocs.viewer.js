@@ -12,7 +12,9 @@
             showPaging: true,
             showZoom: true,
             showSearch: true,
-            showViewerStyleControl: true
+            showViewerStyleControl: true,
+            embedImagesIntoHtmlForWordFiles: false,
+            instanceIdToken: null,
         },
 
         _create: function () {

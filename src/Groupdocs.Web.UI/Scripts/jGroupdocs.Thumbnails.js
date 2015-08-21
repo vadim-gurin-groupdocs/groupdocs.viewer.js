@@ -135,7 +135,7 @@
         },
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
             this._sessionToken = data.token;
-            this._docGuid = data.path;
+            this._docGuid = data.path ? data.path : data.guid;
             this._viewModel.pageCount(data.pageCount);
 
             var width = this._thumbnailWidth;
