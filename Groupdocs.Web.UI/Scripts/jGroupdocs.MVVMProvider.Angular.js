@@ -49,9 +49,10 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                         elem.html(scope.$eval(attr.ngGroupdocsHtml));
                     }
 
-                    scope.$watch(attr.ngGroupdocsHtml, function (newValue, oldValue) {
+                    var unwatch = scope.$watch(attr.ngGroupdocsHtml, function (newValue, oldValue) {
                         if (newValue && newValue !== oldValue) {
                             elem.html(newValue);
+                            //unwatch();
                         }
                     });
                 }
@@ -237,26 +238,24 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     htmlPageContents
 )
 :
-'           <div class="button-pane"></div>' +
-'           <div class="highlight-pane"></div>' +
-'           <div class="custom-pane"></div>' +
-'           <div class="search-pane"></div>' +
-'           <img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" ' +
-'           style: { width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }"/>'
+            '<div class="button-pane"></div>' +
+            '<div class="highlight-pane"></div>' +
+            '<div class="custom-pane"></div>' +
+            '<div class="search-pane"></div>' +
+            '<img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" ' +
+                'style: { width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }"/>'
 ) +
 
-'   </div>' +
-//    '<!-- /ko -->' +
+    '</div>' +
+'</div>' +
 
+'<div class="tab_control_wrapper" data-ng-style="{display: viewModel.useTabsForPages() && viewModel.tabs().length > 0 ? \'block\' : \'none\'}">' +
+    '<ul class="doc_viewer_tab_control" >' +
+        '<li data-ng-repeat="tab in viewModel.tabs()" data-ng-class="{active: $index == viewModel.activeTab()}">' +
+            '<a href="#" data-ng-click="viewModel.activateTab($index)">{{tab.name}}</a>' +
+        '</li>' +
+    '</ul>' +
 '</div>';
-
-//'<div class="tab_control_wrapper" data-bind="visible: useTabsForPages && tabs().length > 0">' +
-//'<ul class="doc_viewer_tab_control" data-bind="foreach: tabs, visible: useTabsForPages && tabs().length > 0">' +
-//'   <li data-bind="css:{active:$index() == $root.activeTab()}">' +
-//'      <a href="#" data-bind="text:name, click: function(){$root.activateTab($index());}"></a>' +
-//'   </li>' +
-//'</ul>' +
-//'</div>';
             return viewerHtml;
         },
 

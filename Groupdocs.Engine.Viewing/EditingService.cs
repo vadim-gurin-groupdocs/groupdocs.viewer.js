@@ -271,7 +271,10 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
                 string cssPageContents = null;
                 using (new InterProcessLock(fullPathToHtml))
                 {
-                    cssPageContents = File.ReadAllText(pathToCss);
+                    if (File.Exists(pathToCss))
+                    {
+                        cssPageContents = File.ReadAllText(pathToCss);
+                    }
                     pageCss[i] = cssPageContents;
                 }
             }

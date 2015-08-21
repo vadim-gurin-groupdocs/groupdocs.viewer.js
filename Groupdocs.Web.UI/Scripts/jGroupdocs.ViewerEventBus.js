@@ -77,7 +77,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 imageVerticalMargin: this.imageVerticalMargin,
                 useJavaScriptDocumentDescription: this.useJavaScriptDocumentDescription,
                 searchPartialWords: this.searchPartialWords,
-                variableHeightPageSupport: this.variableHeightPageSupport,
+                variablePageSizeSupport: this.variablePageSizeSupport,
                 textSelectionSynchronousCalculation: this.textSelectionSynchronousCalculation,
                 minimumImageWidth: this.minimumImageWidth,
                 fileDisplayName: this.fileDisplayName,

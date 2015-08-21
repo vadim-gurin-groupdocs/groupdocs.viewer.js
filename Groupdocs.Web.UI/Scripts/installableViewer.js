@@ -495,7 +495,7 @@
                     imageVerticalMargin: 14,
                     useJavaScriptDocumentDescription: true,
                     searchPartialWords: true,
-                    variableHeightPageSupport: true,
+                    variablePageSizeSupport: true,
                     textSelectionSynchronousCalculation: false,
                     minimumImageWidth: settings.minimumImageWidth,
                     fileDisplayName: settings.fileDisplayName,

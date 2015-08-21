@@ -77,7 +77,7 @@ $.extend(groupdocs.PortalService.prototype, {
         this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : false);
     },
     
-    getImageUrlsAsync: function (userId, privateKey, path, dimension, token, firstPage, pageCount, quality, usePdf, docVersion,
+    getImageUrlsAsync: function (userId, privateKey, path, dimension, token, firstPage, pageCount, quality, usePdf,
                                  watermarkText, watermarkColor, watermarkPosition, watermarkFontSize,
                                  ignoreDocumentAbsence,
                                  useHtmlBasedEngine, supportPageRotation,
@@ -93,7 +93,6 @@ $.extend(groupdocs.PortalService.prototype, {
             pageCount: pageCount,
             quality: quality,
             usePdf: usePdf,
-            docVersion: docVersion,
             watermarkText: watermarkText,
             watermarkColor: watermarkColor,
             watermarkPosition: watermarkPosition,

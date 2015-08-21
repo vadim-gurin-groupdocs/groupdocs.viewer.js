@@ -4,7 +4,6 @@
         _pageCount: 0,
         _sessionToken: '',
         _docGuid: '',
-        _docVersion: 1,
         _pagesWidth: '150',
         _heightWidthRatio: 0,
         _thumbsSelected: 0,
@@ -137,10 +136,8 @@
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
             this._sessionToken = data.token;
             this._docGuid = data.path;
-            this._docVersion = data.version;
             this._viewModel.pageCount(data.pageCount);
 
-            this._heightWidthRatio = parseFloat(data.page_size.Height / data.page_size.Width);
             var width = this._thumbnailWidth;
             var variablePageSizeSupport = false, pageDescriptions = null, maxPageHeight, widthForMaxHeight;
             var thumbnailWrapperHeight = null;
@@ -150,6 +147,7 @@
                 pageDescriptions = data.documentDescription.pages;
                 maxPageHeight = data.documentDescription.maxPageHeight;
                 widthForMaxHeight = data.documentDescription.widthForMaxHeight;
+                this._heightWidthRatio = parseFloat(maxPageHeight / widthForMaxHeight);
                 thumbnailWrapperHeight = maxPageHeight / widthForMaxHeight * this._thumbnailWidth;
                 baseScale = (thumbnailWrapperHeight / maxPageHeight) / pointToPixelRatio;
                 if (this.useHtmlThumbnails) {
@@ -243,7 +241,7 @@
         retrieveImageUrls: function (imageCount) {
             this._portalService.getImageUrlsAsync(this.options.userId, this.options.userKey, this._docGuid,
                     this._thumbnailWidth.toString() + "x", this._sessionToken, 0, imageCount,
-                    this.options.quality, this.options.use_pdf, this._docVersion, null, null, null, null,
+                    this.options.quality, this.options.use_pdf, null, null, null, null,
                     this.options.ignoreDocumentAbsence,
                     this.options.useHtmlBasedEngine, this.options.supportPageRotation,
                     function (response) {
