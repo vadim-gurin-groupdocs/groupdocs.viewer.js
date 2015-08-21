@@ -143,10 +143,25 @@ namespace Groupdocs.Web.UI.Handlers
                                          string instanceId = null,
                                          string locale = null)
         {
+            double width;
+            bool isParsed = Double.TryParse(dimension.Substring(0, dimension.Length - 1), out width);
+            if (!isParsed)
+                return null;
+
+            string[] pageImageUrls;
+
+            pageImageUrls = urlsCreator.GetImageUrlsInternal(path, firstPage, pageCount, (int)width, quality, usePdf,
+                                                                  watermarkText, watermarkColor,
+                                                                  watermarkPosition,
+                                                                  watermarkWidth,
+                                                                  ignoreDocumentAbsence,
+                                                                  useHtmlBasedEngine, supportPageRotation,
+                                                                  instanceId,
+                                                                  locale);
             var data = new
-                {
-                    imageUrls = new[ ]{"", ""}
-                };
+            {
+                image_urls = pageImageUrls
+            };
 
             return data;
         }

@@ -57,7 +57,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             string modificationTimeString = GetModificationTimeString(filePath, true);
             string path = Path.Combine(
                 filePath, modificationTimeString ?? String.Empty,
-                String.Format(_imagesFolderTemplate, quality, "x.Pdf"));
+                String.Format(_imagesFolderTemplate, quality, width) + "x.Pdf");
             return path;
         }
 
@@ -102,7 +102,7 @@ namespace Groupdocs.Engine.Viewing.InstallableViewer
             bool useHtmlBasedEngine = false,
             bool supportPageRotation = false)
         {
-            string fullPath = GetCachedImageFullPath(documentPath, pageIndex, true, null, 100, null);
+            string fullPath = GetCachedImageFullPath(documentPath, pageIndex, true, width, 100, null);
             using (new InterProcessLock(fullPath))
             {
                 using (Stream imageStream = File.OpenRead(fullPath))
