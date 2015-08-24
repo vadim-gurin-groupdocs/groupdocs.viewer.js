@@ -2145,21 +2145,21 @@
                     horizontal = right;
             }
             var returnValue = "translate(";
-            //var widthWithoutMargin = this.pageWidth();
-            //var pageWidth = widthWithoutMargin + this.imageHorizontalMargin;
-            //var pageHeight = widthWithoutMargin * pageProportion;
             var fontHeight = 10;
             var pageWidth = 100;
             var pageHeight = pageWidth * pageProportion;
             var textWidth;
             if (this.watermarkScreenWidth == null) {
-                var textSize = element.getBBox();
+                var textSize;
+                if (!element)
+                    element = page.scopeElement[0];
+                textSize = element.getBBox();
                 this.watermarkScreenWidth = textSize.width;
             }
             textWidth = this.watermarkScreenWidth;
 
             var scale;
-            if (this.watermarkWidth == 0)
+            if (this.watermarkWidth == null)
                 scale = 1;
             else
                 scale = this.watermarkWidth / 100.;

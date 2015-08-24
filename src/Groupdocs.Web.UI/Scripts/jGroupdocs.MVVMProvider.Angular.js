@@ -78,7 +78,48 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 }
             }
         });
-        
+
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsWatermarkTransform", function () {
+            return {
+                restrict: "A",
+                compile: function compile(tElement, tAttrs, transclude) {
+                    return {
+                        pre: function preLink(scope, element, attr, controller) {
+                            var page = scope.page;
+                        },
+
+                        post: function (scope, element, attr, controller) {
+                            var page = scope.page;
+                            page.scopeElement = element;
+
+                            //attr.$observe('ngGroupdocsWatermarkTransform', function (stringValue) {
+                            //    var value = scope.$eval(stringValue);
+                            //    //element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
+                            //    element.attr("transform", value);
+                            //});
+
+                            element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
+                            scope.$watch(attr.ngGroupdocsWatermarkTransform, function (newValue, oldValue) {
+                                if (newValue && newValue !== oldValue) {
+                                    element.attr("transform", newValue);
+                                }
+                            });
+                        }
+                    }
+                }
+                
+            }
+        });
+
+        window.groupdocs.bindingProvider.prototype.$compileProvider.directive('ngGroupdocsViewBox', function () {
+            return {
+                link: function (scope, element, attrs) {
+                    attrs.$observe('ngGroupdocsViewBox', function(value) {
+                        element.get(0).setAttribute("viewBox", value);
+                    });
+                }
+            };
+        });
     },
 
     
@@ -195,9 +236,9 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var htmlBasedWatermarkMarkup;
             if (options.watermarkText) {
                 htmlBasedWatermarkMarkup =
-                '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-ng-attr-width="{{viewModel.pageWidth() + viewModel.imageHorizontalMargin + \'px\'}}" data-ng-attr-height="{{viewModel.pageWidth() * page.prop() + \'px\'}}" data-ng-attr-view-box="{{\'0 0 100 \' + 100 * page.prop()}}" pointer-events="none">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-ng-attr-width="{{viewModel.pageWidth() + viewModel.imageHorizontalMargin + \'px\'}}" data-ng-attr-height="{{viewModel.pageWidth() * page.prop() + \'px\'}}" data-ng-groupdocs-view-Box="{{\'0 0 100 \' + 100 * page.prop()}}" pointer-events="none">' +
                         '<text data-ng-style="{fill: viewModel.intToColor(viewModel.watermarkColor)}" ' +
-                        'data-ng-attr-transform="{{viewModel.watermarkTransform(page, $element)}}" ' +
+                        'data-ng-groupdocs-watermark-transform="viewModel.watermarkTransform(page)" ' +
                         'data-ng-attr-y="{{viewModel.watermarkPosition.indexOf(\'Top\') == -1 ? 100 * page.prop() :\'10\'}}" font-family="Verdana" font-size="10" x="0" y="0" >{{viewModel.watermarkText}}</text>' +
                         '</svg>';
             }
