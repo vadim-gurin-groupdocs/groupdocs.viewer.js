@@ -7,119 +7,122 @@ window.groupdocs.bindingProvider = function () {
 
 $.extend(window.groupdocs.bindingProvider.prototype, {
     scope: null,
+    areDirectivesCreated: false,
 
     create: function () {
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScrollable", function () {
-            return {
-                restrict: "A",
-                link: function (scope, elem, attr, ctrl) {
-                    elem.bind("scrollstop", function (e, data) {
-                        scope.viewModel.ScrollDocViewEnd(data, e);
-                        e.returnValue = false;
-                        return true;
-                    })
-                    .bind("scroll", function (e, data) {
-                        scope.viewModel.ScrollDocView(data, e);
-                        e.returnValue = false;
-                        return true;
-                    });
-                }
-            }
-        });
-
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchInput", function () {
-            return {
-                restrict: "A",
-                link: function (scope, elem, attr, ctrl) {
-                    elem.bind("keypress", function (e) {
-                        scope.viewModel.keyPressed(scope.viewModel, e);
-                    })
-                    .bind("keydown", function (e) {
-                        scope.viewModel.keyDown(scope.viewModel, e);
-                    });
-                }
-            }
-        });
-
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsHtml", function() {
-            return {
-                restrict: "A",
-                link: function (scope, elem, attr, ctrl) {
-                    if (attr.ngGroupdocsHtml) {
-                        elem.html(scope.$eval(attr.ngGroupdocsHtml));
-                    }
-
-                    var unwatch = scope.$watch(attr.ngGroupdocsHtml, function (newValue, oldValue) {
-                        if (newValue && newValue !== oldValue) {
-                            elem.html(newValue);
-                            //unwatch();
-                        }
-                    });
-                }
-            }
-        });
-
-
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchText", function () {
-            return {
-                restrict: "A",
-                link: function (scope, element, attr, ctrl) {
-                    var page = scope.page;
-                    if (!page.searched) {
-                        var value = scope.$eval(attr.ngGroupdocsSearchText);
-                        scope.viewModel.parseSearchParameters(element.get(0), value);
-                    }
-                    scope.$watch(attr.ngGroupdocsSearchText, function (newValue, oldValue) {
-                        if (newValue && newValue !== oldValue) {
-                            scope.viewModel.parseSearchParameters(element.get(0), newValue);
-                        }
-                    });
-                    page.searched = false;
-                }
-            }
-        });
-
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsWatermarkTransform", function () {
-            return {
-                restrict: "A",
-                compile: function compile(tElement, tAttrs, transclude) {
-                    return {
-                        pre: function preLink(scope, element, attr, controller) {
-                            var page = scope.page;
-                        },
-
-                        post: function (scope, element, attr, controller) {
-                            var page = scope.page;
-                            page.scopeElement = element;
-
-                            //attr.$observe('ngGroupdocsWatermarkTransform', function (stringValue) {
-                            //    var value = scope.$eval(stringValue);
-                            //    //element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
-                            //    element.attr("transform", value);
-                            //});
-
-                            element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
-                            scope.$watch(attr.ngGroupdocsWatermarkTransform, function (newValue, oldValue) {
-                                if (newValue && newValue !== oldValue) {
-                                    element.attr("transform", newValue);
-                                }
+        if (!window.groupdocs.bindingProvider.prototype.areDirectivesCreated) {
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScrollable", function() {
+                return {
+                    restrict: "A",
+                    link: function(scope, elem, attributes, controller) {
+                        elem.bind("scrollstop", function(e, data) {
+                                scope.viewModel.ScrollDocViewEnd(data, e);
+                                e.returnValue = false;
+                                return true;
+                            })
+                            .bind("scroll", function(e, data) {
+                                scope.viewModel.ScrollDocView(data, e);
+                                e.returnValue = false;
+                                return true;
                             });
-                        }
                     }
                 }
-                
-            }
-        });
+            });
 
-        window.groupdocs.bindingProvider.prototype.$compileProvider.directive('ngGroupdocsViewBox', function () {
-            return {
-                link: function (scope, element, attrs) {
-                    attrs.$observe('ngGroupdocsViewBox', function(value) {
-                        element.get(0).setAttribute("viewBox", value);
-                    });
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchInput", function() {
+                return {
+                    restrict: "A",
+                    link: function (scope, elem, attributes, controller) {
+                        elem.bind("keypress", function(e) {
+                                scope.viewModel.keyPressed(scope.viewModel, e);
+                            })
+                            .bind("keydown", function(e) {
+                                scope.viewModel.keyDown(scope.viewModel, e);
+                            });
+                    }
                 }
-            };
-        });
+            });
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsHtml", function() {
+                return {
+                    restrict: "A",
+                    link: function (scope, elem, attributes, controller) {
+                        if (attributes.ngGroupdocsHtml) {
+                            elem.html(scope.$eval(attributes.ngGroupdocsHtml));
+                        }
+
+                        var unwatch = scope.$watch(attributes.ngGroupdocsHtml, function(newValue, oldValue) {
+                            if (newValue && newValue !== oldValue) {
+                            elem.html(newValue);
+                            }
+                        });
+                    }
+                }
+            });
+
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchText", function() {
+                return {
+                    restrict: "A",
+                    link: function (scope, element, attributes, controller) {
+                        var page = scope.page;
+                        if (!page.searched) {
+                            var value = scope.$eval(attributes.ngGroupdocsSearchText);
+                            scope.viewModel.parseSearchParameters(element.get(0), value);
+                        }
+                        scope.$watch(attributes.ngGroupdocsSearchText, function(newValue, oldValue) {
+                            if (newValue && newValue !== oldValue) {
+                                scope.viewModel.parseSearchParameters(element.get(0), newValue);
+                            }
+                        });
+                        page.searched = false;
+                    }
+                }
+            });
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsWatermarkTransform", function() {
+                return {
+                    restrict: "A",
+                    compile: function compile(tElement, tAttrs, transclude) {
+                        return {
+                            pre: function preLink(scope, element, attr, controller) {
+                                var page = scope.page;
+                            },
+
+                            post: function(scope, element, attributes, controller) {
+                                var page = scope.page;
+                                page.scopeElement = element;
+
+                                //attributes.$observe('ngGroupdocsWatermarkTransform', function (stringValue) {
+                                //    var value = scope.$eval(stringValue);
+                                //    //element.attributes("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
+                                //    element.attributes("transform", value);
+                                //});
+
+                                element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
+                                scope.$watch(attributes.ngGroupdocsWatermarkTransform, function(newValue, oldValue) {
+                                    if (newValue && newValue !== oldValue) {
+                                        element.attr("transform", newValue);
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                }
+            });
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive('ngGroupdocsViewBox', function() {
+                return {
+                    link: function (scope, element, attributes, controller) {
+                        attributes.$observe('ngGroupdocsViewBox', function(value) {
+                            element.get(0).setAttribute("viewBox", value);
+                        });
+                    }
+                };
+            });
+            window.groupdocs.bindingProvider.prototype.areDirectivesCreated = true;
+        }
     },
 
     
@@ -236,43 +239,43 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var htmlBasedWatermarkMarkup;
             if (options.watermarkText) {
                 htmlBasedWatermarkMarkup =
-                '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-ng-attr-width="{{viewModel.pageWidth() + viewModel.imageHorizontalMargin + \'px\'}}" data-ng-attr-height="{{viewModel.pageWidth() * page.prop() + \'px\'}}" data-ng-groupdocs-view-Box="{{\'0 0 100 \' + 100 * page.prop()}}" pointer-events="none">' +
-                        '<text data-ng-style="{fill: viewModel.intToColor(viewModel.watermarkColor)}" ' +
-                        'data-ng-groupdocs-watermark-transform="viewModel.watermarkTransform(page)" ' +
-                        'data-ng-attr-y="{{viewModel.watermarkPosition.indexOf(\'Top\') == -1 ? 100 * page.prop() :\'10\'}}" font-family="Verdana" font-size="10" x="0" y="0" >{{viewModel.watermarkText}}</text>' +
-                        '</svg>';
+                    '<svg xmlns="http://www.w3.org/2000/svg" class="html_watermark" data-ng-attr-width="{{viewModel.pageWidth() + viewModel.imageHorizontalMargin + \'px\'}}" data-ng-attr-height="{{viewModel.pageWidth() * page.prop() + \'px\'}}" data-ng-groupdocs-view-Box="{{\'0 0 100 \' + 100 * page.prop()}}" pointer-events="none">' +
+                    '<text data-ng-style="{fill: viewModel.intToColor(viewModel.watermarkColor)}" ' +
+                    'data-ng-groupdocs-watermark-transform="viewModel.watermarkTransform(page)" ' +
+                    'data-ng-attr-y="{{viewModel.watermarkPosition.indexOf(\'Top\') == -1 ? 100 * page.prop() :\'10\'}}" font-family="Verdana" font-size="10" x="0" y="0" >{{viewModel.watermarkText}}</text>' +
+                    '</svg>';
             }
             else {
                 htmlBasedWatermarkMarkup = "";
             }
-            var htmlPageContents =
-'           <div class="html_page_contents"' +
-'                 data-ng-groupdocs-html="page.htmlContent()" ' +
+            var htmlPageContents = 
+            '<div class="html_page_contents" ' +
+                'data-ng-groupdocs-html="page.htmlContent()" ' +
                          'data-ng-attr-id="{{\'' + options.docViewerId + 'pageHtml-\' + page.number}}" ' +
                          'data-ng-groupdocs-search-text="page.searchText()" ' +
-'                        data-ng-class="{chrome: viewModel.browserIsChrome(), \'page-image\': !viewModel.useTabsForPages()}" ' +
-'                        data-ng-style=" { ' +
-'                                 width: viewModel.rotatedWidth(), ' +
+                         'data-ng-class="{\'page-image\': !viewModel.useTabsForPages()}" ' +
+                         'data-ng-style=" { ' +
+                                'width: viewModel.rotatedWidth(), ' +
             msScale +
-'                                 MozTransform: \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup + ', ' +
-'                                 \'-webkit-transform\': \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup +
-'                               }">' +
-'            </div>' + htmlBasedWatermarkMarkup;
+                                'MozTransform: \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup + ', ' +
+                                '\'-webkit-transform\': \'scale(\' + page.heightRatio() * viewModel.zoom() / 100.0  + \')\' ' + rotationMarkup +
+                                '}">' +
+                '</div>' + htmlBasedWatermarkMarkup;
 
             var useHtmlBasedEngine = (options.pageContentType == "html");
-            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-style="viewModel.pagesContainerStyle()" ';
+            var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-class="{chrome: viewModel.browserIsChrome()}", data-ng-style="viewModel.pagesContainerStyle()" ';
 
             var viewerHtml =
 
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
 //    '<!-- ko foreach: { afterRender: function(){$root.highlightSearch();} } -->' +
     '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages().slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" >' +
-'       <div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
-'           <div class="loading_overlay_message">' +
-'               <span class="progresspin"></span>' +
-'               <p data-localize="LoadingYourContent">Loading your content...</p>' +
-'           </div>' +
-'       </div>' +
+        '<div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
+            '<div class="loading_overlay_message">' +
+                '<span class="progresspin"></span>' +
+                '<p data-localize="LoadingYourContent">Loading your content...</p>' +
+            '</div>' +
+        '</div>' +
 
 (useHtmlBasedEngine ?
 (

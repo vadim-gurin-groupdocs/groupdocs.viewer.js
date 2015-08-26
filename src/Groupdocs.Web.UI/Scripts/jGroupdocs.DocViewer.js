@@ -430,7 +430,7 @@
                 pageDescription.heightRatio = this.bindingProvider.getObservable(1);
             }
             pageDescription.left = 0;
-            pageDescription.top = this.bindingProvider.getObservable(0);
+            pageDescription.top = this.getPageTop(0);
             this.pages.push(pageDescription);
             this.pagesContainerElement = this.documentSpace.find(".pages_container");
             this.contentControlsFromHtml = new Array();
@@ -734,6 +734,12 @@
                 this.alwaysShowLoadingSpinner(!isDocumentSinglePaged);
 
                 var browserIsChrome = $.browser.webkit && !!window.chrome;
+                var isChromium = window.chrome;
+                var vendorName = window.navigator.vendor;
+                var isOpera = window.navigator.userAgent.indexOf("OPR") > -1;
+                if (!!isChromium && vendorName === "Google Inc." && isOpera == false)
+                    browserIsChrome = true;
+
                 this.browserIsChrome(browserIsChrome);
                 var pageCss = response.pageCss[0];
                 if (!pageCss)
@@ -939,7 +945,7 @@
                         this.applyPageRotationInBrowser(i, pageDescription, rotationFromServer);
                     }
                     pageDescription.left = 0;
-                    pageDescription.top = this.bindingProvider.getObservable(0);
+                    pageDescription.top = this.getPageTop(0);
 
                     pagesNotObservable.push(pageDescription);
                 }
@@ -969,7 +975,7 @@
                         this.applyPageRotationInBrowser(i, pageDescription, rotationFromServer);
                     }
                     pageDescription.left = 0;
-                    pageDescription.top = this.bindingProvider.getObservable(0);
+                    pageDescription.top = this.getPageTop(0);
                     pagesNotObservable.push(pageDescription);
                 }
                 
@@ -1283,65 +1289,43 @@
             var startIndex = null;
             var documentSpaceHeight = this.documentSpace.height();
 
-            if (this.variablePageSizeSupport) {
-                var selectable = this.getSelectableInstance();
-                if (selectable == null && !this.useVirtualScrolling)
-                    return null;
-                var pages = this.pages();
-                var pageLocations;
-                var pageCount;
-                if (this.useVirtualScrolling)
-                    pageCount = pages.length;
-                else {
-                    pageLocations = selectable.pageLocations;
-                    if (pageLocations.length != pages.length)
-                        return null;
-                    pageCount = pageLocations.length;
-                }
-
-                var pageImageTop, pageImageBottom;
-                for (var i = 0; i < pageCount; i++) {
-                    if (this.useVirtualScrolling)
-                        pageImageTop = pages[i].top();
-                    else
-                        pageImageTop = pageLocations[i].y;
-
-                    pageHeight = pages[i].prop() * this.pageWidth();
-
-                    pageImageBottom = pageImageTop + pageHeight;
-                    if ((pageImageTop >= scrollTop && pageImageTop <= scrollTop + documentSpaceHeight) ||
-                        (pageImageBottom >= scrollTop && pageImageBottom <= scrollTop + documentSpaceHeight) ||
-                        (pageImageTop <= scrollTop && pageImageBottom >= scrollTop + documentSpaceHeight)) {
-                        if (start === null)
-                            start = i + 1;
-                        else
-                            end = i + 1;
-                    }
-                }
-                if (end === null)
-                    end = start;
-
-            }
+            var selectable = this.getSelectableInstance();
+            if (selectable == null && !this.useVirtualScrolling)
+                return null;
+            var pages = this.pages();
+            var pageLocations;
+            var pageCount;
+            if (this.useVirtualScrolling)
+                pageCount = pages.length;
             else {
-                if (this._firstPage != null) {
-                    pageHeight = this._firstPage.outerHeight(true); // div height
-                    var pageWidth = this._firstPage.outerWidth(true); // div width
-                    //var scrollTop = this.scrollPosition[1], //scroll top
-                    var dsW = this.pagesContainerElement.width();
-                    startIndex = Math.floor(scrollTop / pageHeight) + 1;
-                    var endIndex = Math.floor((scrollTop + documentSpaceHeight) / pageHeight) + 1;
+                pageLocations = selectable.pageLocations;
+                if (pageLocations.length != pages.length)
+                    return null;
+                pageCount = pageLocations.length;
+            }
 
-                    var hCountToShow = Math.floor(dsW / pageWidth);
+            var pageImageTop, pageImageBottom;
+            for (var i = 0; i < pageCount; i++) {
+                if (this.useVirtualScrolling)
+                    pageImageTop = pages[i].top();
+                else
+                    pageImageTop = pageLocations[i].y;
 
-                    if (hCountToShow == 0)
-                        hCountToShow = 1;
-                    if (this.layout() == this.Layouts.OnePageInRow)
-                        hCountToShow = 1;
+                pageHeight = pages[i].prop() * this.pageWidth();
 
-                    start = startIndex != 1 ? (startIndex - 1) * hCountToShow + 1 : 1;
-                    end = endIndex * hCountToShow <= this.pageCount() ? endIndex * hCountToShow : this.pageCount();
+                pageImageBottom = pageImageTop + pageHeight;
+                if ((pageImageTop >= scrollTop && pageImageTop <= scrollTop + documentSpaceHeight) ||
+                    (pageImageBottom >= scrollTop && pageImageBottom <= scrollTop + documentSpaceHeight) ||
+                    (pageImageTop <= scrollTop && pageImageBottom >= scrollTop + documentSpaceHeight)) {
+                    if (start === null)
+                        start = i + 1;
+                    else
+                        end = i + 1;
                 }
             }
+            if (end === null)
+                end = start;
+
             return { start: start, end: end };
         },
 
@@ -1398,28 +1382,17 @@
             this.pageInd(newPageIndex);
 
             var pageTop;
-            if (this.variablePageSizeSupport) {
-                if (this.useVirtualScrolling) {
-                    pageTop = this.pages()[newPageIndex - 1].top();
-                }
-                else {
-                    var selectable = this.getSelectableInstance();
-                    if (selectable != null) {
-                        if (selectable.pageLocations && selectable.pageLocations.length > 0) {
-                            var pageImageTop = selectable.pageLocations[newPageIndex - 1].y;
-                            pageTop = pageImageTop;
-                        }
-                    }
-                }
+            if (this.useVirtualScrolling) {
+                pageTop = this.pages()[newPageIndex - 1].top();
             }
             else {
-                var hCount = Math.floor(this.pagesContainerElement.width() / this._firstPage.width());
-                if (hCount == 0)
-                    hCount = 1;
-                if (this.layout() == this.Layouts.OnePageInRow)
-                    hCount = 1;
-                var selIndex = Math.ceil(newPageIndex / hCount) - 1;
-                pageTop = selIndex * this._firstPage.outerHeight(true);
+                var selectable = this.getSelectableInstance();
+                if (selectable != null) {
+                    if (selectable.pageLocations && selectable.pageLocations.length > 0) {
+                        var pageImageTop = selectable.pageLocations[newPageIndex - 1].y;
+                        pageTop = pageImageTop;
+                    }
+                }
             }
 
             var oldScrollTop = this.documentSpace.scrollTop();
@@ -1491,6 +1464,9 @@
                 this.setPage(this.pageInd());
                 this.loadImagesForVisiblePages();
             }
+
+            this.reflowPagesInChrome(true);
+            
         },
 
         loadPagesZoomed: function () {
@@ -1919,6 +1895,7 @@
                 function (response) {
                     var page = this.pages()[pageNumber];
                     this.applyPageRotationInBrowser(pageNumber, page, response.resultAngle);
+                    this.reflowPagesInChrome();
                     this.setPage(pageNumber + 1);
                     this.loadImagesForVisiblePages(true);
                 }.bind(this),
@@ -1998,6 +1975,25 @@
             if (selectable != null)
                 selectable.clearSelectionOnPage(pageNumber);
             this.loadImagesForVisiblePages(true);
+        },
+
+        reflowPagesInChrome: function (async) {
+            /* a hack to make Chrome reflow pages after changing their size 
+            when HTML watermarks are enabled */
+            if (this.browserIsChrome() && this.pageContentType == "html"
+                && this.watermarkText && !this.useVirtualScrolling) {
+                var self = this;
+                function internalReflow() {
+                    self.pagesContainerElement.children().each(function () {
+                        $(this).css("top", 0).css("left", 0);
+                    });
+                };
+
+                if (async)
+                    window.setTimeout(internalReflow, 10);
+                else
+                    internalReflow();
+            }
         },
 
         getHtmlElements: function (pageHtml, tagName) {
@@ -2347,7 +2343,8 @@
                     result.overflow = 'hidden';
                 }
             }
-
+            if (index == 0)
+                console.log(result.height);
             return result;
         },
 
@@ -2781,6 +2778,23 @@
                                                this.lastVisiblePageForVirtualMode());
                 }
             }
+        },
+
+        getPageTop: function (initialValue) {
+            if (this.useVirtualScrolling)
+                return this.bindingProvider.getObservable(initialValue);
+            else
+                return this.getAccessor(initialValue);
+        },
+
+        getAccessor: function (initialValue) {
+            var value = initialValue;
+            return function (param) {
+                if (typeof param == "undefined")
+                    return value;
+                else
+                    value = param;
+            };
         }
     });
 })(jQuery);

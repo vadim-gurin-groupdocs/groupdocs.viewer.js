@@ -92,7 +92,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '                 data-bind="' + (options.useVirtualScrolling ? 'parsedHtml' : 'html') + ': htmlContent(), ' +
                          'attr: { id:\'' + options.docViewerId + 'pageHtml-\' + number }, ' +
                          'searchText: searchText, ' +
-'                        css: {chrome: $root.browserIsChrome(), \'page-image\': !$root.useTabsForPages()}, ' +
+'                        css: {\'page-image\': !$root.useTabsForPages()}, ' +
 '                        style: { ' +
 '                                 width: $root.rotatedWidth(), ' +
             msScale +
