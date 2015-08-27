@@ -710,6 +710,7 @@
             this.options.startNumbers = visiblePagesNumbers;
             this.options.proportion = scaleFactor;
             this.options.pageHeight = pageHeight;
+            this.options.pageLocations = pageLocations;
 
             this.initCanvasOffset();
             this.initStorage();

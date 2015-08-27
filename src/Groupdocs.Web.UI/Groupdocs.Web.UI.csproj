@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Groupdocs.Viewer">
+      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Web.UI\Groupdocs.Viewer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -68,8 +71,11 @@
     <Content Include="Images\mainbg.png" />
     <Content Include="Images\spinner.gif" />
     <Content Include="Images\sprites.png" />
+    <Content Include="Scripts\jGroupdocs.Explorer.js" />
+    <Content Include="Scripts\jGroupdocs.fileOpenDialogViewModel.js" />
     <Content Include="Scripts\installableViewer.js" />
     <Content Include="Scripts\jGroupdocs.DocViewer.js" />
+    <Content Include="Scripts\jGroupdocs.FileOpenDialog.js" />
     <Content Include="Scripts\jGroupdocs.Geometry.js" />
     <Content Include="Scripts\jGroupdocs.InitJsInject.js" />
     <Content Include="Scripts\jGroupdocs.MVVMProvider.Knockout.js" />
@@ -86,6 +92,7 @@
     <Content Include="Scripts\jGroupdocs.Zooming.js" />
     <Content Include="Scripts\libs\angular.js" />
     <Content Include="Scripts\libs\angular.min.js" />
+    <Content Include="Scripts\libs\date.format.min.js" />
     <Content Include="Scripts\libs\jquery-1.9.1.min.js" />
     <Content Include="Scripts\libs\JsInject.min.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
@@ -94,16 +101,6 @@
     <Content Include="Scripts\plugins\rx.jQuery.js" />
     <Content Include="Scripts\plugins\scroll-startstop.events.jquery.js" />
     <Content Include="TestInstallableViewer.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Common\Groupdocs.Common.csproj">
-      <Project>{91c486ad-1971-4256-a8ab-661ba34907cb}</Project>
-      <Name>Groupdocs.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.CoreHandler\Groupdocs.CoreHandler.csproj">
-      <Project>{25af850f-6f55-4fd8-824d-fe273ae96780}</Project>
-      <Name>Groupdocs.CoreHandler</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\PT_Sans-Web-Bold.eot" />

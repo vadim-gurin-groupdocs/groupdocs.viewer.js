@@ -1000,22 +1000,28 @@
 
             var scale = this.scale();
 
-            this._dvselectable = this.pagesContainerElement.groupdocsSelectable({
-                txtarea: this.selectionContent,
-                pdf2XmlWrapper: this._pdf2XmlWrapper,
-                startNumbers: this.getVisiblePagesNumbers(),
-                pagesCount: this.pageCount(),
-                proportion: scale,
-                pageHeight: this.getPageHeight(),
-                docSpace: this.documentSpace,
-                pagePrefix: this.pagePrefix,
-                searchPartialWords: this.searchPartialWords,
-                initializeStorageOnly: this.pageContentType == "html",
-                preventTouchEventsBubbling: this.preventTouchEventsBubbling,
-                highlightColor: this.options.highlightColor,
-                useVirtualScrolling: this.useVirtualScrolling,
-                pageLocations: this.pages()
-            });
+            this._dvselectable = this.pagesContainerElement;
+            if (this.getSelectableInstance() == null) {
+                this.pagesContainerElement.groupdocsSelectable({
+                    txtarea: this.selectionContent,
+                    pdf2XmlWrapper: this._pdf2XmlWrapper,
+                    startNumbers: this.getVisiblePagesNumbers(),
+                    pagesCount: this.pageCount(),
+                    proportion: scale,
+                    pageHeight: this.getPageHeight(),
+                    docSpace: this.documentSpace,
+                    pagePrefix: this.pagePrefix,
+                    searchPartialWords: this.searchPartialWords,
+                    initializeStorageOnly: this.pageContentType == "html",
+                    preventTouchEventsBubbling: this.preventTouchEventsBubbling,
+                    highlightColor: this.options.highlightColor,
+                    useVirtualScrolling: this.useVirtualScrolling,
+                    pageLocations: this.pages()
+                });
+            }
+            else {
+                this.reInitSelectable();
+            }
             //this.getSelectableInstance().setVisiblePagesNumbers(this.getVisiblePagesNumbers());
 
             if (!this.docWasLoadedInViewer && (this.usePageNumberInUrlHash === undefined || this.usePageNumberInUrlHash == true)) {
@@ -2343,8 +2349,6 @@
                     result.overflow = 'hidden';
                 }
             }
-            if (index == 0)
-                console.log(result.height);
             return result;
         },
 

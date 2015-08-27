@@ -216,12 +216,6 @@
                     showThumbnails: settings.showThumbnails
                 }
                 this.bindingProvider.createHtml("initializationComponent", this.element, htmlOptions);
-
-                //container.each(function () {
-                //    $(
-                    
-                //    ).appendTo($(this));
-                //});
             }
 
             this.groupdocsViewerWrapper = groupdocsViewerWrapper = container.find(".groupdocs_viewer_wrapper");
@@ -520,7 +514,7 @@
                     urlHashEnabled: false,
                     instanceIdToken: settings.instanceIdToken
                 };
-                fileOpenDialogWrapper.fileOpenDialog(fileOpenDialogOptions);
+                fileOpenDialogWrapper.groupdocsFileOpenDialog(fileOpenDialogOptions);
                 fileOpenDialogWrapper.find(".popclose").click(function () {
                     self._hideFileOpenDialog();
                 });

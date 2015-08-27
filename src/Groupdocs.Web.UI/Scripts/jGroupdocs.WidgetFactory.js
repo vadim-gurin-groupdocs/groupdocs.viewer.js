@@ -11,7 +11,8 @@ window.groupdocs.getWidgetInstance = function (pluginDataKey, widgetObject, opti
             widgetInstance.options = options;
         else
             $.extend(widgetInstance.options, options);
-        widgetInstance._create();
+        if (widgetInstance._create)
+            widgetInstance._create();
         if (widgetInstance._init)
             widgetInstance._init();
         this.data(pluginDataKey, widgetInstance);

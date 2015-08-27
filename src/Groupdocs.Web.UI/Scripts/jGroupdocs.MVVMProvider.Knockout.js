@@ -276,6 +276,69 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '<span class="input_search_clear" data-bind="visible: visible, click: function(){$root.clearValue();}, clickBubble: false"></span>' +
 '<span class="new_head_tools_btn h_t_i_nav2" data-bind="visible: visible, click: findPreviousFromUI, css:{disabled:!previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
 '<span class="new_head_tools_btn h_t_i_nav3" data-bind="visible: visible, click: findNextFromUI, css:{disabled:!nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
+        },
+
+        "fileBrowser": function () {
+    return '<div class="modal_inner_wrapper">' +
+        '<div data-dismiss="modal" class="popclose">' +
+        '</div>' +
+        '<div class="modal_header">' +
+        '   <h3 data-localize="OpenFile">Open File</h3>' +
+        '</div>' +
+        '<div class="modal_content">' +
+            '<div class="modal_input_wrap_left">' +
+                '<div class="file_browser_content">' +
+                    '<div style="position: relative; display: inline-block; overflow: hidden;" class="file_browser_toolbar">' +
+                        '<!-- ko with: isNotRootFolder -->' +
+                            '<a data-bind="click: function () { $parent.openParentFolder();}" data-localize="ParentFolder" class="small_button file_browser_upload_btn">Parent folder</a>' +
+                        '<!-- /ko -->' +
+                    '</div>' +
+                    '<div style="position: relative;" data-bind="fileDnD: {}">' +
+                        '<div style="position: relative;">' +
+                        '</div>' +
+                        '<div class="file_browser_sort">' +
+                            '<a class="file_browser_sort_filename" data-bind="click: function() { setOrder(&quot;Name&quot;);}" href="#">' +
+                                '<h4 data-localize="FileName">File Name</h4>' +
+                                '<span data-bind="visible: orderBy() === \'Name\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow">' +
+                                '</span>' +
+                            '</a>' +
+                            '<a class="file_browser_sort_size" data-bind="click: function() { setOrder(&quot;Size&quot;);}" href="#">' +
+                                '<h4 data-localize="Size">Size</h4>' +
+                                '<span data-bind="visible: orderBy() === \'Size\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow"></span>' +
+                            '</a>' +
+                            '<a class="file_browser_sort_modified" data-bind="click: function() { setOrder(&quot;ModifiedOn&quot;);}" href="#">' +
+                                '<h4 data-localize="Modified">Modified</h4>' +
+                                '<span data-bind="visible: orderBy() === \'ModifiedOn\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow"></span>' +
+                            '</a>' +
+                        '</div>' +
+                        '<ul data-bind="foreach: folders" class="file_browser_folder_list">' +
+                            '<li data-bind="attr: { id: \'explorer-entity-\' + id }, click: open">' +
+                                '<div class="file_browser_listbox folderlist">' +
+                                    '<span class="listicons licon_folder"></span>' +
+                                    '<p data-bind="text: name()" class="listname_file_browser foldername"></p>' +
+                                '</div>' +
+                            '</li>' +
+                        '</ul>' +
+                        '<ul data-bind="foreach: files" class="file_browser_file_list">' +
+                            '<li data-bind="attr: { id: \'explorer-entity-\' + id }, click: open">' +
+                                '<div class="file_browser_listbox filelist">' +
+                                    '<span data-bind="css: { \'licon_unkwn\': (docType() != \'words\' &amp;&amp; docType() != \'pdf\' &amp;&amp;  docType() != \'slides\' &amp;&amp;docType() != \'cells\' &amp;&amp; docType() != \'image\' &amp;&amp; docType() != \'email\' &amp;&amp; docType() != \'diagram\' &amp;&amp; docType() != \'project\' &amp;&amp; docType() != \'taggedimage\'), \'licon_word\': docType() == \'words\', \'licon_pdf\': docType() == \'pdf\', \'licon_ppt\': docType() == \'slides\', \'licon_xls\': docType() == \'cells\', \'licon_bmp\': (docType() == \'image\' || docType() == \'taggedimage\'), \'licon_outlook\': docType() == \'email\', \'licon_visio\': docType() == \'diagram\', \'licon_mpp\': docType() == \'project\' }" class="listicons"></span>' +
+                                    '<p data-bind="text: name(), ellipsis: true" class="listname_file_browser filenameellipses"></p>' +
+                                    '<p data-bind="text: (sizeInKb() + \'Kb\')" class="listfilesize listsmalltext"></p>' +
+                                    '<p data-bind="text: modifiedOn()" class="listfilesize listsmalltext"></p>' +
+                                '</div>' +
+                            '</li>' +
+                        '</ul>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="modal_footer">' +
+            '<div class="modal_btn_wrapper">' +
+            '</div>' +
+        '</div>' +
+    '</div>';
         }
+
     }
 });

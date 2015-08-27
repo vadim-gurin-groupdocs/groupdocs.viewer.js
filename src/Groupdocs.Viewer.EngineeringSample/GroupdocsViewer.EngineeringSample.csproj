@@ -113,6 +113,18 @@
       <Link>Client\Scripts\jGroupdocs.DocViewer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Explorer.js">
+      <Link>Client\Scripts\jGroupdocs.Explorer.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.FileOpenDialog.js">
+      <Link>Client\Scripts\jGroupdocs.FileOpenDialog.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.fileOpenDialogViewModel.js">
+      <Link>Client\Scripts\jGroupdocs.fileOpenDialogViewModel.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Geometry.js">
       <Link>Client\Scripts\jGroupdocs.Geometry.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -175,6 +187,10 @@
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\libs\angular.min.js">
       <Link>Client\Scripts\libs\angular.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\date.format.min.js">
+      <Link>Client\Scripts\libs\date.format.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\libs\jquery-1.9.1.min.js">
