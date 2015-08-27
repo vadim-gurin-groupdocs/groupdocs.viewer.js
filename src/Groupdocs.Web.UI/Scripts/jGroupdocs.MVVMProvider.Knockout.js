@@ -293,20 +293,20 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                             '<a data-bind="click: function () { $parent.openParentFolder();}" data-localize="ParentFolder" class="small_button file_browser_upload_btn">Parent folder</a>' +
                         '<!-- /ko -->' +
                     '</div>' +
-                    '<div style="position: relative;" data-bind="fileDnD: {}">' +
+                    '<div style="position: relative;">' +
                         '<div style="position: relative;">' +
                         '</div>' +
                         '<div class="file_browser_sort">' +
-                            '<a class="file_browser_sort_filename" data-bind="click: function() { setOrder(&quot;Name&quot;);}" href="#">' +
+                            '<a class="file_browser_sort_filename" data-bind="click: function() { setOrder(\'Name\');}" href="#">' +
                                 '<h4 data-localize="FileName">File Name</h4>' +
                                 '<span data-bind="visible: orderBy() === \'Name\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow">' +
                                 '</span>' +
                             '</a>' +
-                            '<a class="file_browser_sort_size" data-bind="click: function() { setOrder(&quot;Size&quot;);}" href="#">' +
+                            '<a class="file_browser_sort_size" data-bind="click: function() { setOrder(\'Size\');}" href="#">' +
                                 '<h4 data-localize="Size">Size</h4>' +
                                 '<span data-bind="visible: orderBy() === \'Size\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow"></span>' +
                             '</a>' +
-                            '<a class="file_browser_sort_modified" data-bind="click: function() { setOrder(&quot;ModifiedOn&quot;);}" href="#">' +
+                            '<a class="file_browser_sort_modified" data-bind="click: function() { setOrder(\'ModifiedOn\');}" href="#">' +
                                 '<h4 data-localize="Modified">Modified</h4>' +
                                 '<span data-bind="visible: orderBy() === \'ModifiedOn\', css: {up: orderAsc(), down: !orderAsc()}" class="smallarrow"></span>' +
                             '</a>' +
@@ -322,8 +322,8 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                         '<ul data-bind="foreach: files" class="file_browser_file_list">' +
                             '<li data-bind="attr: { id: \'explorer-entity-\' + id }, click: open">' +
                                 '<div class="file_browser_listbox filelist">' +
-                                    '<span data-bind="css: { \'licon_unkwn\': (docType() != \'words\' &amp;&amp; docType() != \'pdf\' &amp;&amp;  docType() != \'slides\' &amp;&amp;docType() != \'cells\' &amp;&amp; docType() != \'image\' &amp;&amp; docType() != \'email\' &amp;&amp; docType() != \'diagram\' &amp;&amp; docType() != \'project\' &amp;&amp; docType() != \'taggedimage\'), \'licon_word\': docType() == \'words\', \'licon_pdf\': docType() == \'pdf\', \'licon_ppt\': docType() == \'slides\', \'licon_xls\': docType() == \'cells\', \'licon_bmp\': (docType() == \'image\' || docType() == \'taggedimage\'), \'licon_outlook\': docType() == \'email\', \'licon_visio\': docType() == \'diagram\', \'licon_mpp\': docType() == \'project\' }" class="listicons"></span>' +
-                                    '<p data-bind="text: name(), ellipsis: true" class="listname_file_browser filenameellipses"></p>' +
+                                    '<span data-bind="css: { \'licon_unkwn\': (docType() != \'words\' && docType() != \'pdf\' &&  docType() != \'slides\' &&docType() != \'cells\' && docType() != \'image\' && docType() != \'email\' && docType() != \'diagram\' && docType() != \'project\' && docType() != \'taggedimage\'), \'licon_word\': docType() == \'words\', \'licon_pdf\': docType() == \'pdf\', \'licon_ppt\': docType() == \'slides\', \'licon_xls\': docType() == \'cells\', \'licon_bmp\': (docType() == \'image\' || docType() == \'taggedimage\'), \'licon_outlook\': docType() == \'email\', \'licon_visio\': docType() == \'diagram\', \'licon_mpp\': docType() == \'project\' }" class="listicons"></span>' +
+                                    '<p data-bind="text: name()" class="listname_file_browser filenameellipses"></p>' +
                                     '<p data-bind="text: (sizeInKb() + \'Kb\')" class="listfilesize listsmalltext"></p>' +
                                     '<p data-bind="text: modifiedOn()" class="listfilesize listsmalltext"></p>' +
                                 '</div>' +

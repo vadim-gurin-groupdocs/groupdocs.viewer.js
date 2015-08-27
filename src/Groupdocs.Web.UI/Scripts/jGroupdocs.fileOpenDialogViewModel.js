@@ -12,17 +12,9 @@
         _uploaderElements: [],
 
         _init: function () {
-            this.fileExplorer.bind('onPathChanged', this._onExplorerPathChanged.bind(this));
             this.fileExplorer.bind('onNodeSelected', this._onExplorerNodeSelected.bind(this));
 
             this._explorerViewModel = $(this.fileExplorer).groupdocsExplorer("getViewModel");
-
-            //this.fileUploader.bind('onStart', this._onFileUploaderStart.bind(this));
-            //this.fileUploader.bind('onProgress', this._onFileUploaderProgress.bind(this));
-            //this.fileUploader.bind('onComplete', this._onFileUploaderComplete.bind(this));
-        },
-
-        _onExplorerPathChanged: function (e, path) {
         },
 
         _onExplorerNodeSelected: function (e, node) {

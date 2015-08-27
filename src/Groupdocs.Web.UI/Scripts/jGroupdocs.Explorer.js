@@ -9,10 +9,6 @@
 
             this._viewModel = this.getViewModel();
 
-            this._viewModel.path.subscribe(function (newValue) {
-                $(this.element).trigger('onPathChanged', [newValue]);
-            } .bind(this));
-
             $(this._viewModel).bind('onNodeSelected', function (e, node, initialEvent) {
                 $(this.element).trigger('onNodeSelected', [node, initialEvent]);
             }.bind(this));
@@ -34,7 +30,8 @@
                 startupPath: this.options.startupPath,
                 view: this.options.view,
                 urlHashEnabled: this.options.urlHashEnabled,
-                instanceIdToken: this.options.instanceIdToken
+                instanceIdToken: this.options.instanceIdToken,
+                bindingProvider: this.options.bindingProvider
             };
         },
 
@@ -71,10 +68,7 @@
             name: '',
             types: null
         },
-        _order: {
-            by: ko.observable('Name'),
-            asc: ko.observable(true)
-        },
+        _order: null,
         options: {
             userId: '',
             userKey: '',
@@ -83,6 +77,11 @@
         },
 
         _init: function () {
+            this.bindingProvider = this.options.bindingProvider;
+            this._order = {
+                by: this.bindingProvider.getObservable('Name'),
+                asc: this.bindingProvider.getObservable(true)
+            };
         },
 
         _loadPage: function (index, path, callback, errorCallback) {
@@ -172,35 +171,40 @@
         _userId: null,
         _userKey: null,
         urlHashEnabled: true,
-        busy: ko.observable(false),
-        path: ko.observable(''),
-        entities: ko.observableArray(),
-        files: ko.observableArray(),
-        folders: ko.observableArray(),
+        busy: null,
+        path: null,
+        entities: null,
+        files: null,
+        folders: null,
         changedUrlHash: false,
-        view: ko.observable('listing'),
+        view: null,
 
         _init: function (options) {
             this._model = this._createModel(options);
             this._userId = options.userId;
             this._userKey = options.userKey;
+            this.bindingProvider = options.bindingProvider;
             if (typeof(options.urlHashEnabled) != 'undefined') {
                 this.urlHashEnabled = options.urlHashEnabled;
             }
-            this.busy = ko.observable(false);
+            this.busy = this.bindingProvider.getObservable(false);
+            this.path = this.bindingProvider.getObservable('');
+            this.entities = this.bindingProvider.getObservableArray();
+            this.files = this.bindingProvider.getObservableArray();
+            this.folders = this.bindingProvider.getObservableArray();
+            this.view = this.bindingProvider.getObservable('listing');
 
-            this.path = ko.observable('');
-            this.entities = ko.observableArray();
+            this.path = this.bindingProvider.getObservable('');
+            this.entities = this.bindingProvider.getObservableArray();
 
-            this.files = ko.observableArray();
-            this.folders = ko.observableArray();
+            this.files = this.bindingProvider.getObservableArray();
+            this.folders = this.bindingProvider.getObservableArray();
 
-            this.isNotRootFolder = ko.computed({
-                read: function () {
-                    return !(this.path() === '');
-                },
-                owner: this
-            });
+            var self = this;
+            this.isNotRootFolder = this.bindingProvider.getComputedObservable(
+                function () {
+                    return !(self.path() === '');
+                });
             if (!options.skipStartupPathLoad)
                 this.openFolder(options.startupPath);
         },
@@ -261,29 +265,29 @@
             
             $.extend(entity, {
                 extended: true,
-                name: ko.observable(entity.name),
-                uploading: ko.observable(false),
+                name: self.bindingProvider.getObservable(entity.name),
+                uploading: self.bindingProvider.getObservable(false),
                 isNewVersion:false,
                 processingOnServer:false,
-                sizeInKb: ko.observable(Math.round(entity.size / 1024)),
-                docType: ko.observable((entity && entity.docType) ? entity.docType.toLowerCase() : ""),
+                sizeInKb: self.bindingProvider.getObservable(Math.round(entity.size / 1024)),
+                docType: self.bindingProvider.getObservable((entity && entity.docType) ? entity.docType.toLowerCase() : ""),
                 modifiedOn: function () { return (isNaN(entity.modifyTime) || entity.modifyTime < 0 ? '---' : new Date(entity.modifyTime).format('mmm dd, yyyy')); },
-                percentCompleted: ko.observable(0),
-                uploadSpeed: ko.observable(0),
-                remainingTime: ko.observable(0),
-                supportedTypes: ko.observableArray(supportedTypes),
-                thumbnail: ko.observable(entity.thumbnail),
-                selected: ko.observable(false),
-                isVisible: ko.observable(true),
-                viewJobId: ko.observable(null),
+                percentCompleted: self.bindingProvider.getObservable(0),
+                uploadSpeed: self.bindingProvider.getObservable(0),
+                remainingTime: self.bindingProvider.getObservable(0),
+                supportedTypes: self.bindingProvider.getObservableArray(supportedTypes),
+                thumbnail: self.bindingProvider.getObservable(entity.thumbnail),
+                selected: self.bindingProvider.getObservable(false),
+                isVisible: self.bindingProvider.getObservable(true),
+                viewJobId: self.bindingProvider.getObservable(null),
                 viewJobPoller: null
             });
 
-            entity.statusText = ko.computed(function () {
-                return (this.viewJobId() && this.viewJobId() > 0 ?
+            entity.statusText = this.bindingProvider.getComputedObservable(function () {
+                return (entity.viewJobId() && entity.viewJobId() > 0 ?
                     'Server-side processing ...' :
-                    'Time remaining: ' + this.remainingTime() + ' secs @ ' + this.uploadSpeed() + ' kb/Sec.');
-            }, entity);
+                    'Time remaining: ' + entity.remainingTime() + ' secs @ ' + entity.uploadSpeed() + ' kb/Sec.');
+            });
 
             entity.open = function (e) {
                 if (entity.type === 'file') {
@@ -291,33 +295,6 @@
                 } else
                     self.openFolder(entity.path);
             };
-
-            entity.viewJobId.subscribe(function (newValue) {
-                if (newValue && newValue > 0) {
-                    entity.processingOnServer = true;
-                    this.viewJobPoller = new jobPoller({
-                        userId: self._userId,
-                        userKey: self._userKey,
-                        jobId: newValue,
-                        completed: function () {
-                            entity.uploading(false);
-                            entity.processingOnServer = false;
-                            entity.viewJobPoller = null;
-                        },
-                        failed: function (error) {
-                            entity.uploading(false);
-                            entity.processingOnServer = false;
-                            entity.viewJobPoller = null;
-                        },
-                        timedout: function () {
-                            entity.uploading(false);
-                            entity.processingOnServer = false;
-                            entity.viewJobPoller = null;
-                        }
-                    });
-                    this.viewJobPoller.start();
-                }
-            });
         },
 
         _findEntity: function (name, type) {

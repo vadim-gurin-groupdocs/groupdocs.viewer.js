@@ -85,19 +85,9 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                     restrict: "A",
                     compile: function compile(tElement, tAttrs, transclude) {
                         return {
-                            pre: function preLink(scope, element, attr, controller) {
-                                var page = scope.page;
-                            },
-
                             post: function(scope, element, attributes, controller) {
                                 var page = scope.page;
                                 page.scopeElement = element;
-
-                                //attributes.$observe('ngGroupdocsWatermarkTransform', function (stringValue) {
-                                //    var value = scope.$eval(stringValue);
-                                //    //element.attributes("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
-                                //    element.attributes("transform", value);
-                                //});
 
                                 element.attr("transform", scope.viewModel.watermarkTransform(page, element.get(0)));
                                 scope.$watch(attributes.ngGroupdocsWatermarkTransform, function(newValue, oldValue) {
@@ -121,6 +111,23 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                     }
                 };
             });
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsVisible", function () {
+                return {
+                    restrict: "A",
+                    link: function (scope, element, attributes, controller) {
+                        var attribute = attributes.ngGroupdocsVisible;
+                        var value = scope.$eval(attribute);
+                        element.toggle(value);
+                        scope.$watch(attribute, function (newValue, oldValue) {
+                            if (newValue && newValue !== oldValue) {
+                                element.toggle(newValue);
+                            }
+                        });
+                    }
+                }
+            });
+            
             window.groupdocs.bindingProvider.prototype.areDirectivesCreated = true;
         }
     },
@@ -432,6 +439,66 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '<span class="input_search_clear" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.clearValue()" data-bind=", clickBubble: false"></span>' +
 '<span class="new_head_tools_btn h_t_i_nav2" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.findPreviousFromUI()" data-ng-class="{disabled:!viewModel.previousEnabled()}" data-tooltip="Search Backward" data-localize-tooltip="SearchBackward"></span>' +
 '<span class="new_head_tools_btn h_t_i_nav3" data-ng-style="{display: (viewModel.visible() ? \'block\' : \'none\')}" data-ng-click="viewModel.findNextFromUI()" data-ng-class="{disabled:!viewModel.nextEnabled()}" data-tooltip="Search Forward" data-localize-tooltip="SearchForward"></span>';
+        },
+
+        "fileBrowser": function () {
+            return '<div class="modal_inner_wrapper">' +
+                '<div data-dismiss="modal" class="popclose">' +
+                '</div>' +
+                '<div class="modal_header">' +
+                '   <h3 data-localize="OpenFile">Open File</h3>' +
+                '</div>' +
+                '<div class="modal_content">' +
+                    '<div class="modal_input_wrap_left">' +
+                        '<div class="file_browser_content">' +
+                            '<div style="position: relative; display: inline-block; overflow: hidden;" class="file_browser_toolbar">' +
+                                '<a data-ng-if="viewModel.isNotRootFolder()" data-ng-click="viewModel.openParentFolder()" data-localize="ParentFolder" class="small_button file_browser_upload_btn">Parent folder</a>' +
+                            '</div>' +
+                            '<div style="position: relative;">' +
+                                '<div style="position: relative;">' +
+                                '</div>' +
+                                '<div class="file_browser_sort">' +
+                                    '<a class="file_browser_sort_filename" data-ng-click="viewModel.setOrder(\'Name\')" href="#">' +
+                                        '<h4 data-localize="FileName">File Name</h4>' +
+                                        '<span data-ng-groupdocs-visible="viewModel.orderBy() === \'Name\'" data-ng-class="{up: viewModel.orderAsc(), down: !viewModel.orderAsc()}" class="smallarrow">' +
+                                        '</span>' +
+                                    '</a>' +
+                                    '<a class="file_browser_sort_size" data-ng-click="viewModel.setOrder(\'Size\')" href="#">' +
+                                        '<h4 data-localize="Size">Size</h4>' +
+                                        '<span data-ng-groupdocs-visible="viewModel.orderBy() === \'Size\'" data-ng-class="{up: viewModel.orderAsc(), down: !viewModel.orderAsc()}" class="smallarrow"></span>' +
+                                    '</a>' +
+                                    '<a class="file_browser_sort_modified" data-ng-click="viewModel.setOrder(\'ModifiedOn\')" href="#">' +
+                                        '<h4 data-localize="Modified">Modified</h4>' +
+                                        '<span data-ng-groupdocs-visible="viewModel.orderBy() === \'ModifiedOn\'" data-ng-class="{up: viewModel.orderAsc(), down: !viewModel.orderAsc()}" class="smallarrow"></span>' +
+                                    '</a>' +
+                                '</div>' +
+                                '<ul class="file_browser_folder_list">' +
+                                    '<li data-ng-repeat="folder in viewModel.folders()" data-ng-attr-id="{{\'explorer-entity-\' + folder.id}}" data-ng-click="folder.open()">' +
+                                        '<div class="file_browser_listbox folderlist">' +
+                                            '<span class="listicons licon_folder"></span>' +
+                                            '<p class="listname_file_browser foldername">{{folder.name()}}</p>' +
+                                        '</div>' +
+                                    '</li>' +
+                                '</ul>' +
+                                '<ul  class="file_browser_file_list">' +
+                                    '<li data-ng-repeat="file in viewModel.files()" data-ng-attr-id="{{\'explorer-entity-\' + file.id}}" data-ng-click="file.open()">' +
+                                        '<div class="file_browser_listbox filelist">' +
+                                            '<span data-ng-class="{ \'licon_unkwn\': (file.docType() != \'words\' && file.docType() != \'pdf\' && file.docType() != \'slides\' && file.docType() != \'cells\' && file.docType() != \'image\' && file.docType() != \'email\' && file.docType() != \'diagram\' && file.docType() != \'project\' && file.docType() != \'taggedimage\'), \'licon_word\': file.docType() == \'words\', \'licon_pdf\': file.docType() == \'pdf\', \'licon_ppt\': file.docType() == \'slides\', \'licon_xls\': file.docType() == \'cells\', \'licon_bmp\': (file.docType() == \'image\' || file.docType() == \'taggedimage\'), \'licon_outlook\': file.docType() == \'email\', \'licon_visio\': file.docType() == \'diagram\', \'licon_mpp\': file.docType() == \'project\' }" class="listicons"></span>' +
+                                            '<p class="listname_file_browser filenameellipses">{{file.name()}}</p>' +
+                                            '<p class="listfilesize listsmalltext">{{file.sizeInKb() + \'Kb\'}}</p>' +
+                                            '<p class="listfilesize listsmalltext">{{file.modifiedOn()}}</p>' +
+                                        '</div>' +
+                                    '</li>' +
+                                '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="modal_footer">' +
+                    '<div class="modal_btn_wrapper">' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
         }
     }
 });
