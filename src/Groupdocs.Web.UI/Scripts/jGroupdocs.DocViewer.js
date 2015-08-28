@@ -184,7 +184,7 @@
                 });
         },
 
-        retrieveImageUrls: function (fileId, token, imageCount, pagesDimension,
+        retrieveImageUrls: function (fileId, imageCount, pagesDimension,
                                          watermarkText, watermarkColor,
                                          watermarkPosition, watermarkWidth,
                                          ignoreDocumentAbsence,
@@ -193,18 +193,18 @@
                                          instanceIdToken,
                                          callback, errorCallback,
                                          locale) {
-            this._portalService.getImageUrlsAsync(this.userId, this.userKey, fileId, pagesDimension, token, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf, this.fileVersion,
+            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf, this.fileVersion,
                                               watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                               ignoreDocumentAbsence,
                                               useHtmlBasedEngine, supportPageRotation,
+                                              instanceIdToken,
+                                              locale,
             function (response) {
                 callback.apply(this, [response.data]);
             },
             function (error) {
                 errorCallback.apply(this, [error]);
-            },
-            instanceIdToken,
-            locale
+            }
         );
         },
 
@@ -614,7 +614,7 @@
 
             pageDimension = Math.floor(pageWidth) + "x";
 
-            this._model.retrieveImageUrls(this.fileId, this._sessionToken, imageCount, pageDimension,
+            this._model.retrieveImageUrls(this.fileId, imageCount, pageDimension,
                 this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
                 this.ignoreDocumentAbsence,
                 this.useHtmlBasedEngine, this.supportPageRotation,

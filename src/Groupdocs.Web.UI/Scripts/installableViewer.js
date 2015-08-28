@@ -9,6 +9,7 @@
             showPrint: true,
             showDownload: true,
             showThumbnails: true,
+            openThumbnails: true,
             showPaging: true,
             showZoom: true,
             showSearch: true,

@@ -35,9 +35,7 @@
             var userId = this.options.userId;
             var userKey = this.options.userKey;
             var fileExplorer = $(this.fileExplorer).groupdocsExplorer({ userId: userId, privateKey: userKey, pageSize: 30, fileTypes: this.options.fileTypes, urlHashEnabled: this.options.urlHashEnabled, instanceIdToken: this.options.instanceIdToken });
-            var fileUploader = null;//$(this.fileUploader).groupdocsUploader({ url: url, userId: userId, key: userKey, proxy: 'Uploader.aspx', fld: '', multiple: true, addFileBtn: $(this.uploadButton) });
-
-            return new fileOpenDialogViewModel(this, fileUploader, fileExplorer);
+            return new fileOpenDialogViewModel(this, fileExplorer);
         },
 
         getViewModel: function () {

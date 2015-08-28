@@ -27,8 +27,11 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
     },
 
     createHtml: function (componentName, element, options) {
-        var markup = this.componentHtml[componentName](options);
-        $(markup).appendTo(element);
+        var result = this.componentHtml[componentName](options);
+        if (result.element)
+            return result;
+        else
+            $(result).appendTo(element);
     },
 
     applyBindings: function (viewModel, element) {
@@ -338,6 +341,66 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             '</div>' +
         '</div>' +
     '</div>';
+        },
+
+        "thumbnails": function (options) {
+            var root = options.element;
+            var result = {};
+            var foreachOperator;
+            if (options.supportPageReordering) {
+                foreachOperator = "foreach: thumbnails, sortableArray: thumbnails";
+            }
+            else {
+                foreachOperator = "foreach: thumbnails";
+            }
+
+            result.element = $(
+'<div class="thumbnailsContainer" data-bind="event: { scroll: function(e) { scrollThumbnailsPanel(e); } }, visible:!useInnerThumbnails || openThumbnails">' +
+    '<ul class="vertical-list2 ui-selectable" data-bind="' + foreachOperator + '">' +
+        '<li class="thumb-page ui-selectee" data-bind="style: {height: $data.wrapperHeight + \'px\'}, css: { \'ui-selected\': ($index() + 1) == $root.pageInd() }, click: function() { $root.selectPage($index() + 1); }">' +
+
+(options.useHtmlThumbnails ?
+(
+        '<div class="thumbnail_wrapper" data-bind="style: {width:$data.width() + \'px\',height: $data.height() + 2 * $data.verticalPadding() + \'px\'}">' +
+            '<div class="html_page_contents"' +
+                'data-bind="html: htmlContent, ' +
+                    'visible: visible(),' +
+                    'attr: {id: $root.docViewerId + \'pageHtml-\' + ($index() + 1) },' +
+                    'style: { padding: $data.verticalPadding() + \'px 0\', ' +
+                        'MozTransform: \'scale(\' + $data.scale() + \')\', ' +
+                                    '\'-webkit-transform\': \'scale(\' + $data.scale() + \')\',' +
+                                    '\'-ms-transform\': \'scale(\' + $data.scale() + \')\' }">' +
+            '</div>' +
+
+            '<div class="html_page_contents mouse_intercept_overlay">' +
+            '</div>'
+)
+:
+(
+                '<div class="thumbnail_wrapper" data-bind="style: {height: $data.height() + 2 * $data.verticalPadding() + \'px\'}">' +
+                    '<img class="ui-selectee thumb_image" src="' + options.emptyImageUrl + '" data-bind="attr: {src: visible() ? url() : $root.emptyImageUrl}, style: {width: (visible() ? $data.width() : 0) + \'px\', height: (visible() ? $data.height() : 0) + \'px\', padding: $data.verticalPadding() + \'px 0\', backgroundColor: $data.backgroundColor()}" />'
+)) +
+
+                '</div>' +
+            '<span class="progresspin thumb_progress"></span>' +
+        '</li>' +
+    '</ul>' +
+'</div>');
+
+            if (options.useInnerThumbnails) {
+                result.thumbnailPanelElement = $('<div class="thumbnail_panel"></div>');
+                result.element.appendTo(result.thumbnailPanelElement);
+                result.toggleThumbnailsButton = $('<div class="thumbnail_stripe">' +
+                        '<a class="thumbnail_open" data-bind="click:function(){toggleThumbnails();}"></a>' +
+                    '</div>');
+                result.toggleThumbnailsButton.appendTo(result.thumbnailPanelElement);
+                result.thumbnailPanelElement.prependTo(root);
+            }
+            else {
+                result.element.appendTo(root);
+            }
+            result.rootElement = root;
+            return result;
         }
 
     }

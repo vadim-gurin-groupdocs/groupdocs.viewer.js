@@ -11,7 +11,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 
     create: function () {
         if (!window.groupdocs.bindingProvider.prototype.areDirectivesCreated) {
-            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScrollable", function() {
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsViewingScroll", function() {
                 return {
                     restrict: "A",
                     link: function(scope, elem, attributes, controller) {
@@ -25,6 +25,18 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                                 e.returnValue = false;
                                 return true;
                             });
+                    }
+                }
+            });
+
+            window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScroll", function () {
+                return {
+                    restrict: "A",
+                    link: function (scope, elem, attributes, controller) {
+                        var attribute = attributes.ngGroupdocsScroll;
+                        elem.bind("scroll", function (e, data) {
+                            var value = scope.$eval(attribute);
+                        });
                     }
                 }
             });
@@ -47,19 +59,19 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 return {
                     restrict: "A",
                     link: function (scope, elem, attributes, controller) {
+                        var attribute = attributes.ngGroupdocsHtml;
                         if (attributes.ngGroupdocsHtml) {
-                            elem.html(scope.$eval(attributes.ngGroupdocsHtml));
+                            elem.html(scope.$eval(attribute));
                         }
 
-                        var unwatch = scope.$watch(attributes.ngGroupdocsHtml, function(newValue, oldValue) {
+                        var unwatch = scope.$watch(attribute, function (newValue, oldValue) {
                             if (newValue && newValue !== oldValue) {
-                            elem.html(newValue);
+                                elem.html(newValue);
                             }
                         });
                     }
                 }
             });
-
 
             window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchText", function() {
                 return {
@@ -141,12 +153,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 return value;
             else {
                 value = param;
-                if (self.scope) {
-                    var phase = self.scope.$root.$$phase;
-                    if (phase != '$apply' && phase != '$digest') {
-                        self.scope.$digest();
-                    }
-                }
+                self.safeDigest();
             }
         };
     },
@@ -163,21 +170,18 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 return internalArray;
             else {
                 internalArray = param;
-                if (self.scope)
-                    self.scope.$digest();
+                self.safeDigest();
             }
         };
 
         observableArray.push = function (valueToPush) {
             internalArray.push(valueToPush);
-            if (self.scope)
-                self.scope.$digest();
+            self.safeDigest();
         };
 
         observableArray.removeAll = function () {
             internalArray.length = 0;
-            if (self.scope)
-                self.scope.$digest();
+            self.safeDigest();
         };
         
         return observableArray;
@@ -187,10 +191,21 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
         return functionParam;
     },
 
+    safeDigest: function () {
+        if (this.scope) {
+            var phase = this.scope.$root.$$phase;
+            if (phase != '$apply' && phase != '$digest') {
+                this.scope.$digest();
+            }
+        }
+    },
+    
     createHtml: function (componentName, element, options) {
-        var markup = this.componentHtml[componentName](options);
-        var angularElement = angular.element(markup);
-        angularElement.appendTo(element[0]);
+        var result = this.componentHtml[componentName](options);
+        if (result.element)
+            return result;
+        else
+            $(result).appendTo(element);
     },
 
     applyBindings: function (viewModel, element) {
@@ -376,7 +391,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                 '</div>' +
                 '<div class="fileOpenDialogWrapper" style="display: none"></div>' +
                 '<div class="viewer_mainwrapper ' + options.browserDependentCssClass + '">' +
-                '   <div id=' + options.docViewerId + ' class="doc_viewer" data-ng-groupdocs-scrollable data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e);e.returnValue = false;return true; } }">' +
+                '   <div id=' + options.docViewerId + ' class="doc_viewer" data-ng-groupdocs-viewing-scroll data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e);e.returnValue = false;return true; } }">' +
                 '   </div>' +
                 '   <div class="doc_viewer_wrapper_page_flip" style="overflow: auto; top: -50000px; position: absolute;height: 100%">' +
                 '   </div>' +
@@ -499,6 +514,60 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                     '</div>' +
                 '</div>' +
             '</div>';
+        },
+
+        "thumbnails": function (options) {
+            var root = options.element;
+            var result = {};
+            var foreachOperator;
+
+            result.element = $(
+'<div class="thumbnailsContainer" data-ng-groupdocs-scroll="viewModel.scrollThumbnailsPanel($event)" data-ng-groupdocs-visible="!useInnerThumbnails || openThumbnails">' +
+    '<ul class="vertical-list2 ui-selectable">' +
+        '<li class="thumb-page ui-selectee" data-ng-repeat="thumbnail in viewModel.thumbnails()" data-ng-style="{height: thumbnail.wrapperHeight + \'px\'}" data-ng-class="{ \'ui-selected\': ($index + 1) == viewModel.pageInd() }" data-ng-click="viewModel.selectPage($index + 1)">' +
+
+(options.useHtmlThumbnails ?
+(
+        '<div class="thumbnail_wrapper" data-ng-style="{width: thumbnail.width() + \'px\',height: thumbnail.height() + 2 * thumbnail.verticalPadding() + \'px\'}">' +
+            '<div class="html_page_contents"' +
+                'data-ng-groupdocs-html="thumbnail.htmlContent()"' +
+                    'data-ng-groupdocs-visible="thumbnail.visible()" ' +
+                    'data-ng-attr-id="{{thumbnail.docViewerId + \'pageHtml-\' + ($index + 1)}}"' +
+                    'data-ng-style="{ padding: thumbnail.verticalPadding() + \'px 0\', ' +
+                        'MozTransform: \'scale(\' + thumbnail.scale() + \')\', ' +
+                                    '\'-webkit-transform\': \'scale(\' + thumbnail.scale() + \')\',' +
+                                    '\'-ms-transform\': \'scale(\' + thumbnail.scale() + \')\' }">' +
+            '</div>' +
+
+            '<div class="html_page_contents mouse_intercept_overlay">' +
+            '</div>'
+)
+:
+(
+                '<div class="thumbnail_wrapper" data-ng-style="{height: thumbnail.height() + 2 * thumbnail.verticalPadding() + \'px\'}">' +
+                    '<img class="ui-selectee thumb_image" src="' + options.emptyImageUrl + '" data-ng-src="{{thumbnail.visible() ? thumbnail.url() : viewModel.emptyImageUrl}}" data-ng-style="{width: (thumbnail.visible() ? thumbnail.width() : 0) + \'px\', height: (thumbnail.visible() ? thumbnail.height() : 0) + \'px\', padding: thumbnail.verticalPadding() + \'px 0\', backgroundColor: thumbnail.backgroundColor()}" />'
+)) +
+
+                '</div>' +
+            '<span class="progresspin thumb_progress"></span>' +
+        '</li>' +
+    '</ul>' +
+'</div>');
+
+            if (options.useInnerThumbnails) {
+                result.thumbnailPanelElement = $('<div class="thumbnail_panel"></div>');
+                result.element.appendTo(result.thumbnailPanelElement);
+                result.toggleThumbnailsButton = $('<div class="thumbnail_stripe">' +
+                        '<a class="thumbnail_open" data-ng-click="viewModel.toggleThumbnails()"></a>' +
+                    '</div>');
+                result.toggleThumbnailsButton.appendTo(result.thumbnailPanelElement);
+                result.thumbnailPanelElement.prependTo(root);
+            }
+            else {
+                result.element.appendTo(root);
+            }
+            result.rootElement = root;
+            return result;
         }
     }
 });

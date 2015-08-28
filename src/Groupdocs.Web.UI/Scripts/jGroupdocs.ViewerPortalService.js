@@ -77,18 +77,15 @@ $.extend(groupdocs.PortalService.prototype, {
         this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : false);
     },
     
-    getImageUrlsAsync: function (userId, privateKey, path, dimension, token, firstPage, pageCount, quality, usePdf,
+    getImageUrlsAsync: function (path, dimension, firstPage, pageCount, quality, usePdf,
                                  watermarkText, watermarkColor, watermarkPosition, watermarkFontSize,
                                  ignoreDocumentAbsence,
                                  useHtmlBasedEngine, supportPageRotation,
-                                 successCallback, errorCallback,
-                                 instanceIdToken, locale) {
+                                 instanceIdToken, locale,
+                                 successCallback, errorCallback) {
         var data = {
-            userId: userId,
-            privateKey: privateKey,
             path: path,
             dimension: dimension,
-            token: token,
             firstPage: firstPage,
             pageCount: pageCount,
             quality: quality,

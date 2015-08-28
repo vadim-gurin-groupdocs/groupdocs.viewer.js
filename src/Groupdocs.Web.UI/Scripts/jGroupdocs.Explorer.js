@@ -17,22 +17,7 @@
         },
 
         _createViewModel: function () {
-            return new explorerViewModel(
-                this._getViewModelOptions());
-        },
-
-        _getViewModelOptions: function () {
-            return {
-                userId: this.options.userId,
-                userKey: this.options.privateKey,
-                pageSize: this.options.pageSize,
-                fileTypes: this.options.fileTypes,
-                startupPath: this.options.startupPath,
-                view: this.options.view,
-                urlHashEnabled: this.options.urlHashEnabled,
-                instanceIdToken: this.options.instanceIdToken,
-                bindingProvider: this.options.bindingProvider
-            };
+            return new explorerViewModel(this.options);
         },
 
         getViewModel: function () {
@@ -68,26 +53,26 @@
             name: '',
             types: null
         },
-        _order: null,
         options: {
             userId: '',
             userKey: '',
             pageSize: 30,
             extended: false
         },
+        _order: null,
 
         _init: function () {
             this.bindingProvider = this.options.bindingProvider;
             this._order = {
-                by: this.bindingProvider.getObservable('Name'),
-                asc: this.bindingProvider.getObservable(true)
+                by: 'Name',
+                asc: true
             };
         },
 
         _loadPage: function (index, path, callback, errorCallback) {
             this._portalService.loadFileBrowserTreeData(this.options.userId, this.options.userKey, path,
                     index ? index : 0, this.options.pageSize,
-                    this._order.by(), this._order.asc(),
+                    this._order.by, this._order.asc,
                     this._filter.name, this._filter.types, this.options.extended,
                     function (response) {
                         if (response.textStatus === 'success') {
@@ -112,7 +97,6 @@
             this._path = path || '';
             this._entitiesLoaded = 0;
             this._entitiesTotal = 0;
-
             this._loadPage(0, this._path, callback, errorCallback);
         },
 
@@ -123,24 +107,7 @@
 
             var page = Math.ceil(this._entitiesLoaded / this.options.pageSize);
             this._loadPage(page, this._path, callback, errorCallback);
-
             return true;
-        },
-
-        createFolder: function (path, callback, errorCallback) {
-            this._portalService.createFolderAsync(this.options.userId, this.options.userKey, path,
-                function (response) {
-                    if (response.data > 0) {
-                        callback.apply(this, [path, response.data]);
-                    }
-                    else {
-                        errorCallback.apply(this, [path, null, response.data]);
-                    }
-                } .bind(this),
-                function (error) {
-                    errorCallback.apply(this, [error, path]);
-                } .bind(this)
-            ).Subscribe();
         },
 
         setFilter: function (filter) {
@@ -148,14 +115,9 @@
             this._filter.types = filter.types;
         },
 
-        setOrder: function (order) {
-            if (this._order.by() == order) {
-                var asc = !this._order.asc();
-                this._order.asc(asc);
-            } else {
-                this._order.asc(true);
-                this._order.by(order);
-            }
+        setOrder: function(by, asc) {
+            this._order.by = by;
+            this._order.asc = asc;
         }
     });
 
@@ -168,9 +130,6 @@
         _model: null,
         _filtering: false,
         _ordering: false,
-        _userId: null,
-        _userKey: null,
-        urlHashEnabled: true,
         busy: null,
         path: null,
         entities: null,
@@ -178,15 +137,11 @@
         folders: null,
         changedUrlHash: false,
         view: null,
+        _order: null,
 
         _init: function (options) {
             this._model = this._createModel(options);
-            this._userId = options.userId;
-            this._userKey = options.userKey;
             this.bindingProvider = options.bindingProvider;
-            if (typeof(options.urlHashEnabled) != 'undefined') {
-                this.urlHashEnabled = options.urlHashEnabled;
-            }
             this.busy = this.bindingProvider.getObservable(false);
             this.path = this.bindingProvider.getObservable('');
             this.entities = this.bindingProvider.getObservableArray();
@@ -199,14 +154,18 @@
 
             this.files = this.bindingProvider.getObservableArray();
             this.folders = this.bindingProvider.getObservableArray();
+            this._order = {
+                by: this.bindingProvider.getObservable('Name'),
+                asc: this.bindingProvider.getObservable(true)
+            };
+            this._model.setOrder(this._order.by(), this._order.asc());
 
             var self = this;
             this.isNotRootFolder = this.bindingProvider.getComputedObservable(
                 function () {
                     return !(self.path() === '');
                 });
-            if (!options.skipStartupPathLoad)
-                this.openFolder(options.startupPath);
+            this.openFolder(options.startupPath);
         },
 
         _createModel: function (options) {
@@ -228,29 +187,31 @@
                 self.folders.removeAll();
             }
 
+            var entitiesNotObservable = new Array();
+            var filesNotObservable = new Array();
+            var foldersNotObservable = new Array();
             $.each(entities, function (i) {                
                 if (!this.extended) {
                     var e = this;
                     self._extendEntity(e);
-                    self.entities.push(e);
+                    entitiesNotObservable.push(e);
                 }
 
                 if (this.type == 'file') {
-                    self.files.push(this);
+                    filesNotObservable.push(this);
                 }
                 else {
-                    self.folders.push(this);
+                    foldersNotObservable.push(this);
                 }
             });
+
+            self.entities(entitiesNotObservable);
+            self.files(filesNotObservable);
+            self.folders(foldersNotObservable);
 
             self._filtering = false;
             self._ordering = false;
             self.path(path);
-            if (this.urlHashEnabled) {
-                this.changedUrlHash = true;
-                location.hash = self.view() + '#' + path;
-                this.changedUrlHash = false;
-            }
             self.busy(false);
         },
 
@@ -266,27 +227,14 @@
             $.extend(entity, {
                 extended: true,
                 name: self.bindingProvider.getObservable(entity.name),
-                uploading: self.bindingProvider.getObservable(false),
                 isNewVersion:false,
-                processingOnServer:false,
                 sizeInKb: self.bindingProvider.getObservable(Math.round(entity.size / 1024)),
                 docType: self.bindingProvider.getObservable((entity && entity.docType) ? entity.docType.toLowerCase() : ""),
                 modifiedOn: function () { return (isNaN(entity.modifyTime) || entity.modifyTime < 0 ? '---' : new Date(entity.modifyTime).format('mmm dd, yyyy')); },
-                percentCompleted: self.bindingProvider.getObservable(0),
-                uploadSpeed: self.bindingProvider.getObservable(0),
-                remainingTime: self.bindingProvider.getObservable(0),
                 supportedTypes: self.bindingProvider.getObservableArray(supportedTypes),
                 thumbnail: self.bindingProvider.getObservable(entity.thumbnail),
                 selected: self.bindingProvider.getObservable(false),
-                isVisible: self.bindingProvider.getObservable(true),
-                viewJobId: self.bindingProvider.getObservable(null),
-                viewJobPoller: null
-            });
-
-            entity.statusText = this.bindingProvider.getComputedObservable(function () {
-                return (entity.viewJobId() && entity.viewJobId() > 0 ?
-                    'Server-side processing ...' :
-                    'Time remaining: ' + entity.remainingTime() + ' secs @ ' + entity.uploadSpeed() + ' kb/Sec.');
+                isVisible: self.bindingProvider.getObservable(true)
             });
 
             entity.open = function (e) {
@@ -377,26 +325,6 @@
             return this.busy();
         },
 
-        createFile: function (name, size) {
-            var existingEntity = this._findEntity(name, 'file');
-            if (existingEntity) {
-                existingEntity.uploading(true);
-                existingEntity.isNewVersion = true;
-                return existingEntity;
-            }
-
-            var self = this;
-            var entity = this._createEntity(name, 'file', size);
-
-            entity.uploading(true);
-            entity.isNewVersion = false;
-
-            this.entities.push(entity);
-            this.files.unshift(entity);
-
-            return entity;
-        },
-
         entityExists: function (name, type) {
             return (this._findEntity(name, type) != null);
         },
@@ -409,24 +337,27 @@
 
         setOrder: function (order) {
             this._ordering = true;
-            this._model.setOrder(order);
+            if (this._order.by() == order) {
+                var asc = !this._order.asc();
+                this._order.asc(asc);
+            } else {
+                this._order.asc(true);
+                this._order.by(order);
+            }
+            this._model.setOrder(this._order.by(), this._order.asc());
             this.openFolder(this.path());
         },
 
         orderBy: function () {
-            return this._model._order.by();
+            return this._order.by();
         },
 
         orderAsc: function () {
-            return this._model._order.asc();
+            return this._order.asc();
         },
 
         findEntity: function (name, type) {
             return this._findEntity(name, type);
-        },
-        
-        isNullOrWhiteSpace: function (str){
-        	return str === null || str == 'undefined' || str.match(/^ *$/) !== null;
-		}
+        }
     });
 })(jQuery);

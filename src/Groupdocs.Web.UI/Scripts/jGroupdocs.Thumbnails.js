@@ -2,25 +2,25 @@
     $.groupdocsWidget('thumbnails', {
         _viewModel: null,
         _pageCount: 0,
-        _sessionToken: '',
-        _docGuid: '',
-        _pagesWidth: '150',
+        _documentPath: '',
         _heightWidthRatio: 0,
-        _thumbsSelected: 0,
         _thumbnailWidth: 150,
         _portalService: Container.Resolve("PortalService"),
         options: {
             quality: null,
             use_pdf: "false",
-            baseUrl: null,
-            userId: 0,
-            userKey: null,
-            supportPageRotation: false
+            supportPageRotation: false,
+            emptyImageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
         },
+
         _create: function () {
+            this.bindingProvider = new window.groupdocs.bindingProvider();
+            this.options.bindingProvider = this.bindingProvider;
+
+            this.options.element = this.element;
             this.useHtmlThumbnails = this.options.useHtmlThumbnails;
             this.useHtmlBasedEngine = this.options.useHtmlBasedEngine;
-            this.emptyImageUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=";
+            this.emptyImageUrl = this.options.emptyImageUrl;
             if (this.options.supportPageReordering) {
                 var self = this;
                 ko.bindingHandlers.sortableArray = {
@@ -51,32 +51,36 @@
             if (this.options.createHtml) {
                 this._createHtml();
             }
+
             if (this.options.thumbnailWidth)
                 this._thumbnailWidth = this.options.thumbnailWidth;
 
             this._viewModel = this.getViewModel();
-            ko.applyBindings(this._viewModel, this.element.get(0));
-            if (this.options.useInnerThumbnails)
-                ko.applyBindings(this._viewModel, this.toggleThuumbnailsButton[0]);
+            //var elementsToBind = this.element;
+            this.bindingProvider.applyBindings(this._viewModel, this.thumbnailPanelElement);
+            //if (this.options.useInnerThumbnails)
+            //    elementsToBind.add(this.toggleThumbnailsButton);
+            ////this.bindingProvider.applyBindings(this._viewModel, this.toggleThumbnailsButton);
+            //this.bindingProvider.applyBindings(this._viewModel, elementsToBind);
         },
 
         _createViewModel: function () {
             var viewModel =
             {
-                thumbnails: ko.observableArray([]),
-                pageInd: ko.observable(1),
-                pageCount: ko.observable(0),
-                busy: ko.observable(true)
+                thumbnails: this.bindingProvider.getObservableArray([]),
+                pageInd: this.bindingProvider.getObservable(1),
+                pageCount: this.bindingProvider.getObservable(0),
+                busy: this.bindingProvider.getObservable(true)
             };
-            viewModel._thumbnailHeight = ko.observable(201);
+            viewModel._thumbnailHeight = this.bindingProvider.getObservable(201);
             viewModel.useInnerThumbnails = this.options.useInnerThumbnails;
-            viewModel.openThumbnails = ko.observable(this.options.openThumbnails);
+            viewModel.openThumbnails = this.bindingProvider.getObservable(this.options.openThumbnails);
             viewModel.element = this.element;
             viewModel.rootElement = this.rootElement;
             viewModel.thumbnailPanelElement = this.thumbnailPanelElement;
             viewModel.emptyImageUrl = this.emptyImageUrl;
             if (this.useHtmlThumbnails)
-                viewModel.scale = ko.observable(0);
+                viewModel.scale = this.bindingProvider.getObservable(0);
 
             viewModel.scrollThumbnailsPanel = function (e) {
                 this._onScrollLeftPanel(e);
@@ -127,15 +131,16 @@
             };
             return viewModel;
         },
+
         getViewModel: function () {
             if (!this._viewModel) {
                 this._viewModel = this._createViewModel();
             }
             return this._viewModel;
         },
+
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
-            this._sessionToken = data.token;
-            this._docGuid = data.path ? data.path : data.guid;
+            this._documentPath = data.path ? data.path : data.guid;
             this._viewModel.pageCount(data.pageCount);
 
             var width = this._thumbnailWidth;
@@ -167,9 +172,9 @@
             for (var i = 0; i < pageCount; i++) {
                 thumbnailDescription = {
                     number: i + 1,
-                    busy: ko.observable(true),
-                    visible: ko.observable(false),
-                    url: ko.observable(this.emptyImageUrl)
+                    busy: this.bindingProvider.getObservable(true),
+                    visible: this.bindingProvider.getObservable(false),
+                    url: this.bindingProvider.getObservable(this.emptyImageUrl)
                 };
                 if (variablePageSizeSupport) {
                     if (i < pageDescriptions.length) {
@@ -193,20 +198,20 @@
                         thumbnailWidth = this._thumbnailWidth;
                         thumbnailHeight = 215;
                     }
-                    thumbnailDescription.width = ko.observable(thumbnailWidth);
-                    thumbnailDescription.height = ko.observable(thumbnailHeight);
+                    thumbnailDescription.width = this.bindingProvider.getObservable(thumbnailWidth);
+                    thumbnailDescription.height = this.bindingProvider.getObservable(thumbnailHeight);
                     verticalPadding = 0;
                     backgroundColor = "";
                     if (thumbnailHeight < spinnerHeight) {
                         verticalPadding = ((spinnerHeight - thumbnailHeight) / 2).toString();
                         backgroundColor = "white";
                     }
-                    thumbnailDescription.verticalPadding = ko.observable(verticalPadding);
-                    thumbnailDescription.backgroundColor = ko.observable(backgroundColor);
+                    thumbnailDescription.verticalPadding = this.bindingProvider.getObservable(verticalPadding);
+                    thumbnailDescription.backgroundColor = this.bindingProvider.getObservable(backgroundColor);
                     thumbnailDescription.wrapperHeight = thumbnailWrapperHeight;
-                    thumbnailDescription.scale = ko.observable((thumbnailHeight / pageDescriptions[i].h) / pointToPixelRatio);
+                    thumbnailDescription.scale = this.bindingProvider.getObservable((thumbnailHeight / pageDescriptions[i].h) / pointToPixelRatio);
                     thumbLeftCoord = (thumbnailContainerWidth - thumbnailWidth) / 2;
-                    thumbnailDescription.thumbLeftCoord = ko.observable(thumbLeftCoord);
+                    thumbnailDescription.thumbLeftCoord = this.bindingProvider.getObservable(thumbLeftCoord);
 
                     if (this.useHtmlThumbnails) {
                         thumbnailDescription.htmlContent = pages[i].htmlContent;
@@ -233,21 +238,21 @@
 
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
-            this._thumbsSelected = this._thumbsCountToShow; //_thumbsSelected = _thumbsCountToShow on start
 
             this.retrieveImageUrls(this._viewModel.pageCount());
         },
 
         retrieveImageUrls: function (imageCount) {
-            this._portalService.getImageUrlsAsync(this.options.userId, this.options.userKey, this._docGuid,
-                    this._thumbnailWidth.toString() + "x", this._sessionToken, 0, imageCount,
+            this._portalService.getImageUrlsAsync(this._documentPath,
+                    this._thumbnailWidth.toString() + "x", 0, imageCount,
                     this.options.quality, this.options.use_pdf, null, null, null, null,
                     this.options.ignoreDocumentAbsence,
                     this.options.useHtmlBasedEngine, this.options.supportPageRotation,
+                    this.options.instanceIdToken,
+                    this.options.locale,
                     function (response) {
                         for (var i = 0; i < imageCount; i++) {
                             this._viewModel.thumbnails()[i].url(response.data.image_urls[i]);
-                            //this.makeThumbnailNotBusy(i);
                         }
                         this._onScrollLeftPanel();
 
@@ -256,9 +261,7 @@
                         for (var i = 0; i < imageCount; i++) {
                             this.makeThumbnailNotBusy(i);
                         }
-                    }.bind(this),
-                this.options.instanceIdToken,
-                this.options.locale
+                    }.bind(this)
             );
         },
 
@@ -285,8 +288,6 @@
                 }
                 this._viewModel.thumbnails()[i].visible(true);
             }
-
-            this._thumbsSelected = endIndex;
         },
 
         setThumbnailsScroll: function (data) {
@@ -325,64 +326,11 @@
         },
 
         _createHtml: function () {
-            var root = this.element;
-            var foreachOperator;
-
-            if (this.options.supportPageReordering) {
-                //foreachOperator = "sortable: {data: thumbnails, afterMove: function(arg){console.log('arg.sourceIndex:',arg.sourceIndex)}}";
-                foreachOperator = "foreach: thumbnails, sortableArray: thumbnails";
-            }
-            else {
-                foreachOperator = "foreach: thumbnails";
-            }
-
-            this.element = $(
-'<div class="thumbnailsContainer" data-bind="event: { scroll: function(e) { scrollThumbnailsPanel(e); } }, visible:!useInnerThumbnails || openThumbnails">' +
-'    <ul class="vertical-list2 ui-selectable" data-bind="' + foreachOperator + '">' +
-'        <li class="thumb-page ui-selectee" data-bind="style: {height: $data.wrapperHeight + \'px\'}, css: { \'ui-selected\': ($index() + 1) == $root.pageInd() }, click: function() { $root.selectPage($index() + 1); }">' +
-
-(this.useHtmlThumbnails ?
-(
-'        <div class="thumbnail_wrapper" data-bind="style: {width:$data.width() + \'px\',height: $data.height() + 2 * $data.verticalPadding() + \'px\'}">' +
-'           <div class="html_page_contents"' +
-'                 data-bind="html: htmlContent, ' +
-'                        visible: visible(),' +
-'                        attr: {id: $root.docViewerId + \'pageHtml-\' + ($index() + 1) },' +
-'                        style: { padding: $data.verticalPadding() + \'px 0\', ' +
-'                                   MozTransform: \'scale(\' + $data.scale() + \')\', ' +
-'                                    \'-webkit-transform\': \'scale(\' + $data.scale() + \')\',' +
-'                                    \'-ms-transform\': \'scale(\' + $data.scale() + \')\' }">' +
-'            </div>' +
-
-'           <div class="html_page_contents mouse_intercept_overlay">' +
-'            </div>'
-)
-:
-(
-'                <div class="thumbnail_wrapper" data-bind="style: {height: $data.height() + 2 * $data.verticalPadding() + \'px\'}">' +
-'                    <img class="ui-selectee thumb_image" src="' + this.emptyImageUrl + '" data-bind="attr: {src: visible() ? url() : $root.emptyImageUrl}, style: {width: (visible() ? $data.width() : 0) + \'px\', height: (visible() ? $data.height() : 0) + \'px\', padding: $data.verticalPadding() + \'px 0\', backgroundColor: $data.backgroundColor()}" />'
-)) +
-
-'                </div>' +
-'                <span class="progresspin thumb_progress"></span>' +
-'        </li>' +
-'    </ul>' +
-'</div>');
-
-            if (this.options.useInnerThumbnails) {
-                this.thumbnailPanelElement = $('<div class="thumbnail_panel"></div>');
-                this.element.appendTo(this.thumbnailPanelElement);
-                this.toggleThuumbnailsButton = $('<div class="thumbnail_stripe">' +
-                    '   <a class="thumbnail_open" data-bind="click:function(){toggleThumbnails();}"></a>' +
-                    '</div>');
-                this.toggleThuumbnailsButton.appendTo(this.thumbnailPanelElement);
-                this.thumbnailPanelElement.prependTo(root);
-            }
-            else {
-                this.element.appendTo(root);
-            }
-            this.rootElement = root;
+            var result = this.bindingProvider.createHtml("thumbnails", this.element, this.options);
+            this.element = result.element;
+            this.thumbnailPanelElement = result.thumbnailPanelElement;
+            this.toggleThumbnailsButton = result.toggleThumbnailsButton;
+            this.rootElement = result.rootElement;
         }
-
     });
 })(jQuery);
