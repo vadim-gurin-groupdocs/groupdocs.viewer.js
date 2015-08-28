@@ -23,29 +23,6 @@
             this.emptyImageUrl = this.options.emptyImageUrl;
             if (this.options.supportPageReordering) {
                 var self = this;
-                ko.bindingHandlers.sortableArray = {
-                    init: function (element, valueAccessor) {
-                        var thumbnails = valueAccessor();
-                        $(element).sortable({
-                            axis: "y",
-                            update: function (event, ui) {
-                                var movedElement = ui.item[0];
-                                //retrieve our actual data item
-                                var dataItem = ko.dataFor(movedElement);
-                                //figure out its new position
-                                var oldPosition = thumbnails.indexOf(dataItem);
-                                var newPosition = ko.utils.arrayIndexOf(ui.item.parent().children(), movedElement);
-                                ui.item.remove();
-                                //remove the item and add it back in the right spot
-                                if (newPosition >= 0) {
-                                    thumbnails.remove(dataItem);
-                                    thumbnails.splice(newPosition, 0, dataItem);
-                                }
-                                self.rootElement.trigger("onPageReordered", [oldPosition, newPosition]);
-                            }
-                        });
-                    }
-                };
             }
 
             if (this.options.createHtml) {
@@ -56,12 +33,7 @@
                 this._thumbnailWidth = this.options.thumbnailWidth;
 
             this._viewModel = this.getViewModel();
-            //var elementsToBind = this.element;
             this.bindingProvider.applyBindings(this._viewModel, this.thumbnailPanelElement);
-            //if (this.options.useInnerThumbnails)
-            //    elementsToBind.add(this.toggleThumbnailsButton);
-            ////this.bindingProvider.applyBindings(this._viewModel, this.toggleThumbnailsButton);
-            //this.bindingProvider.applyBindings(this._viewModel, elementsToBind);
         },
 
         _createViewModel: function () {
@@ -176,60 +148,50 @@
                     visible: this.bindingProvider.getObservable(false),
                     url: this.bindingProvider.getObservable(this.emptyImageUrl)
                 };
-                if (variablePageSizeSupport) {
-                    if (i < pageDescriptions.length) {
-                        pageWidth = pageDescriptions[i].w;
-                        pageHeight = pageDescriptions[i].h;
-                        var prop = pageHeight / pageWidth;
-                        var rotation = pageDescriptions[i].rotation;
-                        if (typeof rotation == "undefined")
-                            rotation = 0;
-                        if (rotation % 180 != 0)
-                            prop = 1 / prop;
-                        thumbnailWidth = this._thumbnailWidth;
-                        thumbnailHeight = this._thumbnailWidth * prop;
-                        if (thumbnailHeight > thumbnailWrapperHeight) {
-                            scaleRatio = thumbnailWrapperHeight / thumbnailHeight;
-                            thumbnailHeight = thumbnailWrapperHeight;
-                            thumbnailWidth = this._thumbnailWidth * scaleRatio;
-                        }
-                    }
-                    else {
-                        thumbnailWidth = this._thumbnailWidth;
-                        thumbnailHeight = 215;
-                    }
-                    thumbnailDescription.width = this.bindingProvider.getObservable(thumbnailWidth);
-                    thumbnailDescription.height = this.bindingProvider.getObservable(thumbnailHeight);
-                    verticalPadding = 0;
-                    backgroundColor = "";
-                    if (thumbnailHeight < spinnerHeight) {
-                        verticalPadding = ((spinnerHeight - thumbnailHeight) / 2).toString();
-                        backgroundColor = "white";
-                    }
-                    thumbnailDescription.verticalPadding = this.bindingProvider.getObservable(verticalPadding);
-                    thumbnailDescription.backgroundColor = this.bindingProvider.getObservable(backgroundColor);
-                    thumbnailDescription.wrapperHeight = thumbnailWrapperHeight;
-                    thumbnailDescription.scale = this.bindingProvider.getObservable((thumbnailHeight / pageDescriptions[i].h) / pointToPixelRatio);
-                    thumbLeftCoord = (thumbnailContainerWidth - thumbnailWidth) / 2;
-                    thumbnailDescription.thumbLeftCoord = this.bindingProvider.getObservable(thumbLeftCoord);
 
-                    if (this.useHtmlThumbnails) {
-                        thumbnailDescription.htmlContent = pages[i].htmlContent;
+                if (i < pageDescriptions.length) {
+                    pageWidth = pageDescriptions[i].w;
+                    pageHeight = pageDescriptions[i].h;
+                    var prop = pageHeight / pageWidth;
+                    var rotation = pageDescriptions[i].rotation;
+                    if (typeof rotation == "undefined")
+                        rotation = 0;
+                    if (rotation % 180 != 0)
+                        prop = 1 / prop;
+                    thumbnailWidth = this._thumbnailWidth;
+                    thumbnailHeight = this._thumbnailWidth * prop;
+                    if (thumbnailHeight > thumbnailWrapperHeight) {
+                        scaleRatio = thumbnailWrapperHeight / thumbnailHeight;
+                        thumbnailHeight = thumbnailWrapperHeight;
+                        thumbnailWidth = this._thumbnailWidth * scaleRatio;
                     }
+                }
+                else {
+                    thumbnailWidth = this._thumbnailWidth;
+                    thumbnailHeight = 215;
+                }
+                thumbnailDescription.width = this.bindingProvider.getObservable(thumbnailWidth);
+                thumbnailDescription.height = this.bindingProvider.getObservable(thumbnailHeight);
+                verticalPadding = 0;
+                backgroundColor = "";
+                if (thumbnailHeight < spinnerHeight) {
+                    verticalPadding = ((spinnerHeight - thumbnailHeight) / 2).toString();
+                    backgroundColor = "white";
+                }
+                thumbnailDescription.verticalPadding = this.bindingProvider.getObservable(verticalPadding);
+                thumbnailDescription.backgroundColor = this.bindingProvider.getObservable(backgroundColor);
+                thumbnailDescription.wrapperHeight = thumbnailWrapperHeight;
+                thumbnailDescription.scale = this.bindingProvider.getObservable((thumbnailHeight / pageDescriptions[i].h) / pointToPixelRatio);
+                thumbLeftCoord = (thumbnailContainerWidth - thumbnailWidth) / 2;
+                thumbnailDescription.thumbLeftCoord = this.bindingProvider.getObservable(thumbLeftCoord);
+
+                if (this.useHtmlThumbnails) {
+                    thumbnailDescription.htmlContent = pages[i].htmlContent;
                 }
 
                 notObservableThumbnails.push(thumbnailDescription);
             }
             this._viewModel.thumbnails(notObservableThumbnails);
-            var height = parseInt(this._heightWidthRatio * width);
-            var thumbCss = "";
-            if (variablePageSizeSupport) {
-                //thumbCss = "div.thumbnailsContainer ul li img{background-color:white}";
-            }
-            else {
-                thumbCss = ".grpdx .thumbnailsContainer .thumb-page{min-height:" + height.toString() + "px}";
-            }
-
             this.loadThumbnails();
         },
 

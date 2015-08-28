@@ -6,7 +6,89 @@ window.groupdocs.bindingProvider = function () {
 };
 
 $.extend(window.groupdocs.bindingProvider.prototype, {
-    create: function() {
+    areBindingsCreated: false,
+
+    create: function () {
+        if (!window.groupdocs.bindingProvider.prototype.areBindingsCreated) {
+            ko.bindingHandlers.sortableArray = {
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    var thumbnails = valueAccessor();
+                    $(element).sortable({
+                        axis: "y",
+                        update: function(event, ui) {
+                            var movedElement = ui.item[0];
+                            //retrieve our actual data item
+                            var dataItem = ko.dataFor(movedElement);
+                            //figure out its new position
+                            var oldPosition = thumbnails.indexOf(dataItem);
+                            var newPosition = ko.utils.arrayIndexOf(ui.item.parent().children(), movedElement);
+                            ui.item.remove();
+                            //remove the item and add it back in the right spot
+                            if (newPosition >= 0) {
+                                thumbnails.remove(dataItem);
+                                thumbnails.splice(newPosition, 0, dataItem);
+                            }
+                            viewModel.rootElement.trigger("onPageReordered", [oldPosition, newPosition]);
+                        }
+                    });
+                }
+            };
+
+            if (!ko.bindingHandlers.searchText) {
+                ko.bindingHandlers.searchText = {
+                    update: function (element, valueAccessor, allBindings, viewModelParam, bindingContext) {
+                        var viewModel = bindingContext.$root;
+                        var page = bindingContext.$data;
+                        if (!page.searched) {
+                            var value = ko.utils.unwrapObservable(valueAccessor());
+                            viewModel.parseSearchParameters(element, value);
+                        }
+                        page.searched = false;
+                    }
+                };
+            }
+
+            if (!ko.bindingHandlers.parsedHtml) {
+                ko.bindingHandlers.parsedHtml = {
+                    init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                        var modelValue = valueAccessor();
+                        var jqueryElement = $(element);
+                        var elementValue = jqueryElement.html();
+
+                        if (ko.isWriteableObservable(modelValue)) {
+                            modelValue(elementValue);
+                        }
+                        else { //handle non-observable one-way binding
+                            var allBindings = allBindingsAccessor();
+                            if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].parsedHtml)
+                                allBindings['_ko_property_writers'].parsedHtml(elementValue);
+                        }
+                    },
+                    update: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                        var value = ko.unwrap(valueAccessor()) || "";
+                        var page = bindingContext.$data;
+                        var jqueryElement = $(element);
+                        jqueryElement.empty();
+                        if (value) {
+                            if (typeof page.currentValue == "undefined"
+                                || page.currentValue === null
+                                || page.currentValue != value) {
+                                var trimmedValue = value.replace(/^[\r\n\s]+|[\r\n\s]+$/g, "");
+                                page.parsedHtmlElement = $(trimmedValue);
+                                page.currentValue = value;
+                            }
+                            jqueryElement.append(page.parsedHtmlElement);
+                        }
+                        else {
+                            page.parsedHtmlElement = null;
+                            page.currentValue = null;
+                        }
+                    }
+                };
+            }
+
+            window.groupdocs.bindingProvider.prototype.areBindingsCreated = true;
+        }
     },
 
     getValue: function(variable) {
@@ -112,7 +194,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
     '<!-- ko foreach: { data: $root.useVirtualScrolling ? pages.slice(firstVisiblePageForVirtualMode(), lastVisiblePageForVirtualMode() + 1) : pages, afterRender: function(){$root.highlightSearch();} } -->' +
     '<div class="doc-page" data-bind="attr: {id: $root.pagePrefix + (($root.useVirtualScrolling ? $root.firstVisiblePageForVirtualMode() : 0) + $index() + 1)}, style: $root.pageElementStyle($index()), css: {cover_page: ($root.layout() == $root.Layouts.CoverThenTwoPagesInRow && ($root.useVirtualScrolling ? $root.firstVisiblePageForVirtualMode() : 0) + $index() == 0)}" >' +
-'       <div class="viewer_loading_overlay" data-bind="visible: ($root.alwaysShowLoadingSpinner() || $root.inprogress() || !visible()), style: { zIndex: ($root.inprogress() || !visible() ? 2 : 0), width: $root.pageWidth() + \'px\', height: $root.autoHeight() ? \'100%\' : ($parent.pageWidth() * $data.prop() + \'px\'), backgroundColor: ($root.inprogress() || !visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
+'       <div class="viewer_loading_overlay" data-bind="visible: ($root.alwaysShowLoadingSpinner() || $root.inprogress() || !visible()), style: $root.loadingOverlayStyle($data)"" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
 '           <div class="loading_overlay_message">' +
 '               <span class="progresspin"></span>' +
 '               <p data-localize="LoadingYourContent">Loading your content...</p>' +

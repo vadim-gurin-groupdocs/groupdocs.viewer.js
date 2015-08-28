@@ -2360,6 +2360,16 @@
             };
         },
 
+        loadingOverlayStyle: function (page) {
+            return {
+                display: ((this.alwaysShowLoadingSpinner() || this.inprogress() || !page.visible()) ? 'block' : 'none'), 
+                zIndex: (this.inprogress() || !page.visible() ? 2 : 0),
+                width: this.pageWidth() + 'px',
+                height: this.autoHeight() ? '100%' : (this.pageWidth() * page.prop() + 'px'),
+                backgroundColor: (this.inprogress() || !page.visible() ? '' : 'transparent')
+            }
+        },
+
         setLayout: function (layout) {
             this.layout(layout);
             this.calculatePagePositions();
@@ -2664,60 +2674,7 @@
         },
 
         initCustomBindings: function () {
-            if (window.ko) {
-                if (!ko.bindingHandlers.searchText) {
-                    ko.bindingHandlers.searchText = {
-                        update: function(element, valueAccessor, allBindings, viewModelParam, bindingContext) {
-                            var viewModel = bindingContext.$root;
-                            var page = bindingContext.$data;
-                            if (!page.searched) {
-                                var value = ko.utils.unwrapObservable(valueAccessor());
-                                viewModel.parseSearchParameters(element, value);
-                            }
-                            page.searched = false;
-                        }
-                    };
-                }
-
-                if (!ko.bindingHandlers.parsedHtml) {
-                    ko.bindingHandlers.parsedHtml = {
-                        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                            var modelValue = valueAccessor();
-                            var jqueryElement = $(element);
-                            var elementValue = jqueryElement.html();
-
-                            if (ko.isWriteableObservable(modelValue)) {
-                                modelValue(elementValue);
-                            }
-                            else { //handle non-observable one-way binding
-                                var allBindings = allBindingsAccessor();
-                                if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].parsedHtml)
-                                    allBindings['_ko_property_writers'].parsedHtml(elementValue);
-                            }
-                        },
-                        update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                            var value = ko.unwrap(valueAccessor()) || "";
-                            var page = bindingContext.$data;
-                            var jqueryElement = $(element);
-                            jqueryElement.empty();
-                            if (value) {
-                                if (typeof page.currentValue == "undefined"
-                                    || page.currentValue === null
-                                    || page.currentValue != value) {
-                                    var trimmedValue = value.replace(/^[\r\n\s]+|[\r\n\s]+$/g, "");
-                                    page.parsedHtmlElement = $(trimmedValue);
-                                    page.currentValue = value;
-                                }
-                                jqueryElement.append(page.parsedHtmlElement);
-                            }
-                            else {
-                                page.parsedHtmlElement = null;
-                                page.currentValue = null;
-                            }
-                        }
-                    };
-                }
-            }
+            
         },
 
         parseSearchParameters: function (element, value) {

@@ -292,7 +292,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
 '<div id="' + options.docViewerId + 'PagesContainer" ' + pagesContainerElementHtml + '>' +
 //    '<!-- ko foreach: { afterRender: function(){$root.highlightSearch();} } -->' +
     '<div data-ng-repeat="page in viewModel.useVirtualScrolling ? viewModel.pages().slice(viewModel.firstVisiblePageForVirtualMode(), viewModel.lastVisiblePageForVirtualMode() + 1) : viewModel.pages()" class="doc-page" data-ng-attr-id="{{viewModel.pagePrefix + ((viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index + 1)}}" data-ng-style="viewModel.pageElementStyle($index)" data-ng-class="{cover_page: (viewModel.layout() == viewModel.Layouts.CoverThenTwoPagesInRow && (viewModel.useVirtualScrolling ? viewModel.firstVisiblePageForVirtualMode() : 0) + $index == 0)}" >' +
-        '<div class="viewer_loading_overlay" data-ng-style="{display: ((viewModel.alwaysShowLoadingSpinner() || viewModel.inprogress() || !page.visible()) ? \'block\' : \'none\'), zIndex: (viewModel.inprogress() || !page.visible() ? 2 : 0), width: viewModel.pageWidth() + \'px\', height: viewModel.autoHeight() ? \'100%\' : (viewModel.pageWidth() * page.prop() + \'px\'), backgroundColor: (viewModel.inprogress() || !page.visible() ? \'\' : \'transparent\')}" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
+        '<div class="viewer_loading_overlay" data-ng-style="viewModel.loadingOverlayStyle(page)" style="width: 850px; height: 1100px;position: absolute;left:0;top:0">' +
             '<div class="loading_overlay_message">' +
                 '<span class="progresspin"></span>' +
                 '<p data-localize="LoadingYourContent">Loading your content...</p>' +
