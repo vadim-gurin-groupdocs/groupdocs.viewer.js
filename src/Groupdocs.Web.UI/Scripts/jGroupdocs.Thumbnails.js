@@ -161,7 +161,15 @@
 
         toggleThumbnails: function () {
             this.openThumbnails(!this.openThumbnails());
-            this.rootElement.trigger("onResizeThumbnails", this.thumbnailPanelElement.width());
+            if (this.useInnerThumbnails) {
+                var thumbnailStripeWidth = this.thumbnailPanelElement.children(".thumbnail_stripe").width();
+                var thumbnailContainerWidth = parseInt(this.element.css("width"));
+                var borderWidth = 1;
+                var resultWidth = thumbnailStripeWidth;
+                if (this.openThumbnails())
+                    resultWidth += thumbnailContainerWidth + borderWidth;
+                this.rootElement.trigger("onResizeThumbnails", resultWidth);//this.thumbnailPanelElement.width()
+            }
         },
 
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {

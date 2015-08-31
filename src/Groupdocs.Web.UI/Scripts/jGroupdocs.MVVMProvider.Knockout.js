@@ -437,7 +437,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             }
 
             result.element = $(
-'<div class="thumbnailsContainer" data-bind="event: { scroll: function(e) { scrollThumbnailsPanel(e); } }, visible:!useInnerThumbnails || openThumbnails">' +
+'<div class="thumbnailsContainer" data-bind="event: { scroll: function(e) { scrollThumbnailsPanel(e); } }, visible: openThumbnails">' +
     '<ul class="vertical-list2 ui-selectable" data-bind="' + foreachOperator + '">' +
         '<li class="thumb-page ui-selectee" data-bind="style: {height: $data.wrapperHeight + \'px\'}, css: { \'ui-selected\': ($index() + 1) == $root.pageInd() }, click: function() { $root.selectPage($index() + 1); }">' +
 

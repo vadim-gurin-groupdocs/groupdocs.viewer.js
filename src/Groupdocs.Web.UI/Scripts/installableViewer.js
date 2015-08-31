@@ -568,7 +568,7 @@
 
             if (settings.showThumbnails && settings.openThumbnails) {
                 container.find(".thumbs_btn").addClass("thumbs_btn_slide");
-                container.find(".thumbnailsContainer").css("display", "block");
+            //    container.find(".thumbnailsContainer").css("display", "block");
             }
 
             this.bindingProvider.applyBindings(viewTypeViewModel, viewTypeMenu);

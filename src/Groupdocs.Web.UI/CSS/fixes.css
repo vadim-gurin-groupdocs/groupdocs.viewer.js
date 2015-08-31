@@ -302,10 +302,6 @@ div.thumbnailsContainer ul li .html_page_contents {
     display: block
 }
 
-.thumbnailsContainer {
-    display: none
-}
-
 .search_highlight_html {
     background-color: #99cc99;
     fill: #99cc99;
