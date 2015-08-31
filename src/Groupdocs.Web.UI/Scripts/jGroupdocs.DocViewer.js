@@ -1985,7 +1985,7 @@
 
         reflowPagesInChrome: function (async) {
             /* a hack to make Chrome reflow pages after changing their size 
-            when HTML watermarks are enabled */
+            when SVG watermarks are enabled */
             if (this.browserIsChrome() && this.pageContentType == "html"
                 && this.watermarkText && !this.useVirtualScrolling) {
                 var self = this;

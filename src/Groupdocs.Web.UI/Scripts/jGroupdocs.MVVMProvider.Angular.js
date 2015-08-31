@@ -132,7 +132,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                         var value = scope.$eval(attribute);
                         element.toggle(value);
                         scope.$watch(attribute, function (newValue, oldValue) {
-                            if (newValue && newValue !== oldValue) {
+                            if (newValue !== oldValue) {
                                 element.toggle(newValue);
                             }
                         });
@@ -522,7 +522,7 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
             var foreachOperator;
 
             result.element = $(
-'<div class="thumbnailsContainer" data-ng-groupdocs-scroll="viewModel.scrollThumbnailsPanel($event)" data-ng-groupdocs-visible="!useInnerThumbnails || openThumbnails">' +
+'<div class="thumbnailsContainer" data-ng-groupdocs-scroll="viewModel.scrollThumbnailsPanel($event)" data-ng-groupdocs-visible="!viewModel.useInnerThumbnails || viewModel.openThumbnails()">' +
     '<ul class="vertical-list2 ui-selectable">' +
         '<li class="thumb-page ui-selectee" data-ng-repeat="thumbnail in viewModel.thumbnails()" data-ng-style="{height: thumbnail.wrapperHeight + \'px\'}" data-ng-class="{ \'ui-selected\': ($index + 1) == viewModel.pageInd() }" data-ng-click="viewModel.selectPage($index + 1)">' +
 

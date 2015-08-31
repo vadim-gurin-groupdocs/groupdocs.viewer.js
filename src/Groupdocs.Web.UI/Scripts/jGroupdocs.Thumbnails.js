@@ -1,11 +1,7 @@
 ﻿(function ($, undefined) {
     $.groupdocsWidget('thumbnails', {
         _viewModel: null,
-        _pageCount: 0,
-        _documentPath: '',
-        _heightWidthRatio: 0,
-        _thumbnailWidth: 150,
-        _portalService: Container.Resolve("PortalService"),
+        
         options: {
             quality: null,
             use_pdf: "false",
@@ -13,7 +9,7 @@
             emptyImageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
         },
 
-        _create: function () {
+        _create: function() {
             this.bindingProvider = new window.groupdocs.bindingProvider();
             this.options.bindingProvider = this.bindingProvider;
 
@@ -33,87 +29,144 @@
                 this._thumbnailWidth = this.options.thumbnailWidth;
 
             this._viewModel = this.getViewModel();
-            this.bindingProvider.applyBindings(this._viewModel, this.thumbnailPanelElement);
+            this.bindingProvider.applyBindings(this._viewModel, this.options.thumbnailPanelElement ? this.options.thumbnailPanelElement : this.options.element);
         },
 
-        _createViewModel: function () {
-            var viewModel =
-            {
-                thumbnails: this.bindingProvider.getObservableArray([]),
-                pageInd: this.bindingProvider.getObservable(1),
-                pageCount: this.bindingProvider.getObservable(0),
-                busy: this.bindingProvider.getObservable(true)
-            };
-            viewModel._thumbnailHeight = this.bindingProvider.getObservable(201);
-            viewModel.useInnerThumbnails = this.options.useInnerThumbnails;
-            viewModel.openThumbnails = this.bindingProvider.getObservable(this.options.openThumbnails);
-            viewModel.element = this.element;
-            viewModel.rootElement = this.rootElement;
-            viewModel.thumbnailPanelElement = this.thumbnailPanelElement;
-            viewModel.emptyImageUrl = this.emptyImageUrl;
-            if (this.useHtmlThumbnails)
-                viewModel.scale = this.bindingProvider.getObservable(0);
-
-            viewModel.scrollThumbnailsPanel = function (e) {
-                this._onScrollLeftPanel(e);
-            }.bind(this);
-
-            viewModel.selectPage = function (pageIndex) {
-                this.set(pageIndex);
-            }.bind(this);
-
-            viewModel.showThumbnails = function (show) {
-                var thumbnail;
-                for (var i = 0; i < this.thumbnails().length; i++) {
-                    thumbnail = this.thumbnails()[i];
-                    thumbnail.visible(show);
-                }
-            };
-
-            viewModel.hideThumbnails = function () {
-                this.showThumbnails(false);
-            };
-
-            viewModel.onProcessPages = function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
-                this.onProcessPages(data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId);
-            }.bind(this);
-
-            viewModel.setThumbnailsScroll = function (data) {
-                this.setThumbnailsScroll(data);
-            }.bind(this);
-
-            viewModel.set = function (index) {
-                this.set(index);
-            }.bind(this);
-
-            viewModel.setPageWithoutEvent = function (index) {
-                this.setPageWithoutEvent(index);
-            }.bind(this);
-
-            viewModel.getThumbnailsPanelWidth = function () {
-                var thumbnailsPanelWidth = 0;
-                if (this.useInnerThumbnails)
-                    thumbnailsPanelWidth = this.element.parent().width();
-                return thumbnailsPanelWidth;
-            };
-
-            viewModel.toggleThumbnails = function () {
-                this.openThumbnails(!this.openThumbnails());
-                this.rootElement.trigger("onResizeThumbnails", this.thumbnailPanelElement.width());
-            };
+        _createViewModel: function() {
+            var viewModel = new window.groupdocs.thumbnailsViewModel(this.options);
             return viewModel;
         },
 
-        getViewModel: function () {
+        getViewModel: function() {
             if (!this._viewModel) {
                 this._viewModel = this._createViewModel();
             }
             return this._viewModel;
         },
 
+        _createHtml: function () {
+            var result = this.bindingProvider.createHtml("thumbnails", this.element, this.options);
+            this.options.element = result.element;
+            this.options.thumbnailPanelElement = result.thumbnailPanelElement;
+            this.options.toggleThumbnailsButton = result.toggleThumbnailsButton;
+            this.options.rootElement = result.rootElement;
+        }
+    });
+
+
+    window.groupdocs.thumbnailsModel = function (options) {
+        this._create(options);
+    };
+
+    $.extend(window.groupdocs.thumbnailsModel.prototype, {
+        _portalService: Container.Resolve("PortalService"),
+
+        _create: function (options) {
+            this.options = options;
+        },
+
+        retrieveImageUrls: function(documentPath, thumbnailWidth, pageNumber, imageCount,
+                                    successHandler, errorHandler) {
+            this._portalService.getImageUrlsAsync(documentPath,
+                thumbnailWidth, pageNumber, imageCount,
+                this.options.quality, this.options.use_pdf, null, null, null, null,
+                this.options.ignoreDocumentAbsence,
+                this.options.useHtmlBasedEngine, this.options.supportPageRotation,
+                this.options.instanceIdToken,
+                this.options.locale,
+                function(response) {
+                    successHandler(response);
+                }.bind(this),
+                function(error) {
+                    errorHandler(error);
+                }.bind(this)
+            );
+        }
+    });
+
+    window.groupdocs.thumbnailsViewModel = function (options) {
+        this._create(options);
+    };
+
+    $.extend(window.groupdocs.thumbnailsViewModel.prototype, {
+        _pageCount: 0,
+        _documentPath: '',
+        _heightWidthRatio: 0,
+        _thumbnailWidth: 150,
+
+        thumbnails: null,
+        pageInd: null,
+        pageCount: null,
+        busy: null,
+
+        _thumbnailHeight: null,
+        useInnerThumbnails: false,
+        openThumbnails: null,
+        element: null,
+        rootElement: null,
+        thumbnailPanelElement: null,
+        emptyImageUrl: null,
+        scale: null,
+
+        _create: function (options) {
+            this.options = options;
+            this._init(options);
+        },
+
+        _init: function (options) {
+            this.bindingProvider = this.options.bindingProvider;
+            this._model = new window.groupdocs.thumbnailsModel(options);
+
+            this.thumbnails = this.bindingProvider.getObservableArray([]);
+            this.pageInd = this.bindingProvider.getObservable(1);
+            this.pageCount = this.bindingProvider.getObservable(0);
+            this.busy = this.bindingProvider.getObservable(true);
+            this._thumbnailHeight = this.bindingProvider.getObservable(201);
+            this.useInnerThumbnails = options.useInnerThumbnails;
+            this.openThumbnails = this.bindingProvider.getObservable(options.openThumbnails);
+            this.element = options.element;
+            this.rootElement = options.rootElement;
+            this.thumbnailPanelElement = options.thumbnailPanelElement;
+            this.emptyImageUrl = options.emptyImageUrl;
+            if (this.useHtmlThumbnails)
+                this.scale = this.bindingProvider.getObservable(0);
+        },
+
+        scrollThumbnailsPanel: function (e) {
+            this._onScrollThumbnailsPanel(e);
+        },
+
+        selectPage: function (pageIndex) {
+            this.set(pageIndex);
+        },
+
+        showThumbnails: function (show) {
+            var thumbnail;
+            for (var i = 0; i < this.thumbnails().length; i++) {
+                thumbnail = this.thumbnails()[i];
+                thumbnail.visible(show);
+            }
+        },
+
+        hideThumbnails: function () {
+            this.showThumbnails(false);
+        },
+
+        getThumbnailsPanelWidth: function () {
+            var thumbnailsPanelWidth = 0;
+            if (this.useInnerThumbnails)
+                thumbnailsPanelWidth = this.element.parent().width();
+            return thumbnailsPanelWidth;
+        },
+
+        toggleThumbnails: function () {
+            this.openThumbnails(!this.openThumbnails());
+            this.rootElement.trigger("onResizeThumbnails", this.thumbnailPanelElement.width());
+        },
+
         onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
             this._documentPath = data.path ? data.path : data.guid;
-            this._viewModel.pageCount(data.pageCount);
+            this.pageCount(data.pageCount);
 
             var width = this._thumbnailWidth;
             var variablePageSizeSupport = false, pageDescriptions = null, maxPageHeight, widthForMaxHeight;
@@ -130,7 +183,7 @@
                 if (this.useHtmlThumbnails) {
                     this.getDocumentPageHtmlCallback = getDocumentPageHtmlCallback;
                     this.viewerViewModel = viewerViewModel;
-                    this._viewModel.docViewerId = docViewerId;
+                    this.docViewerId = docViewerId;
                     var thumbnailContainerWidth = this.element.width();
                 }
             }
@@ -138,7 +191,7 @@
             var notObservableThumbnails = [];
             var thumbnailDescription, verticalPadding, thumbnailWidth, thumbnailHeight, backgroundColor;
             var spinnerHeight = 47;
-            var pageCount = this._viewModel.pageCount();
+            var pageCount = this.pageCount();
             var pageWidth, pageHeight, scaleRatio;
             var thumbLeftCoord;
             for (var i = 0; i < pageCount; i++) {
@@ -191,7 +244,7 @@
 
                 notObservableThumbnails.push(thumbnailDescription);
             }
-            this._viewModel.thumbnails(notObservableThumbnails);
+            this.thumbnails(notObservableThumbnails);
             this.loadThumbnails();
         },
 
@@ -201,23 +254,17 @@
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
 
-            this.retrieveImageUrls(this._viewModel.pageCount());
+            this.retrieveImageUrls(this.pageCount());
         },
 
         retrieveImageUrls: function (imageCount) {
-            this._portalService.getImageUrlsAsync(this._documentPath,
+            this._model.retrieveImageUrls(this._documentPath,
                     this._thumbnailWidth.toString() + "x", 0, imageCount,
-                    this.options.quality, this.options.use_pdf, null, null, null, null,
-                    this.options.ignoreDocumentAbsence,
-                    this.options.useHtmlBasedEngine, this.options.supportPageRotation,
-                    this.options.instanceIdToken,
-                    this.options.locale,
                     function (response) {
                         for (var i = 0; i < imageCount; i++) {
-                            this._viewModel.thumbnails()[i].url(response.data.image_urls[i]);
+                            this.thumbnails()[i].url(response.data.image_urls[i]);
                         }
-                        this._onScrollLeftPanel();
-
+                        this._onScrollThumbnailsPanel();
                     }.bind(this),
                     function (error) {
                         for (var i = 0; i < imageCount; i++) {
@@ -228,15 +275,15 @@
         },
 
         makeThumbnailNotBusy: function (thumbnailIndex) {
-            var currentThumbnail = this._viewModel.thumbnails()[thumbnailIndex];
+            var currentThumbnail = this.thumbnails()[thumbnailIndex];
             currentThumbnail.busy(false);
         },
 
-        _onScrollLeftPanel: function () {
-            var pageCount = this._viewModel.pageCount();
+        _onScrollThumbnailsPanel: function () {
+            var pageCount = this.pageCount();
             var width = this._thumbnailWidth;
             var thumbContainer = this.element;
-            var thumbnailHeight = thumbContainer.find(".thumb-page:first").outerHeight(false); // div height
+            var thumbnailHeight = thumbContainer.children("ul").children("li.thumb-page:first").outerHeight(false);
 
             var scrollTop = thumbContainer.scrollTop();
             var th = thumbContainer.height(); // thumbnails height
@@ -248,21 +295,21 @@
                 if (this.useHtmlThumbnails) {
                     this.getDocumentPageHtmlCallback.call(this.viewerViewModel, i);
                 }
-                this._viewModel.thumbnails()[i].visible(true);
+                this.thumbnails()[i].visible(true);
             }
         },
 
         setThumbnailsScroll: function (data) {
             var index = data.pi;
-            if (this._viewModel.pageInd != index) {
-                this._viewModel.pageInd(index);
+            if (this.pageInd() != index) {
+                this.pageInd(index);
                 if (!data.eventAlreadyRaised)
                     this.element.trigger('onSetThumbnailsScroll', index);
             }
 
             var thumbnailsContainerTop = this.element.offset().top;
 
-            var thumbWrapper = this.element.children("ul").children("li:nth-child(" + this._viewModel.pageInd() + ")");
+            var thumbWrapper = this.element.children("ul").children("li:nth-child(" + this.pageInd() + ")");
             if (thumbWrapper.length == 0)
                 return;
             var thumbPageTop = thumbWrapper.offset().top;
@@ -276,23 +323,17 @@
         },
 
         set: function (index) {
-            this._viewModel.pageInd(index);
+            this.pageInd(index);
             $(this.element).trigger('onSetThumbnails', index);
         },
+
         setPageWithoutEvent: function (index) {
-            this._viewModel.pageInd(index);
-        },
-        setPagesCount: function (pagesCount) {
-            this._pageCount = pagesCount;
-            this._viewModel.pageCount(pagesCount);
+            this.pageInd(index);
         },
 
-        _createHtml: function () {
-            var result = this.bindingProvider.createHtml("thumbnails", this.element, this.options);
-            this.element = result.element;
-            this.thumbnailPanelElement = result.thumbnailPanelElement;
-            this.toggleThumbnailsButton = result.toggleThumbnailsButton;
-            this.rootElement = result.rootElement;
+        setPagesCount: function (pagesCount) {
+            this._pageCount = pagesCount;
+            this.pageCount(pagesCount);
         }
     });
 })(jQuery);
