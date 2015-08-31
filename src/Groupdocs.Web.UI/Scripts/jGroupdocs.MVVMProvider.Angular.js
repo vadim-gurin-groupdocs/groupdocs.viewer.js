@@ -488,20 +488,20 @@ $.extend(window.groupdocs.bindingProvider.prototype, {
                                     '</a>' +
                                 '</div>' +
                                 '<ul class="file_browser_folder_list">' +
-                                    '<li data-ng-repeat="folder in viewModel.folders()" data-ng-attr-id="{{\'explorer-entity-\' + folder.id}}" data-ng-click="folder.open()">' +
+                                    '<li data-ng-repeat="folder in viewModel.folders()" data-ng-attr-id="{{::\'explorer-entity-\' + folder.id}}" data-ng-click="folder.open()">' +
                                         '<div class="file_browser_listbox folderlist">' +
                                             '<span class="listicons licon_folder"></span>' +
-                                            '<p class="listname_file_browser foldername">{{folder.name()}}</p>' +
+                                            '<p class="listname_file_browser foldername">{{::folder.name()}}</p>' +
                                         '</div>' +
                                     '</li>' +
                                 '</ul>' +
                                 '<ul  class="file_browser_file_list">' +
-                                    '<li data-ng-repeat="file in viewModel.files()" data-ng-attr-id="{{\'explorer-entity-\' + file.id}}" data-ng-click="file.open()">' +
+                                    '<li data-ng-repeat="file in viewModel.files()" data-ng-attr-id="{{::\'explorer-entity-\' + file.id}}" data-ng-click="file.open()">' +
                                         '<div class="file_browser_listbox filelist">' +
                                             '<span data-ng-class="{ \'licon_unkwn\': (file.docType() != \'words\' && file.docType() != \'pdf\' && file.docType() != \'slides\' && file.docType() != \'cells\' && file.docType() != \'image\' && file.docType() != \'email\' && file.docType() != \'diagram\' && file.docType() != \'project\' && file.docType() != \'taggedimage\'), \'licon_word\': file.docType() == \'words\', \'licon_pdf\': file.docType() == \'pdf\', \'licon_ppt\': file.docType() == \'slides\', \'licon_xls\': file.docType() == \'cells\', \'licon_bmp\': (file.docType() == \'image\' || file.docType() == \'taggedimage\'), \'licon_outlook\': file.docType() == \'email\', \'licon_visio\': file.docType() == \'diagram\', \'licon_mpp\': file.docType() == \'project\' }" class="listicons"></span>' +
-                                            '<p class="listname_file_browser filenameellipses">{{file.name()}}</p>' +
-                                            '<p class="listfilesize listsmalltext">{{file.sizeInKb() + \'Kb\'}}</p>' +
-                                            '<p class="listfilesize listsmalltext">{{file.modifiedOn()}}</p>' +
+                                            '<p class="listname_file_browser filenameellipses">{{::file.name()}}</p>' +
+                                            '<p class="listfilesize listsmalltext">{{::file.sizeInKb() + \'Kb\'}}</p>' +
+                                            '<p class="listfilesize listsmalltext">{{::file.modifiedOn()}}</p>' +
                                         '</div>' +
                                     '</li>' +
                                 '</ul>' +
