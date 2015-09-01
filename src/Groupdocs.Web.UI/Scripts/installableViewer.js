@@ -556,8 +556,8 @@
 
             groupdocsViewerWrapper.find(".file_browser_content").bind('fileSelected', function (e, metadata) {
                 self._hideFileOpenDialog();
-                self.fileDisplayName = viewerAdapter.docViewerViewModel.fileDisplayName = "";
-                viewerAdapter.docViewerViewModel.loadDocument(metadata.guid);
+                self.fileDisplayName = viewerAdapter.documentComponentViewModel.fileDisplayName = "";
+                viewerAdapter.documentComponentViewModel.loadDocument(metadata.guid);
             });
 
             if (settings.showThumbnails && settings.openThumbnails) {
@@ -871,8 +871,8 @@
             }
 
             if (this.viewMode != this.viewModes.BookMode) {
-                this.viewerAdapter.docViewerViewModel.calculatePagePositions();
-                this.viewerAdapter.docViewerViewModel.reInitSelectable();
+                this.viewerAdapter.documentComponentViewModel.calculatePagePositions();
+                this.viewerAdapter.documentComponentViewModel.reInitSelectable();
             }
 
             if (this.useInnerThumbnails) {
@@ -883,10 +883,10 @@
                 if (this.viewMode == this.viewModes.BookMode)
                     this.viewerAdapter.docViewerPageFlipViewModel.resizeViewerElement(thumbnailPanelWidth);
                 else
-                    this.viewerAdapter.docViewerViewModel.resizeViewerElement(thumbnailPanelWidth);
+                    this.viewerAdapter.documentComponentViewModel.resizeViewerElement(thumbnailPanelWidth);
             }
             else {
-                this.viewerAdapter.docViewerViewModel.loadImagesForVisiblePages();
+                this.viewerAdapter.documentComponentViewModel.loadImagesForVisiblePages();
             }
 
             this._setFitWidthAndHeightValues();
@@ -932,7 +932,7 @@
         },
 
         _rotatePage: function (angle) {
-            this.viewerAdapter.docViewerViewModel.rotatePage(angle);
+            this.viewerAdapter.documentComponentViewModel.rotatePage(angle);
         },
 
         openScrollView: function () {
@@ -942,7 +942,7 @@
             viewerWrapper2.css("height", "100%");
             viewerWrapper2.hide();
             viewerWrapper.show();
-            this.viewerAdapter.docViewerViewModel.openCurrentPage();
+            this.viewerAdapter.documentComponentViewModel.openCurrentPage();
             if (this.viewerAdapter.search) {
                 this.viewerAdapter.searchViewModel.showControls();
             }
@@ -950,8 +950,8 @@
 
         setMultiplePagesInRowLayout: function () {
             this.openScrollView();
-            this.viewerAdapter.docViewerViewModel.setLayout(window.groupdocs.ScrollMode);
-            this.viewerAdapter.docViewerViewModel.reInitSelectable();
+            this.viewerAdapter.documentComponentViewModel.setLayout(window.groupdocs.ScrollMode);
+            this.viewerAdapter.documentComponentViewModel.reInitSelectable();
             this._setFitWidthAndHeightValues();
 
             this.viewMode = this.viewModes.ScrollMode;
@@ -962,7 +962,7 @@
                 var viewerWrapper = this.groupdocsViewerWrapper.find(".doc_viewer");
                 var viewerWrapper2 = this.groupdocsViewerWrapper.find(".doc_viewer_wrapper_page_flip");
                 viewerWrapper2.css("display", "inline-block");
-                this.viewerAdapter.docViewerViewModel.setLayout(window.groupdocs.BookMode);
+                this.viewerAdapter.documentComponentViewModel.setLayout(window.groupdocs.BookMode);
                 this.viewerAdapter.docViewerPageFlipViewModel.openCurrentPage();
                 viewerWrapper2.css("height", "");
                 viewerWrapper2.css("top", "");
@@ -980,28 +980,28 @@
 
         openOnePageInRowView: function () {
             this.openScrollView();
-            this.viewerAdapter.docViewerViewModel.setLayout(window.groupdocs.OnePageInRow);
-            this.viewerAdapter.docViewerViewModel.reInitSelectable();
+            this.viewerAdapter.documentComponentViewModel.setLayout(window.groupdocs.OnePageInRow);
+            this.viewerAdapter.documentComponentViewModel.reInitSelectable();
             if (!this.useHtmlBasedEngine) {
-                this.viewerAdapter.docViewerViewModel.openCurrentPage();
+                this.viewerAdapter.documentComponentViewModel.openCurrentPage();
             }
         },
 
         openTwoPagesInRowView: function () {
             this.openScrollView();
-            this.viewerAdapter.docViewerViewModel.setLayout(window.groupdocs.TwoPagesInRow);
-            this.viewerAdapter.docViewerViewModel.reInitSelectable();
+            this.viewerAdapter.documentComponentViewModel.setLayout(window.groupdocs.TwoPagesInRow);
+            this.viewerAdapter.documentComponentViewModel.reInitSelectable();
             if (!this.useHtmlBasedEngine) {
-                this.viewerAdapter.docViewerViewModel.openCurrentPage();
+                this.viewerAdapter.documentComponentViewModel.openCurrentPage();
             }
         },
 
         openCoverThenTwoPagesInRowView: function () {
             this.openScrollView();
-            this.viewerAdapter.docViewerViewModel.setLayout(window.groupdocs.CoverThenTwoPagesInRow);
-            this.viewerAdapter.docViewerViewModel.reInitSelectable();
+            this.viewerAdapter.documentComponentViewModel.setLayout(window.groupdocs.CoverThenTwoPagesInRow);
+            this.viewerAdapter.documentComponentViewModel.reInitSelectable();
             if (!this.useHtmlBasedEngine) {
-                this.viewerAdapter.docViewerViewModel.openCurrentPage();
+                this.viewerAdapter.documentComponentViewModel.openCurrentPage();
             }
         },
 
@@ -1226,11 +1226,11 @@
                 }
                 else {
                     containerWidth = this.groupdocsViewerWrapper.width();
-                    this.viewerAdapter.docViewerViewModel.setContainerWidth(containerWidth);
+                    this.viewerAdapter.documentComponentViewModel.setContainerWidth(containerWidth);
                     containerHeight = this.viewerMainWrapper.height();
-                    this.viewerAdapter.docViewerViewModel.setContainerHeight(containerHeight);
-                    fitWidthZoom = this.viewerAdapter.docViewerViewModel.getFitWidthZoom();
-                    fitHeightZoom = this.viewerAdapter.docViewerViewModel.getFitHeightZoom();
+                    this.viewerAdapter.documentComponentViewModel.setContainerHeight(containerHeight);
+                    fitWidthZoom = this.viewerAdapter.documentComponentViewModel.getFitWidthZoom();
+                    fitHeightZoom = this.viewerAdapter.documentComponentViewModel.getFitHeightZoom();
                 }
                 this.viewerAdapter.zoomViewModel.setFitWidthZoom(fitWidthZoom);
                 this.viewerAdapter.zoomViewModel.setFitHeightZoom(fitHeightZoom);
@@ -1318,23 +1318,23 @@
         },
 
         getDocumentPageCount: function () {
-            return this.viewerAdapter.docViewerViewModel.pageCount();
+            return this.viewerAdapter.documentComponentViewModel.pageCount();
         },
 
         loadDocument: function (documentPath) {
-            this.viewerAdapter.docViewerViewModel.loadDocument(documentPath);
+            this.viewerAdapter.documentComponentViewModel.loadDocument(documentPath);
         },
 
         setLoadingState: function (set) {
-            this.viewerAdapter.docViewerViewModel.setLoadingState(set);
+            this.viewerAdapter.documentComponentViewModel.setLoadingState(set);
         },
 
         getContentControlDescriptions: function () {
-            return this.viewerAdapter.docViewerViewModel.getContentControlDescriptions();
+            return this.viewerAdapter.documentComponentViewModel.getContentControlDescriptions();
         },
 
         navigateToContentControl: function (number) {
-            this.viewerAdapter.docViewerViewModel.navigateToContentControl(number);
+            this.viewerAdapter.documentComponentViewModel.navigateToContentControl(number);
         },
 
         destroy: function () {

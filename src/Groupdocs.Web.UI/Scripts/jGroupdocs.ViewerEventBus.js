@@ -4,7 +4,7 @@ groupdocs.ViewerEventBus = function (options) {
 };
 $.extend(groupdocs.ViewerEventBus.prototype, {
     docViewerWidget: null,
-    docViewerViewModel: null,
+    documentComponentViewModel: null,
     navigationWidget: null,
     navigationViewModel: null,
     thumbnailsWidget: null,
@@ -22,7 +22,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         var embedSource = null;
         var viewTypeMenu = null;
 
-        var docViewerViewModel = null;
+        var documentComponentViewModel = null;
         var navigationViewModel = null;
         var thumbnailsViewModel = null;
         var zoomViewModel = null;
@@ -83,12 +83,12 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 instanceId: this.instanceId
             }, this.viewerOptions);
 
-            docViewer = this.docSpace.groupdocsViewingComponent(viewerOptions);
-            docViewerViewModel = this.docSpace.groupdocsViewingComponent('getViewModel');
+            docViewer = this.docSpace.groupdocsDocumentComponent(viewerOptions);
+            documentComponentViewModel = this.docSpace.groupdocsDocumentComponent('getViewModel');
         }
         else {
             docViewer = this.docSpaceCreator();
-            docViewerViewModel = this.docSpaceViewModel();
+            documentComponentViewModel = this.docSpaceViewModel();
         }
 
         var docViewerPageFlip = null;
@@ -122,7 +122,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         }
 
         if (this.search) {
-            search = this.search.search($.extend(this.searchOptions, { viewerViewModel: docViewerViewModel }));
+            search = this.search.search($.extend(this.searchOptions, { viewerViewModel: documentComponentViewModel }));
             searchViewModel = this.search.search('getViewModel');
         }
 
@@ -141,7 +141,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
             viewTypeViewModel = this.viewTypeViewModel;
         }
 
-        this.docViewerViewModel = docViewerViewModel;
+        this.documentComponentViewModel = documentComponentViewModel;
         this.docViewerPageFlipViewModel = docViewerPageFlipViewModel;
         this.navigationViewModel = navigationViewModel;
         this.thumbnailsViewModel = thumbnailsViewModel;
@@ -203,10 +203,10 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 docViewerPageFlipViewModel._onDocumentLoaded(data, pdf2XmlWrapper);
 
             if (zooming) {
-                if (docViewerViewModel.isScrollViewerVisible()) {
-                    zoomViewModel.setFitWidthZoom(docViewerViewModel.getFitWidthZoom());
-                    zoomViewModel.setFitHeightZoom(docViewerViewModel.getFitHeightZoom());
-                    zoomViewModel.setZoomWithoutEvent(docViewerViewModel.zoom());
+                if (documentComponentViewModel.isScrollViewerVisible()) {
+                    zoomViewModel.setFitWidthZoom(documentComponentViewModel.getFitWidthZoom());
+                    zoomViewModel.setFitHeightZoom(documentComponentViewModel.getFitHeightZoom());
+                    zoomViewModel.setZoomWithoutEvent(documentComponentViewModel.zoom());
                 }
                 else {
                     if (docViewerPageFlipViewModel) {
@@ -230,14 +230,14 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 if (thumbnails) {
                     thumbnailsViewModel.pageInd(pageIndex);
                 }
-                docViewerViewModel.pageInd(pageIndex);
-                docViewerViewModel.setPageNumerInUrlHash(pageIndex);
+                documentComponentViewModel.pageInd(pageIndex);
+                documentComponentViewModel.setPageNumerInUrlHash(pageIndex);
             });
         }
 
         if (search) {
             search.bind('onPerformSearch', function (e, value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch) {
-                docViewerViewModel.performSearch(value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
+                documentComponentViewModel.performSearch(value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
             });
         }
 
@@ -246,7 +246,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.setPage(pageIndex);
 
-                docViewerViewModel.setPage(pageIndex);
+                documentComponentViewModel.setPage(pageIndex);
                 if (thumbnails) {
                     thumbnailsViewModel.setPageWithoutEvent(pageIndex);
                     thumbnailsViewModel.setThumbnailsScroll({ pi: pageIndex, direction: 'up' });
@@ -256,7 +256,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.setPage(pageIndex);
 
-                docViewerViewModel.setPage(pageIndex);
+                documentComponentViewModel.setPage(pageIndex);
                 if (thumbnails) {
                     thumbnailsViewModel.setPageWithoutEvent(pageIndex);
                     thumbnailsViewModel.setThumbnailsScroll({ pi: pageIndex, direction: 'down' });
@@ -266,7 +266,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.setPage(data.pageIndex);
 
-                docViewerViewModel.setPage(data.pageIndex);
+                documentComponentViewModel.setPage(data.pageIndex);
                 if (thumbnails) {
                     thumbnailsViewModel.setPageWithoutEvent(data.pageIndex);
                     thumbnailsViewModel.setThumbnailsScroll({ pi: data.pageIndex, direction: data.direction, eventAlreadyRaised: true });
@@ -278,7 +278,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
             zooming.bind('onSetZoom', function (e, value) {
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.setZoom(value);
-                docViewerViewModel.setZoom(value);
+                documentComponentViewModel.setZoom(value);
                 if (search) {
                     searchViewModel.resetButtons();
                 }
@@ -292,7 +292,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
 
         if (thumbnails) {
             thumbnails.bind('onSetThumbnails', function (e, index) {
-                docViewerViewModel.setPage(index);
+                documentComponentViewModel.setPage(index);
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.setPage(index);
                 if (navigation) {
@@ -305,12 +305,12 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 }
             } .bind(this));
             thumbnails.bind('onResizeThumbnails', function (e, viewerLeft) {
-                docViewerViewModel.resizeViewerElement(viewerLeft);
+                documentComponentViewModel.resizeViewerElement(viewerLeft);
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel.resizeViewerElement(viewerLeft);
             });
             thumbnails.bind('onPageReordered', function (e, oldPosition, newPosition) {
-                docViewerViewModel.onPageReordered(oldPosition, newPosition);
+                documentComponentViewModel.onPageReordered(oldPosition, newPosition);
             });
         }
 
