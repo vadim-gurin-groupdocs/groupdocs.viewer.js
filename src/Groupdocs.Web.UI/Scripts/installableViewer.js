@@ -491,6 +491,7 @@
                     minimumImageWidth: settings.minimumImageWidth,
                     fileDisplayName: settings.fileDisplayName,
                     pageContentType: settings.useHtmlBasedEngine ? "html" : "image",
+                    useHtmlBasedEngine: settings.useHtmlBasedEngine,
                     searchExactText: settings.searchExactText,
                     viewerOptions: viewerOptions,
                     viewTypeMenu: viewTypeMenu,

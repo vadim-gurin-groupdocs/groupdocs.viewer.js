@@ -173,6 +173,14 @@
       <Link>Client\Scripts\jGroupdocs.ViewerPortalService.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Viewing.HTML.js">
+      <Link>Client\Scripts\jGroupdocs.Viewing.HTML.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Viewing.Image.js">
+      <Link>Client\Scripts\jGroupdocs.Viewing.Image.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.WidgetFactory.js">
       <Link>Client\Scripts\jGroupdocs.WidgetFactory.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

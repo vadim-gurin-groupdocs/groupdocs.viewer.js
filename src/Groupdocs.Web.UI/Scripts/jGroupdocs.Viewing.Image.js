@@ -1,5 +1,5 @@
 ﻿(function ($, undefined) {
-    $.groupdocsWidget("groupdocsDocumentComponent", {
+    $.groupdocsWidget("groupdocsDocumentImageRendering", {
         _viewModel: null,
         options: {
             fileId: 0,
@@ -36,7 +36,7 @@
         },
 
         _createViewModel: function () {
-            var vm = new window.groupdocs.documentComponentViewModel(this.options);
+            var vm = new window.groupdocs.documentImageRenderingComponentViewModel(this.options);
             return vm;
         },
 
@@ -47,12 +47,12 @@
         }
     });
 
-    window.groupdocs.documentComponentModel = function (options) {
+    window.groupdocs.documentImageRenderingComponentModel = function (options) {
         $.extend(this, options);
         this._init();
     };
 
-    $.extend(window.groupdocs.documentComponentModel.prototype, {
+    $.extend(window.groupdocs.documentImageRenderingComponentModel.prototype, {
         _init: function () {
             this._portalService = Container.Resolve("ServerExchange");
         },
@@ -114,37 +114,15 @@
             function (error) {
                 errorCallback.apply(this, [error]);
             });
-        },
-
-        reorderPage: function (fileId, oldPosition, newPosition, instanceIdToken, callback, errorCallback) {
-            this._portalService.reorderPage(fileId, oldPosition, newPosition,
-                instanceIdToken,
-                function (response) {
-                    callback.apply(this, [response.data]);
-                },
-                function (error) {
-                    errorCallback.apply(this, [error]);
-                });
-        },
-
-        rotatePage: function (path, pageNumber, rotationAmount, instanceIdToken, successCallback, errorCallback) {
-            this._portalService.rotatePage(path, pageNumber, rotationAmount,
-                instanceIdToken,
-                function (response) {
-                    successCallback.apply(this, [response.data]);
-                },
-                function (error) {
-                    errorCallback.apply(this, [error]);
-                });
         }
     });
 
-    window.groupdocs.documentComponentViewModel = function (options) {
+    window.groupdocs.documentImageRenderingComponentViewModel = function (options) {
         $.extend(this, options);
         this._create(options);
     };
 
-    $.extend(window.groupdocs.documentComponentViewModel.prototype, {
+    $.extend(window.groupdocs.documentImageRenderingComponentViewModel.prototype, window.groupdocs.documentComponentViewModel.prototype, {
         Layouts: { ScrollMode: 1, BookMode: 2, OnePageInRow: 3, TwoPagesInRow: 4, CoverThenTwoPagesInRow: 5 },
         _model: null,
         pagesDimension: null,
@@ -225,11 +203,14 @@
         },
 
         _create: function (options) {
-            this._model = new window.groupdocs.documentComponentModel(options);
+            this._model = new window.groupdocs.documentImageRenderingComponentModel(options);
             this._init(options);
         },
 
         _init: function (options) {
+            window.groupdocs.documentComponentViewModel.prototype._init.call(this, options);
+            return;
+
             var self = this;
 
             if (this.viewerLeft != 0) {
@@ -329,61 +310,38 @@
             this.triggerEvent('onDocumentloadingStarted');
 
             var pageCountToShow = 1;
-            if (this.pageContentType == "image") {
-                var pageWidth;
-                if (this.shouldMinimumWidthBeUsed(this.pageImageWidth * this.initialZoom / 100, false))
-                    pageWidth = this.minimumImageWidth;
-                else
-                    pageWidth = Math.round(this.pageImageWidth * this.initialZoom / 100);
+            var pageWidth;
+            if (this.shouldMinimumWidthBeUsed(this.pageImageWidth * this.initialZoom / 100, false))
+                pageWidth = this.minimumImageWidth;
+            else
+                pageWidth = Math.round(this.pageImageWidth * this.initialZoom / 100);
 
-                this._model.loadDocument(fileId || this.fileId, pageCountToShow, pageWidth, this.password(), this.fileDisplayName,
-                    this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
-                    this.ignoreDocumentAbsence, this.supportPageRotation,
-                    this.supportListOfContentControls, this.supportListOfBookmarks,
-                    this.instanceIdToken,
-                    this.locale,
-                    function (response) {
-                        //this._onDocumentLoaded(response);
-                        if (typeof (fileId) !== 'undefined')
-                            this.fileId = fileId;
-                        this.pageWidth(this.pageImageWidth * (this.initialZoom / 100));
-                        this.zoom(this.initialZoom);
-                        if (this.docWasLoadedInViewer)
-                            this.setPageNumerInUrlHash(1);
+            this._model.loadDocument(fileId || this.fileId, pageCountToShow, pageWidth, this.password(), this.fileDisplayName,
+                this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
+                this.ignoreDocumentAbsence, this.supportPageRotation,
+                this.supportListOfContentControls, this.supportListOfBookmarks,
+                this.instanceIdToken,
+                this.locale,
+                function (response) {
+                    //this._onDocumentLoaded(response);
+                    if (typeof (fileId) !== 'undefined')
+                        this.fileId = fileId;
+                    this.pageWidth(this.pageImageWidth * (this.initialZoom / 100));
+                    this.zoom(this.initialZoom);
+                    if (this.docWasLoadedInViewer)
+                        this.setPageNumerInUrlHash(1);
 
-                        this._onDocumentLoadedBeforePdf2Xml(response);
-                        //this.preloadImages(response, this.preloadPagesCount);
-                    }.bind(this),
-                    function (error) {
-                        this._onDocumentLoadFailed(error);
-                    }.bind(this));
-            }
-            else if (this.pageContentType == "html") {
-                this._model.loadDocumentAsHtml(fileId || this.fileId, pageCountToShow, this.fileDisplayName, this.usePngImagesForHtmlBasedEngine,
-                    this.convertWordDocumentsCompletely,
-                    this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,
-                    this.ignoreDocumentAbsence, this.supportPageRotation,
-                    this.supportListOfContentControls, this.supportListOfBookmarks,
-                    this.embedImagesIntoHtmlForWordFiles,
-                    this.instanceIdToken,
-                    this.locale,
-                    function (response) {
-                        if (typeof (fileId) !== 'undefined')
-                            this.fileId = fileId;
-                        this.pageWidth(this.pageImageWidth * (this.initialZoom / 100));
-                        this._onDocumentLoadedBeforePdf2Xml(response);
-                        //this._onDocumentLoaded(response);
-                    }.bind(this),
-                    function (error) {
-                        this._onDocumentLoadFailed(error);
-                    }.bind(this)
-                );
-            }
+                    this._onDocumentLoadedBeforePdf2Xml(response);
+                    //this.preloadImages(response, this.preloadPagesCount);
+                }.bind(this),
+                function (error) {
+                    this._onDocumentLoadFailed(error);
+                }.bind(this));
 
             if (typeof viewModelPathOnlineDoc !== 'undefined')
                 viewModelPathOnlineDoc.pathOnlineDoc('');
         },
-        
+
         retrieveImageUrls: function (imageCount) {
             var i;
             var pageDimension, pageWidth;
@@ -411,47 +369,7 @@
                 }.bind(this));
         },
 
-        _onError: function (error) {
-            this.inprogress(false);
-            var errorFunction = window.jerror || (window.jGDError && window.jGDError[this.instanceId]);
-            if (errorFunction)
-                errorFunction(error.Reason || "The document couldn't be loaded...");
-        },
-
-        _onDocumentLoadFailed: function (error) {
-            this.inprogress(false);
-
-            if (error.code == 'Unauthorized')
-                this.triggerEvent('onDocumentPasswordRequired');
-            else {
-                this._onError(error);
-                this.triggerEvent("documentLoadFailed.groupdocs");
-            }
-        },
-
-        _onDocumentLoadedBeforePdf2Xml: function (response) {
-            var self = this;
-
-            function callOnDocumentLoaded() {
-                self._onDocumentLoaded(response);
-            }
-
-            var options = {
-                fileId: this.fileId,
-                path: response.path,
-                documentDescription: response.documentDescription,
-                callback: callOnDocumentLoaded
-            };
-
-            if (this.useJavaScriptDocumentDescription) {
-                options.synchronousWork = this.textSelectionSynchronousCalculation;
-                options.descForHtmlBasedEngine = (this.pageContentType == "html"
-                    || this.use_pdf == 'false');
-                this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
-                this._onDocumentLoaded(response);
-            }
-        },
-
+        
         _onDocumentLoaded: function (response) {
             this.isDocumentLoaded = true;
             if (this.useJavaScriptDocumentDescription) {
@@ -889,69 +807,6 @@
             });
         },
 
-        setPageWidth: function (val) {
-            this.pageImageWidth = val;
-        },
-
-        setContainerWidth: function (containerWidth) {
-            this.viewerWidth = containerWidth;
-        },
-
-        setContainerHeight: function (containerHeight) {
-            this.viewerHeight = containerHeight;
-        },
-
-        getFitWidth: function () {
-            var viewerWidth;
-            if (this.viewerWidth)
-                viewerWidth = this.viewerWidth;
-            else
-                viewerWidth = this.documentSpace.width();
-            var scrollbarWidth = this.getScrollbarWidth();
-
-            return viewerWidth - scrollbarWidth - 2 * (this.imageHorizontalMargin + 1);
-        },
-
-        getFitWidthZoom: function () {
-            return this.getFitWidth() / this.initialWidth * 100;
-            //return viewerWidth / (this.pageImageWidth + 2 * this.imageHorizontalMargin) * 100;
-        },
-        
-        getViewerHeight: function () {
-            var viewerHeight;
-            if (this.viewerHeight)
-                viewerHeight = this.viewerHeight;
-            else
-                viewerHeight = this.documentSpace.parent().height();
-            return viewerHeight;
-        },
-
-        getFitHeightZoom: function () {
-            var viewerHeight = this.getViewerHeight();
-            return (viewerHeight - (this.imageVerticalMargin + 2)) / Math.round(this.initialWidth * this.heightWidthRatio) * 100;
-        },
-
-        getScrollbarWidth: function () {
-            if (this.scrollbarWidth == null) {
-                // Create the measurement node
-                var scrollDivJquery = $("<div/>").css("width", "100px").css("height", "100px")
-                    .css("overflow", "scroll").css("position", "absolute").css("top", "-9999px");
-                var scrollDiv = scrollDivJquery[0];
-                document.body.appendChild(scrollDiv);
-
-                // Get the scrollbar width
-                this.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-
-                // Delete the DIV 
-                document.body.removeChild(scrollDiv);
-            }
-            return this.scrollbarWidth;
-        },
-
-        getPageHeight: function () {
-            return this.unscaledPageHeight * this.scale();
-        },
-
         ScrollDocView: function (item, e) {
             var isSetCalled = this.isSetCalled;
             this.isSetCalled = false;
@@ -1023,76 +878,6 @@
             this.triggerEvent("documentScrolledToPage.groupdocs", [this.pageInd()]);
         },
 
-        getVisiblePagesNumbers: function () {
-            if (!this.isDocumentLoaded)
-                return null;
-            if (this.useTabsForPages()) {
-                return { start: 1, end: 1 };
-            }
-
-            var start = null;
-            var end = null;
-            var scrollTop = this.documentSpace.scrollTop();
-            var pageHeight;
-            var startIndex = null;
-            var documentSpaceHeight = this.documentSpace.height();
-
-            var selectable = this.getSelectableInstance();
-            if (selectable == null && !this.useVirtualScrolling)
-                return null;
-            var pages = this.pages();
-            var pageLocations;
-            var pageCount;
-            if (this.useVirtualScrolling)
-                pageCount = pages.length;
-            else {
-                pageLocations = selectable.pageLocations;
-                if (pageLocations.length != pages.length)
-                    return null;
-                pageCount = pageLocations.length;
-            }
-
-            var pageImageTop, pageImageBottom;
-            for (var i = 0; i < pageCount; i++) {
-                if (this.useVirtualScrolling)
-                    pageImageTop = pages[i].top();
-                else
-                    pageImageTop = pageLocations[i].y;
-
-                pageHeight = pages[i].prop() * this.pageWidth();
-
-                pageImageBottom = pageImageTop + pageHeight;
-                if ((pageImageTop >= scrollTop && pageImageTop <= scrollTop + documentSpaceHeight) ||
-                    (pageImageBottom >= scrollTop && pageImageBottom <= scrollTop + documentSpaceHeight) ||
-                    (pageImageTop <= scrollTop && pageImageBottom >= scrollTop + documentSpaceHeight)) {
-                    if (start === null)
-                        start = i + 1;
-                    else
-                        end = i + 1;
-                }
-            }
-            if (end === null)
-                end = start;
-
-            return { start: start, end: end };
-        },
-
-        loadImagesForVisiblePages: function (forceLoading) {
-            var numbers = this.getVisiblePagesNumbers();
-            if (numbers != null) {
-                var start = numbers.start;
-                var end = numbers.end;
-                if (start !== null && end !== null) {
-                    this.loadImagesForPages(start, end, forceLoading);
-                    if (this.useVirtualScrolling) {
-                        this.firstVisiblePageForVirtualMode(numbers.start - 1);
-                        this.lastVisiblePageForVirtualMode(numbers.end - 1);
-                    }
-                }
-            }
-            return numbers;
-        },
-
         loadImagesForPages: function (start, end, forceLoading) {
             var pages = this.pages();
             var cssForAllPages = "";
@@ -1101,8 +886,6 @@
             for (var i = start; i <= end; i++) {
                 page = pages[i - 1];
                 isPageVisible = page.visible();
-                if (isPageVisible)
-                    this.markContentControls(i - 1);
 
                 if (this.pageContentType == "image") {
                     this.triggerImageLoadedEvent(i);
@@ -1112,61 +895,15 @@
                     }
                 }
                 else if (this.pageContentType == "html") {
+                    if (isPageVisible)
+                        this.markContentControls(i - 1);
+
                     if (!isPageVisible) {
                         this.getDocumentPageHtml(i - 1);
                     }
                 }
                 page.visible(true);
             }
-        },
-
-        setPage: function (index) {
-            this.isSetCalled = true;
-            var newPageIndex = Number(index);
-
-            if (isNaN(newPageIndex) || newPageIndex < 1)
-                newPageIndex = 1;
-
-            this.pageInd(newPageIndex);
-
-            var pageTop;
-            if (this.useVirtualScrolling) {
-                pageTop = this.pages()[newPageIndex - 1].top();
-            }
-            else {
-                var selectable = this.getSelectableInstance();
-                if (selectable != null) {
-                    if (selectable.pageLocations && selectable.pageLocations.length > 0) {
-                        var pageImageTop = selectable.pageLocations[newPageIndex - 1].y;
-                        pageTop = pageImageTop;
-                    }
-                }
-            }
-
-            var oldScrollTop = this.documentSpace.scrollTop();
-            this.documentSpace.scrollTop(pageTop);
-            if (this.documentSpace.scrollTop() == oldScrollTop) {
-                this.isSetCalled = false;
-            }
-
-            this.triggerEvent('onDocViewScrollPositionSet', { position: pageTop });
-            var page = this.pages()[newPageIndex - 1];
-
-            if (this.pageContentType == "image") {
-                this.triggerImageLoadedEvent(newPageIndex);
-                page.visible(true);
-            }
-            else if (this.pageContentType == "html") {
-                if (!page.visible()) {
-                    this.getDocumentPageHtml(newPageIndex - 1);
-                }
-            }
-
-            //this.isSetCalled = false;
-
-            this.setPageNumerInUrlHash(newPageIndex);
-            this.triggerEvent('onDocumentPageSet', [newPageIndex]);
-            this.triggerEvent("documentPageSet.groupdocs", newPageIndex);
         },
 
         triggerImageLoadedEvent: function (pageIndex) {
@@ -1249,57 +986,11 @@
         },
 
         performSearch: function (value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch) {
-            if (this.pageContentType == "image") {
-                var selectable = this.getSelectableInstance();
-                if (selectable != null) {
-                    var searchCountItem = selectable.performSearch(value, this.scale(), isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
-                    this.triggerEvent('onSearchPerformed', [searchCountItem]);
-                }
+            var selectable = this.getSelectableInstance();
+            if (selectable != null) {
+                var searchCountItem = selectable.performSearch(value, this.scale(), isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
+                this.triggerEvent('onSearchPerformed', [searchCountItem]);
             }
-            else {
-                this.searchText = value;
-                this.searchForSeparateWords = searchForSeparateWords;
-                this.treatPhrasesInDoubleQuotesAsExact = treatPhrasesInDoubleQuotesAsExact;
-                var pages = this.pages();
-                var page;
-
-                if (this.loadAllPagesOnSearch)
-                    this.loadImagesForPages(1, pages.length);
-
-                for (var i = 0; i < pages.length; i++) {
-                    page = pages[i];
-                    if (page.visible()) {
-                        var searchParameters = {
-                            text: value,
-                            isCaseSensitive: isCaseSensitive,
-                            searchForSeparateWords: searchForSeparateWords,
-                            treatPhrasesInDoubleQuotesAsExact: treatPhrasesInDoubleQuotesAsExact,
-                            pageNumber: i
-                        };
-
-                        page.searchText(searchParameters);
-                    }
-                }
-            }
-        },
-        
-        getWords: function (phrase) {
-            var separatorsRegexString = "[^" + this.searchSeparatorsList + "]+";
-            var separatorsRegex = new RegExp(separatorsRegexString, "g");
-            var matches = phrase.match(separatorsRegex);
-            var words;
-            if (matches == null) {
-                words = null;
-            }
-            else {
-                words = $.map(matches,
-                function (val, index) {
-                    if (val != '') {
-                        return val;
-                    }
-                });
-            }
-            return words;
         },
 
         selectTextInRect: function (rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers) {
@@ -1315,46 +1006,6 @@
             }
         },
 
-        reInitSelectable: function () {
-            var visiblePagesNumbers = this.getVisiblePagesNumbers();
-            var selectable = this.getSelectableInstance();
-            if (selectable != null) {
-                selectable.reInitPages(this.scale(), visiblePagesNumbers,
-                    this.scrollPosition, this.getPageHeight(), this.pages());
-            }
-        },
-
-        reInitCanvasOffset: function () {
-            var selectable = this.getSelectableInstance();
-            selectable.initCanvasOffset();
-        },
-
-        openCurrentPage: function () {
-            this.setPage(this.pageInd());
-        },
-
-        setPageNumerInUrlHash: function (pageIndex) {
-            if (this.usePageNumberInUrlHash == true) {
-                if (location.hash != "" || pageIndex > 1) {
-                    this.changedUrlHash = true;
-                    location.hash = this.hashPagePrefix + pageIndex.toString();
-                    this.changedUrlHash = false;
-                }
-            }
-        },
-
-        isScrollViewerVisible: function () {
-            var isVisible = this.documentSpace.is(":visible");
-            return isVisible;
-        },
-
-        getSelectableInstance: function () {
-            if (this._dvselectable == null)
-                return null;
-            var selectable = this._dvselectable.data("groupdocsSelectable");
-            return selectable;
-        },
-
         shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
             var originalDocumentWidth = null;
             if (this.use_pdf != 'false' && checkOriginalDocumentWidth) {
@@ -1363,60 +1014,6 @@
             }
             return this.minimumImageWidth != null &&
                 (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
-        },
-
-        resizeViewerElement: function (viewerLeft) {
-            var parent = this.documentSpace.parent();
-            var parentWidth = parent.width();
-            if (typeof viewerLeft == "undefined")
-                viewerLeft = 0;
-            else
-                this.viewerLeft = viewerLeft;
-            this.documentSpace.width(parentWidth - viewerLeft);
-            this.reInitSelectable();
-            this.loadImagesForVisiblePages();
-        },
-
-        onPageReordered: function (oldPosition, newPosition) {
-            this._model.reorderPage(this.fileId, oldPosition, newPosition,
-                this.instanceIdToken,
-                function (response) {
-                    if (this.pageContentType == "image") {
-                        var pages = this.pages();
-                        var pageImageUrl;
-                        var minPosition = Math.min(oldPosition, newPosition);
-                        var maxPosition = Math.max(oldPosition, newPosition);
-                        for (var i = minPosition; i <= maxPosition; i++) {
-                            pageImageUrl = pages[i].url();
-                            pages[i].url(pageImageUrl + "#0"); // to avoid caching
-                            pages[i].visible(true);
-                        }
-                    }
-                    if (this._pdf2XmlWrapper)
-                        this._pdf2XmlWrapper.reorderPage(oldPosition, newPosition);
-                    this.reInitSelectable();
-                    this.loadImagesForVisiblePages();
-                }.bind(this),
-                function (error) {
-                    this._onError(error);
-                }.bind(this)
-            );
-        },
-
-        rotatePage: function (rotationAmount) {
-            var pageNumber = this.pageInd() - 1;
-            this._model.rotatePage(this.fileId, pageNumber, rotationAmount,
-                this.instanceIdToken,
-                function (response) {
-                    var page = this.pages()[pageNumber];
-                    this.applyPageRotationInBrowser(pageNumber, page, response.resultAngle);
-                    this.reflowPagesInChrome();
-                    this.setPage(pageNumber + 1);
-                    this.loadImagesForVisiblePages(true);
-                }.bind(this),
-                function (error) {
-                    this._onError(error);
-                }.bind(this));
         },
 
         applyPageRotationInBrowser: function (pageNumber, page, angle) {
@@ -1492,29 +1089,6 @@
             this.loadImagesForVisiblePages(true);
         },
 
-        isPageVisible: function (pageNumber) {
-            return this.pages()[pageNumber].visible();
-        },
-
-        getPageLocations: function () {
-            return this.getSelectableInstance().pageLocations;
-        },
-
-        getPageSize: function () {
-            var pageSize = this._pdf2XmlWrapper.getPageSize();
-            return pageSize;
-        },
-
-        calculatePointToPixelRatio: function () {
-            var pointWidth = 100;
-            var testElement = $("<div/>").css("width", pointWidth + "pt").css("height", "0");
-            testElement.appendTo(this.documentSpace);
-            var pixelWidth = testElement.width();
-            this.pointToPixelRatio = pixelWidth / pointWidth;
-            testElement.remove();
-        },
-
-        
         adjustInitialZoom: function () {
             if (this.zoomToFitHeight)
                 this.setZoom(this.getFitHeightZoom());
@@ -1529,19 +1103,6 @@
             }
         },
 
-        intToColor: function (num) {
-            if (num === null)
-                num = 0xFFFF0000; // default is red
-            else
-                num >>>= 0;
-
-            var b = num & 0xFF,
-                g = (num & 0xFF00) >>> 8,
-                r = (num & 0xFF0000) >>> 16,
-                a = ((num & 0xFF000000) >>> 24) / 255;
-            return "rgba(" + [r, g, b, a].join(",") + ")";
-        },
-
         addSuffixToImageUrl: function (page) {
             var src = page.url();
             var prefixChar = "?";
@@ -1554,20 +1115,6 @@
             if (paramsIndex != -1)
                 prefixChar = "&";
             page.url(src + prefixChar + 'dummy=' + new Date().getTime());
-        },
-
-        setLoadingState: function (set) {
-            this.inprogress(set);
-        },
-
-        getScaleRatioForPage: function (widthForMaxHeight, maxPageHiegt, pageWidth, pageHeight) {
-            var widthRatio, scaleRatio;
-            if (widthForMaxHeight === undefined)
-                widthRatio = 1;
-            else
-                widthRatio = widthForMaxHeight / pageWidth;
-            scaleRatio = widthRatio;
-            return scaleRatio;
         },
 
         pageElementStyle: function (index) {
@@ -1614,117 +1161,14 @@
             return result;
         },
 
-        pagesContainerStyle: function () {
-            var layout = this.layout();
-            return { height: this.useVirtualScrolling ? (this.documentHeight() + "px") : "auto",
-                width: (layout == this.Layouts.TwoPagesInRow || layout == this.Layouts.CoverThenTwoPagesInRow) ?
-                        (this.pageWidth() + this.imageHorizontalMargin) * 2 + "px" : "auto"
-            };
-        },
-
-        loadingOverlayStyle: function (page) {
-            return {
-                display: ((this.alwaysShowLoadingSpinner() || this.inprogress() || !page.visible()) ? 'block' : 'none'), 
-                zIndex: (this.inprogress() || !page.visible() ? 2 : 0),
-                width: this.pageWidth() + 'px',
-                height: this.autoHeight() ? '100%' : (this.pageWidth() * page.prop() + 'px'),
-                backgroundColor: (this.inprogress() || !page.visible() ? '' : 'transparent')
-            }
-        },
-
-        setLayout: function (layout) {
-            this.layout(layout);
-            this.calculatePagePositions();
-            this.loadImagesForVisiblePages();
-        },
-
-        calculatePagePositions: function () {
-            var pageVerticalMargin = 15; // pixels
-            var pageHorizontalMargin = 7 + 0; // pixels from left
-            var pages = this.pages();
-            var width = this.pageWidth();
-            var documentHeight = 0;
-            var page, proportion, pageHeight;
-            var pageLeft = 0, pageTop = 0;
-            var rowHeight = 0;
-            var pagesInRow;
-            var layout = this.layout();
-            switch (layout) {
-            case this.Layouts.ScrollMode:
-                var widthWithMargin = width + pageHorizontalMargin;
-                var documentSpaceWidth = this.pagesContainerElement.get(0).getBoundingClientRect().width;
-                pagesInRow = Math.floor(documentSpaceWidth / widthWithMargin);
-                if (pagesInRow == 0)
-                    pagesInRow = 1;
-                break;
-            case this.Layouts.OnePageInRow:
-                pagesInRow = 1;
-                break;
-            case this.Layouts.TwoPagesInRow:
-            case this.Layouts.CoverThenTwoPagesInRow:
-                pagesInRow = 2;
-                break;
-            }
-
-            var isFirstPageInRow, isLastPageInRow;
-            for (var i = 0; i < pages.length; i++) {
-                page = pages[i];
-                proportion = page.prop();
-                pageHeight = width * proportion;
-                page.left = pageLeft;
-                page.top(pageTop);
-                isFirstPageInRow = (layout != this.Layouts.CoverThenTwoPagesInRow && i % pagesInRow == 0)
-                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 1));
-
-                isLastPageInRow = layout == this.Layouts.OnePageInRow
-                    || (layout == this.Layouts.TwoPagesInRow && i % pagesInRow == 1)
-                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 0))
-                    || (layout == this.Layouts.ScrollMode && i % pagesInRow == pagesInRow - 1);
-
-                if (isFirstPageInRow || (!isFirstPageInRow && pageHeight > rowHeight))
-                    rowHeight = pageHeight;
-                documentHeight = pageTop + rowHeight + pageVerticalMargin;
-
-                if (isLastPageInRow) {
-                    pageTop += rowHeight + pageVerticalMargin;
-                    pageLeft = 0;
-                }
-                else
-                    pageLeft += width + pageHorizontalMargin;
-            }
-            this.documentHeight(documentHeight);
-        },
-        
-        
         highlightSearch: function () {
-            if (this.pageContentType == "image" && this.useVirtualScrolling) {
+            if (this.useVirtualScrolling) {
                 var selectable = this.getSelectableInstance();
                 if (selectable) {
                     selectable.highlightSearch(this.firstVisiblePageForVirtualMode(),
                                                this.lastVisiblePageForVirtualMode());
                 }
             }
-        },
-
-        getPageTop: function (initialValue) {
-            if (this.useVirtualScrolling)
-                return this.bindingProvider.getObservable(initialValue);
-            else
-                return this.getAccessor(initialValue);
-        },
-
-        getAccessor: function (initialValue) {
-            var value = initialValue;
-            return function (param) {
-                if (typeof param == "undefined")
-                    return value;
-                else
-                    value = param;
-            };
-        },
-
-        triggerEvent: function (name, params) {
-            this.documentSpace.trigger(name, params);
         }
     });
 })(jQuery);

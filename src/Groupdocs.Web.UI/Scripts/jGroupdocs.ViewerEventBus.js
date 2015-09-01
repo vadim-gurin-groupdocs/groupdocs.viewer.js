@@ -83,8 +83,14 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 instanceId: this.instanceId
             }, this.viewerOptions);
 
-            docViewer = this.docSpace.groupdocsDocumentComponent(viewerOptions);
-            documentComponentViewModel = this.docSpace.groupdocsDocumentComponent('getViewModel');
+            if (this.useHtmlBasedEngine) {
+                docViewer = this.docSpace.groupdocsDocumentHtmlRendering(viewerOptions);
+                documentComponentViewModel = this.docSpace.groupdocsDocumentHtmlRendering('getViewModel');
+            }
+            else {
+                docViewer = this.docSpace.groupdocsDocumentImageRendering(viewerOptions);
+                documentComponentViewModel = this.docSpace.groupdocsDocumentImageRendering('getViewModel');
+            }
         }
         else {
             docViewer = this.docSpaceCreator();
