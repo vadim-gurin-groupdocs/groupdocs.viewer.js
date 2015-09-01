@@ -59,7 +59,7 @@
     };
 
     $.extend(window.groupdocs.thumbnailsModel.prototype, {
-        _portalService: Container.Resolve("PortalService"),
+        _portalService: Container.Resolve("ServerExchange"),
 
         _create: function (options) {
             this.options = options;

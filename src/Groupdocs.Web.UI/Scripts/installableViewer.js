@@ -16,6 +16,7 @@
             showViewerStyleControl: true,
             embedImagesIntoHtmlForWordFiles: false,
             instanceIdToken: null,
+            enableStandardErrorHandling: true
         },
 
         _create: function () {
@@ -334,10 +335,6 @@
                          "}";
             }
 
-            //if (settings.showOnePageInRow || settings.viewerStyle == window.groupdocs.OnePageInRow) {
-            //    style += ".grpdx." + classWithNumber + " .doc-page {display:block; margin-left:auto; margin-right:auto;}";
-            //}
-
             if (settings.useEmScaling) {
                 style += ".grpdx." + classWithNumber + " .html_page_contents {transform-origin:initial}";
             }
@@ -345,9 +342,6 @@
             if (style)
                 $("<style>" + style + "</style>").appendTo("head");
 
-
-            //var viewerHeaderHeight = viewerHeader.outerHeight(true);
-            //viewerMainWrapper.css("top", viewerHeaderHeight.toString() + "px");
 
             function localizeElements() {
                 self._localizeElements();
@@ -1361,7 +1355,7 @@
     $.extend(groupdocsViewerModel.prototype, {
         _portalService: null,
         _init: function () {
-            this._portalService = Container.Resolve("PortalService");
+            this._portalService = Container.Resolve("ServerExchange");
         },
 
         getPrintableHtml: function (documentPath, useHtmlBasedEngine, fileDisplayName,

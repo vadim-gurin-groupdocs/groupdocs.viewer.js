@@ -26,8 +26,8 @@ if (!window.Container) {
             $.fn.groupdocsViewer.prototype.isWorkingCrossDomain = true;
     }
 
-    Container.Register("PortalService", function (c) {
-            return new groupdocs.PortalService($.fn.groupdocsViewer.prototype.applicationPath,
+    Container.Register("ServerExchange", function (c) {
+            return new groupdocs.ServerExchange($.fn.groupdocsViewer.prototype.applicationPath,
                                                $.fn.groupdocsViewer.prototype.useHttpHandlers,
                                                $.fn.groupdocsViewer.prototype.isWorkingCrossDomain);
         }, true);

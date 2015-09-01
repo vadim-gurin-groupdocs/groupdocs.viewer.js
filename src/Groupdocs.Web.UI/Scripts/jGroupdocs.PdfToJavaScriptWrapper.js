@@ -9,43 +9,13 @@ window.groupdocs.Pdf2JavaScriptWrapper = function (options) {
 };
 $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
     documentDescription: null,
-    _portalService: Container.Resolve("PortalService"),
+    _portalService: Container.Resolve("ServerExchange"),
     proportion: 1,
     options: {
-        userId: 0,
-        privateKey: '',
         path: ''
     },
     init: function () {
-        var self = this;
-
-        function successHandler(response) {
-            //if (response) {
-            //if (response.data.success === false) {
-            //    errorHandler.apply(this, [{ code: response.data.code, Reason: (response.data ? response.data.Reason : null)}]);
-            //}
-            //else {
-            self.documentDescription = response.data;
-            self.options.callback();
-            //}
-            //}
-        }
-
-        //function errorHandler(error) {
-        //    if (window.jerror)
-        //        window.jerror(error.Reason);
-        //}
-
         this.documentDescription = JSON.parse(this.options.documentDescription);
-
-        //if (this.options.descForHtmlBasedEngine) {
-        //    this.documentDescription = JSON.parse(this.options.documentDescription);
-        //}
-        //else {
-        //    this._portalService.getPdf2JavaScript(this.options.userId, this.options.privateKey,
-        //        this.options.path, this.options.descForHtmlBasedEngine,
-        //        successHandler, null);
-        //}
     },
 
     getPageCount: function () {

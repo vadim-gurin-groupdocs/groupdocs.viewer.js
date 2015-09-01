@@ -17,7 +17,7 @@
         },
 
         _createViewModel: function () {
-            return new explorerViewModel(this.options);
+            return new window.groupdocs.explorerViewModel(this.options);
         },
 
         getViewModel: function () {
@@ -39,13 +39,13 @@
 
 
     // File explorer model
-    explorerModel = function (options) {
+    window.groupdocs.explorerModel = function (options) {
         $.extend(this.options, options);
         this._init();
     };
 
-    $.extend(explorerModel.prototype, {
-        _portalService: Container.Resolve("PortalService"),
+    $.extend(window.groupdocs.explorerModel.prototype, {
+        _portalService: Container.Resolve("ServerExchange"),
         _path: '',
         _entitiesLoaded: 0,
         _entitiesTotal: 0,
@@ -54,8 +54,6 @@
             types: null
         },
         options: {
-            userId: '',
-            userKey: '',
             pageSize: 30,
             extended: false
         },
@@ -70,10 +68,11 @@
         },
 
         _loadPage: function (index, path, callback, errorCallback) {
-            this._portalService.loadFileBrowserTreeData(this.options.userId, this.options.userKey, path,
+            this._portalService.loadFileBrowserTreeData(path,
                     index ? index : 0, this.options.pageSize,
                     this._order.by, this._order.asc,
                     this._filter.name, this._filter.types, this.options.extended,
+                    this.options.instanceIdToken,
                     function (response) {
                         if (response.textStatus === 'success') {
                             this._entitiesLoaded += response.data.nodes.length;
@@ -87,9 +86,7 @@
                     } .bind(this),
                     function (error) {
                         errorCallback.apply(this, [error]);
-                    } .bind(this),
-                    false,
-                    this.options.instanceIdToken
+                    } .bind(this)
               );
         },
 
@@ -122,11 +119,11 @@
     });
 
     // File explorer view model
-    explorerViewModel = function (options) {
+    window.groupdocs.explorerViewModel = function (options) {
         this._init(options);
     };
 
-    $.extend(explorerViewModel.prototype, {
+    $.extend(window.groupdocs.explorerViewModel.prototype, {
         _model: null,
         _filtering: false,
         _ordering: false,
@@ -135,8 +132,6 @@
         entities: null,
         files: null,
         folders: null,
-        changedUrlHash: false,
-        view: null,
         _order: null,
 
         _init: function (options) {
@@ -147,7 +142,6 @@
             this.entities = this.bindingProvider.getObservableArray();
             this.files = this.bindingProvider.getObservableArray();
             this.folders = this.bindingProvider.getObservableArray();
-            this.view = this.bindingProvider.getObservable('listing');
 
             this.path = this.bindingProvider.getObservable('');
             this.entities = this.bindingProvider.getObservableArray();
@@ -169,7 +163,7 @@
         },
 
         _createModel: function (options) {
-            return new explorerModel(options);
+            return new window.groupdocs.explorerModel(options);
         },
 
         _addRoot: function () {

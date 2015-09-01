@@ -51,11 +51,8 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
         if (this.docSpace) {
             var viewerOptions = $.extend(
             {
-                userId: this.userId,
-                userKey: this.userKey,
                 baseUrl: this.baseUrl,
                 fileId: this.fileId,
-                fileVersion: this.fileVersion,
                 quality: this.quality,
                 use_pdf: this.use_pdf,
                 pageImageWidth: this.pageImageWidth,
@@ -99,11 +96,8 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
 
         if (this.docSpacePageFlip) {
             docViewerPageFlip = this.docSpacePageFlip.docViewerPageFlip({
-                userId: this.userId,
-                userKey: this.userKey,
                 baseUrl: this.baseUrl,
                 fileId: this.fileId,
-                fileVersion: this.fileVersion,
                 quality: this.quality,
                 use_pdf: this.use_pdf,
                 pageImageWidth: this.pageImageWidth,

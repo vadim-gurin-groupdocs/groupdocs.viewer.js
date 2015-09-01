@@ -1,11 +1,11 @@
 ﻿if (!window.groupdocs)
     window.groupdocs = {};
 
-groupdocs.PortalService = function (applicationPath, useHttpHandlers, isWorkingCrossDomain) {
+groupdocs.ServerExchange = function (applicationPath, useHttpHandlers, isWorkingCrossDomain) {
     this._init(applicationPath, useHttpHandlers, isWorkingCrossDomain);
 };
 
-$.extend(groupdocs.PortalService.prototype, {
+$.extend(groupdocs.ServerExchange.prototype, {
     _urlSuffix: "",
     _lastError: null,
     _service: null,
@@ -24,15 +24,16 @@ $.extend(groupdocs.PortalService.prototype, {
             this.useJSONP = true;
     },
 
-    viewDocumentAsHtml: function (userId, privateKey, path, preloadPagesCount, fileDisplayName, usePngImagesForHtmlBasedEngine,
+    viewDocumentAsHtml: function (path, preloadPagesCount, fileDisplayName, usePngImagesForHtmlBasedEngine,
                                   convertWordDocumentsCompletely,
                                   watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                   ignoreDocumentAbsence, supportPageRotation,
                                   supportListOfContentControls, supportListOfBookmarks,
                                   embedImagesIntoHtmlForWordFiles,
-                                  successCallback, errorCallback, useCache, instanceIdToken, locale) {
+                                  instanceIdToken, locale,
+                                  successCallback, errorCallback) {
         var data = {
-            userId: userId, privateKey: privateKey, path: path, useHtmlBasedEngine: true,
+            path: path, useHtmlBasedEngine: true,
             preloadPagesCount: preloadPagesCount,
             fileDisplayName: fileDisplayName,
             usePngImagesForHtmlBasedEngine: usePngImagesForHtmlBasedEngine,
@@ -45,27 +46,28 @@ $.extend(groupdocs.PortalService.prototype, {
             instanceIdToken: instanceIdToken,
             locale: locale
         };
-        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : false);
+        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
     getDocumentPageHtml: function (path, pageIndex, usePngImages,
                                    embedImagesIntoHtmlForWordFiles,
-                                   successCallback, errorCallback,
-                                   instanceIdToken, locale) {
+                                   instanceIdToken, locale,
+                                   successCallback, errorCallback) {
         var data = {
             path: path, pageIndex: pageIndex, usePngImages: usePngImages,
             embedImagesIntoHtmlForWordFiles: embedImagesIntoHtmlForWordFiles,
             instanceIdToken: instanceIdToken,
             locale: locale
         };
-        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetDocumentPageHtml' + this._urlSuffix, data, successCallback, errorCallback, false);
+        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetDocumentPageHtml' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
     viewDocument: function (path, width, quality, usePdf, preloadPagesCount, password, fileDisplayName,
                             watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                             ignoreDocumentAbsence, supportPageRotation,
                             supportListOfContentControls, supportListOfBookmarks,
-                            successCallback, errorCallback, useCache, instanceIdToken, locale) {
+                            instanceIdToken, locale,
+                            successCallback, errorCallback) {
         var data = {
             path: path, width: width, quality: quality, usePdf: usePdf, preloadPagesCount: preloadPagesCount, password: password, fileDisplayName: fileDisplayName,
             watermarkText: watermarkText, watermarkColor: watermarkColor, watermarkPosition: watermarkPosition, watermarkWidth: watermarkWidth,
@@ -74,7 +76,7 @@ $.extend(groupdocs.PortalService.prototype, {
             instanceIdToken: instanceIdToken,
             locale: locale
         };
-        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : false);
+        this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback);
     },
     
     getImageUrlsAsync: function (path, dimension, firstPage, pageCount, quality, usePdf,
@@ -100,12 +102,12 @@ $.extend(groupdocs.PortalService.prototype, {
             instanceIdToken: instanceIdToken,
             locale: locale
         };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetImageUrls' + this._urlSuffix, data, successCallback, errorCallback, false);
+        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetImageUrls' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
-    loadFileBrowserTreeData: function (userId, privateKey, path, pageIndex, pageSize, orderBy, orderAsc, filter, fileTypes, extended, successCallback, errorCallback, useCache, instanceIdToken) {
-        var data = { userId: userId, privateKey: privateKey, path: path, pageIndex: pageIndex, pageSize: pageSize, orderBy: orderBy, orderAsc: orderAsc, filter: filter, fileTypes: fileTypes, extended: extended, instanceIdToken: instanceIdToken };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/LoadFileBrowserTreeData' + this._urlSuffix, data, successCallback, errorCallback, useCache != null ? useCache : true);
+    loadFileBrowserTreeData: function (path, pageIndex, pageSize, orderBy, orderAsc, filter, fileTypes, extended, instanceIdToken, successCallback, errorCallback) {
+        var data = { path: path, pageIndex: pageIndex, pageSize: pageSize, orderBy: orderBy, orderAsc: orderAsc, filter: filter, fileTypes: fileTypes, extended: extended, instanceIdToken: instanceIdToken };
+        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/LoadFileBrowserTreeData' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
     getPrintableHtml: function (path, useHtmlBasedEngine, fileDisplayName,
@@ -121,49 +123,37 @@ $.extend(groupdocs.PortalService.prototype, {
             instanceIdToken: instanceIdToken,
             locale: locale
         };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetPrintableHtml' + this._urlSuffix, data, successCallback, errorCallback, false);
+        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/GetPrintableHtml' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
-    reorderPage: function (path, oldPosition, newPosition, successCallback, errorCallback, instanceIdToken) {
+    reorderPage: function (path, oldPosition, newPosition, instanceIdToken, successCallback, errorCallback) {
         var data = { path: path, oldPosition: oldPosition, newPosition: newPosition, instanceIdToken: instanceIdToken };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ReorderPage' + this._urlSuffix, data, successCallback, errorCallback, false);
+        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ReorderPage' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
-    rotatePage: function (path, pageNumber, rotationAmount, successCallback, errorCallback, instanceIdToken) {
+    rotatePage: function (path, pageNumber, rotationAmount, instanceIdToken, successCallback, errorCallback) {
         var data = { path: path, pageNumber: pageNumber, rotationAmount: rotationAmount, instanceIdToken: instanceIdToken };
-        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/RotatePage' + this._urlSuffix, data, successCallback, errorCallback, false);
+        return this._runServiceAsync(this.applicationPath + this.urlPrefix + '/RotatePage' + this._urlSuffix, data, successCallback, errorCallback);
     },
 
-    _runServiceSync: function (url, data, useCache) {
+    _runServiceSync: function (url, data) {
         var r = null;
         var serviceCallEnded = false;
         var successCallback = function (response) {
             serviceCallEnded = true;
             r = response.data;
         };
-        this._runService(url, data, false, successCallback, null, useCache);
+        this._runService(url, data, false, successCallback, null);
         return r;
     },
 
-    _runServiceAsync: function (url, data, successCallback, errorCallback, useCache, convertToXml) {
-        return this._runService(url, data, true, successCallback, errorCallback, useCache, convertToXml);
+    _runServiceAsync: function (url, data, successCallback, errorCallback, convertToXml) {
+        return this._runService(url, data, true, successCallback, errorCallback, convertToXml);
     },
 
 
-    _runService: function (url, data, mode, successCallback, errorCallback, useCache, convertToXml) {
+    _runService: function (url, data, mode, successCallback, errorCallback, convertToXml) {
         var stringData = JSON.stringify(data);
-        var cacher = null;
-        if (useCache) {
-            cacher = Container.Resolve("Cacher");
-            var cacheItem = cacher.get(url + stringData);
-            if (cacheItem) {
-                cacheItem.value.Subscribe(function (response) {
-                    this._successHandler(response, successCallback);
-                }.bind(this), function (ex) { this._errorHandler(ex, errorCallback); }.bind(this));
-                return cacheItem.value;
-            }
-        }
-
         var dataToSend;
         if (this.useJSONP) {
             if (this._useHttpHandlers)
@@ -180,7 +170,6 @@ $.extend(groupdocs.PortalService.prototype, {
             type: this.useJSONP ? "GET" : "POST",
             contentType: "application/json; charset=utf-8",
             dataType: this.useJSONP ? "jsonp" + (convertToXml ? " xml" : "") : null,
-            //data: (this.useJSONP && this._useHttpHandlers) ? ("data=" + stringData.toString()) : stringData,
             data: dataToSend,
             async: mode
         });
@@ -211,9 +200,6 @@ $.extend(groupdocs.PortalService.prototype, {
                 finalHandler.OnCompleted();
             }.bind(this));
 
-        if (useCache) {
-            cacher.add(url + stringData, requestObservable, this._cacheTimeout);
-        }
         return requestObservable;
     },
 

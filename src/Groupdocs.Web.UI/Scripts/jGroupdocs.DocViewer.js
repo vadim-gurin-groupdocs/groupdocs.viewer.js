@@ -3,12 +3,7 @@
         _viewModel: null,
         options: {
             fileId: 0,
-            fileVersion: 1,
-            userId: 0,
-            userKey: null,
-            baseUrl: null,
-            _mode: 'full',
-            _docGuid: '',
+            _mode: 'webComponent',
             quality: null,
             use_pdf: "true",
             showHyperlinks: true
@@ -44,10 +39,6 @@
 
             $(this._viewModel).bind('_onProcessPages', function (e, data) {
                 $(this.element).trigger('_onProcessPages', [data]);
-            }.bind(this));
-
-            $(this._viewModel).bind('onProcessPages', function (e, path) {
-                $(this.element).trigger('onProcessPages', [path]);
             }.bind(this));
 
             $(this._viewModel).bind('onScrollDocView', function (e, data) {
@@ -88,7 +79,7 @@
         },
 
         _createViewModel: function () {
-            var vm = new docViewerViewModel(this.options);
+            var vm = new window.groupdocs.docViewerViewModel(this.options);
             return vm;
         },
 
@@ -99,15 +90,14 @@
         }
     });
 
-    // Doc Viewer Model
-    docViewerModel = function (options) {
+    window.groupdocs.docViewerModel = function (options) {
         $.extend(this, options);
         this._init();
     };
 
-    $.extend(docViewerModel.prototype, {
+    $.extend(window.groupdocs.docViewerModel.prototype, {
         _init: function () {
-            this._portalService = Container.Resolve("PortalService");
+            this._portalService = Container.Resolve("ServerExchange");
         },
 
         loadDocument: function (fileId, pagesCountToShow, imageWidth, password, fileDisplayName,
@@ -116,8 +106,8 @@
                                 supportPageRotation,
                                 supportListOfContentControls, supportListOfBookmarks,
                                 instanceIdToken,
-                                callback, errorCallback,
-                                locale) {
+                                locale,
+                                callback, errorCallback) {
             var onSucceded = function (response) {
                 if (response.data != null) {
                     callback.apply(this, [response.data]);
@@ -131,10 +121,9 @@
                 watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                 ignoreDocumentAbsence, supportPageRotation,
                 supportListOfContentControls, supportListOfBookmarks,
-                onSucceded, errorCallback,
-                false,
                 instanceIdToken,
-                locale);
+                locale,
+                onSucceded, errorCallback);
         },
 
         loadDocumentAsHtml: function (fileId, pagesCountToShow, fileDisplayName, usePngImages, convertWordDocumentsCompletely,
@@ -143,13 +132,16 @@
                                       supportListOfContentControls, supportListOfBookmarks,
                                       embedImagesIntoHtmlForWordFiles,
                                       instanceIdToken,
-                                      callback, errorCallback, locale) {
-            this._portalService.viewDocumentAsHtml(this.userId, this.userKey, fileId, this.preloadPagesCount, fileDisplayName, usePngImages,
+                                      locale,
+                                      callback, errorCallback) {
+            this._portalService.viewDocumentAsHtml(fileId, this.preloadPagesCount, fileDisplayName, usePngImages,
                                                    convertWordDocumentsCompletely,
                                                    watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                                    ignoreDocumentAbsence, supportPageRotation,
                                                    supportListOfContentControls, supportListOfBookmarks,
                                                    embedImagesIntoHtmlForWordFiles,
+                                                   instanceIdToken,
+                                                   locale,
                 function (response) {
                     if (response.data) {
                         callback.apply(this, [response.data]);
@@ -161,17 +153,8 @@
                 function (error) {
                     errorCallback.apply(this, [error]);
                 },
-                false,
-                instanceIdToken,
-                locale
+                false
             );
-        },
-
-        loadProperties: function (fileId, callback) {
-            this._portalService.getDocInfoAsync(this.userId, this.userKey, fileId,
-                function (response) {
-                    callback.apply(this, [response.data]);
-                });
         },
 
         loadHyperlinks: function (fileId, callback, errorCallback) {
@@ -191,9 +174,9 @@
                                          useHtmlBasedEngine,
                                          supportPageRotation,
                                          instanceIdToken,
-                                         callback, errorCallback,
-                                         locale) {
-            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf, this.fileVersion,
+                                         locale,
+                                         callback, errorCallback) {
+            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf,
                                               watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                               ignoreDocumentAbsence,
                                               useHtmlBasedEngine, supportPageRotation,
@@ -210,52 +193,52 @@
 
         getDocumentPageHtml: function (fileId, pageNumber, usePngImages,
                                        embedImagesIntoHtmlForWordFiles,
-                                       instanceIdToken,
-                                       callback, errorCallback, locale) {
+                                       locale, instanceIdToken,
+                                       callback, errorCallback) {
             this._portalService.getDocumentPageHtml(fileId, pageNumber, usePngImages,
                 embedImagesIntoHtmlForWordFiles,
+                instanceIdToken,
+                locale,
                 function (response) {
                     callback.apply(this, [response.data]);
                 },
                 function (error) {
                     errorCallback.apply(this, [error]);
-                },
-                instanceIdToken,
-                locale
+                }
             );
         },
 
         reorderPage: function (fileId, oldPosition, newPosition, instanceIdToken, callback, errorCallback) {
             this._portalService.reorderPage(fileId, oldPosition, newPosition,
+                instanceIdToken,
                 function (response) {
                     callback.apply(this, [response.data]);
                 },
                 function (error) {
                     errorCallback.apply(this, [error]);
-                },
-                instanceIdToken
+                }
             );
         },
 
         rotatePage: function (path, pageNumber, rotationAmount, instanceIdToken, successCallback, errorCallback) {
             this._portalService.rotatePage(path, pageNumber, rotationAmount,
+                instanceIdToken,
                 function (response) {
                     successCallback.apply(this, [response.data]);
                 },
                 function (error) {
                     errorCallback.apply(this, [error]);
-                },
-                instanceIdToken
+                }
             );
         }
     });
 
     // Doc Viewer View Model
-    docViewerViewModel = function (options) {
+    window.groupdocs.docViewerViewModel = function (options) {
         $.extend(this, options);
         this._create(options);
     };
-    $.extend(docViewerViewModel.prototype, {
+    $.extend(window.groupdocs.docViewerViewModel.prototype, {
         Layouts: { ScrollMode: 1, BookMode: 2, OnePageInRow: 3, TwoPagesInRow: 4, CoverThenTwoPagesInRow: 5 },
         _model: null,
         pagesDimension: null,
@@ -338,7 +321,7 @@
         },
 
         _create: function (options) {
-            this._model = new docViewerModel(options);
+            this._model = new window.groupdocs.docViewerModel(options);
             this._init(options);
         },
 
@@ -461,6 +444,7 @@
                     this.ignoreDocumentAbsence, this.supportPageRotation,
                     this.supportListOfContentControls, this.supportListOfBookmarks,
                     this.instanceIdToken,
+                    this.locale,
                     function (response) {
                         //this._onDocumentLoaded(response);
                         if (typeof (fileId) !== 'undefined')
@@ -475,8 +459,7 @@
                     }.bind(this),
                     function (error) {
                         this._onDocumentLoadFailed(error);
-                    }.bind(this),
-                    this.locale);
+                    }.bind(this));
             }
             else if (this.pageContentType == "html") {
                 this._model.loadDocumentAsHtml(fileId || this.fileId, pageCountToShow, this.fileDisplayName, this.usePngImagesForHtmlBasedEngine,
@@ -486,6 +469,7 @@
                     this.supportListOfContentControls, this.supportListOfBookmarks,
                     this.embedImagesIntoHtmlForWordFiles,
                     this.instanceIdToken,
+                    this.locale,
                     function (response) {
                         if (typeof (fileId) !== 'undefined')
                             this.fileId = fileId;
@@ -495,8 +479,7 @@
                     }.bind(this),
                     function (error) {
                         this._onDocumentLoadFailed(error);
-                    }.bind(this),
-                    this.locale
+                    }.bind(this)
                 );
             }
 
@@ -528,6 +511,7 @@
                 this._model.getDocumentPageHtml(this.fileId, pageNumber, this.usePngImagesForHtmlBasedEngine,
                     this.embedImagesIntoHtmlForWordFiles,
                     this.instanceIdToken,
+                    this.locale,
                     function (response) {
                         this.setPageHtml(page, pageNumber, response.pageHtml, response.pageCss);
                         if (successCallback)
@@ -536,8 +520,7 @@
                     function (error) {
                         page.startedDownloadingPage = false;
                         this._onError(error);
-                    }.bind(this),
-                    this.locale
+                    }.bind(this)
                 );
             }
         },
@@ -619,6 +602,7 @@
                 this.ignoreDocumentAbsence,
                 this.useHtmlBasedEngine, this.supportPageRotation,
                 this.instanceIdToken,
+                this.locale,
                 function (response) {
                     for (i = 0; i < imageCount; i++) {
                         this.pages()[i].url(response.image_urls[i]);
@@ -627,8 +611,7 @@
                 }.bind(this),
                 function (error) {
                     this._onError(error);
-                }.bind(this),
-                this.locale);
+                }.bind(this));
         },
 
         _onError: function (error) {
@@ -657,8 +640,6 @@
             }
 
             var options = {
-                userId: this.userId,
-                privateKey: this.userKey,
                 fileId: this.fileId,
                 path: response.path,
                 documentDescription: response.documentDescription,
@@ -679,12 +660,13 @@
             if (this.useJavaScriptDocumentDescription) {
                 response.pageCount = this._pdf2XmlWrapper.getPageCount();
             }
+            if (!response.imageUrls)
+                response.imageUrls = response.image_urls;
 
             $(this).trigger('onDocumentLoaded', response);
             var self = this;
 
             this._sessionToken = response.token;
-            this.docGuid = response.path;
             this.pageCount(response.pageCount);
             this.documentName(response.name);
             this.docType(response.doc_type);
@@ -991,7 +973,6 @@
             if (this.pages().length > 0 && this._firstPage.length == 0 && !this.useVirtualScrolling) // viewer destroyed while loading document
                 return;
 
-            $(this).trigger('onProcessPages', [this.docGuid]);
             this.inprogress(false);
 
             if (this.pageContentType == "image") {
@@ -1069,7 +1050,7 @@
             this.docWasLoadedInViewer = true;
 
             // get a list of document hyperlinks from the server
-            if (this.pageContentType == "image" && this._mode != "webComponent" && this._mode != "annotatedDocument") {
+            if (this.pageContentType == "image" && this._mode != "webComponent") {
                 this._loadHyperlinks();
             }
 
