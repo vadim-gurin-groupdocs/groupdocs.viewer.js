@@ -70,6 +70,7 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 selectionContent: this.selectionContent,
                 usePageNumberInUrlHash: this.usePageNumberInUrlHash,
                 pageContentType: this.pageContentType,
+                useHtmlBasedEngine: this.useHtmlBasedEngine,
                 imageHorizontalMargin: this.imageHorizontalMargin,
                 imageVerticalMargin: this.imageVerticalMargin,
                 useJavaScriptDocumentDescription: this.useJavaScriptDocumentDescription,

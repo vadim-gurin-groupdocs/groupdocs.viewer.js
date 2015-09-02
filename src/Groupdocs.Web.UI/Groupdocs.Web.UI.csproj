@@ -31,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Groupdocs.Viewer">
-      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Web.UI\Groupdocs.Viewer.dll</HintPath>
+    <Reference Include="Groupdocs.Common.InstallableViewer">
+      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Common.Viewer\bin\Debug\Groupdocs.Common.InstallableViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="Groupdocs.Viewer, Version=2.15.1.20585, Culture=neutral, PublicKeyToken=c037f897af36d52e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Web.UI\bin\Debug\Groupdocs.Viewer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,6 +75,8 @@
     <Content Include="Images\mainbg.png" />
     <Content Include="Images\spinner.gif" />
     <Content Include="Images\sprites.png" />
+    <Content Include="Scripts\jGroupdocs.Viewing.HTML.js" />
+    <Content Include="Scripts\jGroupdocs.Viewing.Image.js" />
     <Content Include="Scripts\jGroupdocs.Explorer.js" />
     <Content Include="Scripts\jGroupdocs.fileOpenDialogViewModel.js" />
     <Content Include="Scripts\installableViewer.js" />
