@@ -89,7 +89,9 @@
         _model: null,
         pagesDimension: null,
         pageImageWidth: 0,
+        defaultPageImageWidth: 852,
         imageHorizontalMargin: 34,
+        pageWrapperHorizontalMargin: 7,
         imageVerticalMargin: 0,
         initialZoom: 100,
         zoom: null,
@@ -176,7 +178,7 @@
                 this.viewerWidth -= this.viewerLeft;
                 this.documentSpace.css("width", this.viewerWidth + "px");
             }
-            var defaultPageImageWidth = 852;
+            var defaultPageImageWidth = this.defaultPageImageWidth;
             var defaultPageImageHeight = 1100;
             this.pageImageWidth = defaultPageImageWidth;
 
@@ -218,19 +220,10 @@
                 this.lastVisiblePageForVirtualMode.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } });;
             this.documentHeight = this.bindingProvider.getObservable(0);
 
-            if (this.pageContentType == "html") {
-                this.imageHorizontalMargin = 0;
-                this.calculatePointToPixelRatio();
-            }
-
             this.pagePrefix = this.docViewerId + "-page-";
 
-            if (this.pageContentType == "image")
-                this.initialWidth = this.pageImageWidth;
-
-            if (this.zoomToFitWidth) {
+            if (this.zoomToFitWidth)
                 this.initialWidth = this.pageImageWidth = this.getFitWidth();
-            }
 
             this.zoom = this.bindingProvider.getObservable(this.initialZoom);
             this.documentHeight = this.bindingProvider.getObservable(0);
@@ -245,10 +238,8 @@
             pageDescription = { number: 1, visible: this.bindingProvider.getObservable(false), url: this.bindingProvider.getObservable(this.emptyImageUrl), htmlContent: this.bindingProvider.getObservable(""), searchText: this.bindingProvider.getObservable(null) };
             if (this.supportPageRotation)
                 pageDescription.rotation = this.bindingProvider.getObservable(0);
-            if (this.variablePageSizeSupport) {
-                pageDescription.prop = this.bindingProvider.getObservable(1);
-                pageDescription.heightRatio = this.bindingProvider.getObservable(1);
-            }
+            pageDescription.prop = this.bindingProvider.getObservable(1);
+            pageDescription.heightRatio = this.bindingProvider.getObservable(1);
             pageDescription.left = 0;
             pageDescription.top = this.getPageTop(0);
             this.pages.push(pageDescription);
@@ -422,53 +413,6 @@
             this.triggerEvent("documentLoadCompleted.groupdocs");
         },
 
-
-        _onDocumentHyperlinksLoaded: function (response) {
-            if (!response || !response.links) {
-                this.hyperlinks.removeAll();
-                return;
-            }
-
-            var links = [];
-            var self = this;
-            var selectable = this.getSelectableInstance();
-
-            $.each(response.links, function () {
-                var l = {
-                    url: this.Url,
-                    pageNumber: this.PageNumber,
-                    targetPage: this.TargetPage,
-                    rect: new groupdocs.Rect(this.Bounds.X, this.Bounds.Y, this.Bounds.X + this.Bounds.Width, this.Bounds.Y + this.Bounds.Height)
-                };
-                l.frame = this.bindingProvider.getObservable(selectable != null ? selectable.convertPageAndRectToScreenCoordinates(l.pageNumber, l.rect) : l.rect);
-                links.push(l);
-            });
-
-            this.hyperlinks(links);
-        },
-
-        _loadHyperlinks: function () {
-            if (this.options.showHyperlinks == true) {
-                this._model.loadHyperlinks(
-                    this.fileId,
-                    this._onDocumentHyperlinksLoaded.bind(this),
-                    function (error) {
-                    });
-            }
-        },
-
-        _refreshHyperlinkFrames: function () {
-            var selectable = this.getSelectableInstance();
-
-            $.each(this.hyperlinks(), function () {
-                this.frame(selectable != null ? selectable.convertPageAndRectToScreenCoordinates(this.pageNumber, this.rect) : this.rect);
-            });
-        },
-
-        setPageWidth: function (val) {
-            this.pageImageWidth = val;
-        },
-
         setContainerWidth: function (containerWidth) {
             this.viewerWidth = containerWidth;
         },
@@ -490,7 +434,6 @@
 
         getFitWidthZoom: function () {
             return this.getFitWidth() / this.initialWidth * 100;
-            //return viewerWidth / (this.pageImageWidth + 2 * this.imageHorizontalMargin) * 100;
         },
         
         getViewerHeight: function () {
@@ -532,8 +475,6 @@
             var isSetCalled = this.isSetCalled;
             this.isSetCalled = false;
             if (isSetCalled)
-                return;
-            if (this.useTabsForPages())
                 return;
             //var direction;
             var pageIndex = null;
@@ -585,9 +526,6 @@
         },
 
         ScrollDocViewEnd: function (item, e) {
-            if (this.useTabsForPages())
-                return;
-
             this.isSetCalled = false;
             this.scrollPosition = [$(e.target).scrollLeft(), $(e.target).scrollTop()];
             var numbers = this.loadImagesForVisiblePages();
@@ -602,9 +540,6 @@
         getVisiblePagesNumbers: function () {
             if (!this.isDocumentLoaded)
                 return null;
-            if (this.useTabsForPages()) {
-                return { start: 1, end: 1 };
-            }
 
             var start = null;
             var end = null;
@@ -671,27 +606,10 @@
 
         loadImagesForPages: function (start, end, forceLoading) {
             var pages = this.pages();
-            var cssForAllPages = "";
             var page;
-            var isPageVisible;
             for (var i = start; i <= end; i++) {
                 page = pages[i - 1];
-                isPageVisible = page.visible();
-                if (isPageVisible)
-                    this.markContentControls(i - 1);
-
-                if (this.pageContentType == "image") {
-                    this.triggerImageLoadedEvent(i);
-
-                    if (this.supportPageRotation && forceLoading) {
-                        this.addSuffixToImageUrl(page);
-                    }
-                }
-                else if (this.pageContentType == "html") {
-                    if (!isPageVisible) {
-                        this.getDocumentPageHtml(i - 1);
-                    }
-                }
+                this.loadImageForPage(i - 1, page, forceLoading);
                 page.visible(true);
             }
         },
@@ -727,69 +645,17 @@
 
             this.triggerEvent('onDocViewScrollPositionSet', { position: pageTop });
             var page = this.pages()[newPageIndex - 1];
-
-            if (this.pageContentType == "image") {
-                this.triggerImageLoadedEvent(newPageIndex);
-                page.visible(true);
-            }
-            else if (this.pageContentType == "html") {
-                if (!page.visible()) {
-                    this.getDocumentPageHtml(newPageIndex - 1);
-                }
-            }
-
-            //this.isSetCalled = false;
+            this.makePageVisible(newPageIndex - 1, page);
 
             this.setPageNumerInUrlHash(newPageIndex);
             this.triggerEvent('onDocumentPageSet', [newPageIndex]);
             this.triggerEvent("documentPageSet.groupdocs", newPageIndex);
         },
 
-        triggerImageLoadedEvent: function (pageIndex) {
-            if ($.browser.msie) {
-                if (!this.pages()[pageIndex - 1].visible()) {
-                    $("img#img-" + pageIndex).load(function () {
-                        this.triggerEvent("onPageImageLoaded");
-                    });
-                }
-            }
-        },
-
         setZoom: function (value) {
             this.zoom(value);
             this.loadPagesZoomed();
             this.clearContentControls();
-
-            if (this.pageContentType == "image") {
-                if (this._pdf2XmlWrapper) {
-                    var pageSize = this._pdf2XmlWrapper.getPageSize();
-                    this.scale(this.pageImageWidth / pageSize.width * value / 100);
-                }
-
-                var selectable = this.getSelectableInstance();
-                selectable.changeSelectedRowsStyle(this.scale());
-                this.reInitSelectable();
-                if (this.useVirtualScrolling) {
-                    selectable.recalculateSearchPositions(this.scale());
-                    this.highlightSearch();
-                }
-                this.setPage(this.pageInd());
-
-                if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
-                    this.loadImagesForVisiblePages();
-
-                if (this.options.showHyperlinks) {
-                    this._refreshHyperlinkFrames();
-                }
-            }
-            else if (this.pageContentType == "html") {
-                this.reInitSelectable();
-                this.setPage(this.pageInd());
-                this.loadImagesForVisiblePages();
-            }
-
-            this.reflowPagesInChrome(true);
-            
         },
 
         loadPagesZoomed: function () {
@@ -797,11 +663,13 @@
             var newHeight = Math.round(newWidth * this.heightWidthRatio);
             var pages = this.pages();
 
+            var changed = false;
             if (newWidth != this.pageWidth() || newHeight != this.pageHeight()) {
                 this.pagesDimension = Math.floor(newWidth) + 'x';
 
                 this.pageWidth(newWidth);
                 this.pageHeight(newHeight);
+                changed = true;
                 if (this.useTabsForPages()) {
                     var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
                     var pageElement = htmlPageContents.children("div,table,img");
@@ -822,43 +690,10 @@
                         this.retrieveImageUrls(pageCount);
                 }
             }
+
+            return changed ? newWidth : null;
         },
 
-        performSearch: function (value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch) {
-            if (this.pageContentType == "image") {
-                var selectable = this.getSelectableInstance();
-                if (selectable != null) {
-                    var searchCountItem = selectable.performSearch(value, this.scale(), isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
-                    this.triggerEvent('onSearchPerformed', [searchCountItem]);
-                }
-            }
-            else {
-                this.searchText = value;
-                this.searchForSeparateWords = searchForSeparateWords;
-                this.treatPhrasesInDoubleQuotesAsExact = treatPhrasesInDoubleQuotesAsExact;
-                var pages = this.pages();
-                var page;
-
-                if (this.loadAllPagesOnSearch)
-                    this.loadImagesForPages(1, pages.length);
-
-                for (var i = 0; i < pages.length; i++) {
-                    page = pages[i];
-                    if (page.visible()) {
-                        var searchParameters = {
-                            text: value,
-                            isCaseSensitive: isCaseSensitive,
-                            searchForSeparateWords: searchForSeparateWords,
-                            treatPhrasesInDoubleQuotesAsExact: treatPhrasesInDoubleQuotesAsExact,
-                            pageNumber: i
-                        };
-
-                        page.searchText(searchParameters);
-                    }
-                }
-            }
-        },
-        
         getWords: function (phrase) {
             var separatorsRegexString = "[^" + this.searchSeparatorsList + "]+";
             var separatorsRegex = new RegExp(separatorsRegexString, "g");
@@ -876,19 +711,6 @@
                 });
             }
             return words;
-        },
-
-        selectTextInRect: function (rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers) {
-            if (this._dvselectable) {
-                return $(this._dvselectable).groupdocsSelectable('highlightPredefinedArea', rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers);
-            }
-            return null;
-        },
-
-        deselectTextInRect: function (rect, deleteStatic, pageNumber, selectionCounter) {
-            if (this._dvselectable) {
-                $(this._dvselectable).groupdocsSelectable('unhighlightPredefinedArea', rect, deleteStatic, pageNumber, selectionCounter);
-            }
         },
 
         reInitSelectable: function () {
@@ -929,16 +751,6 @@
                 return null;
             var selectable = this._dvselectable.data("groupdocsSelectable");
             return selectable;
-        },
-
-        shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
-            var originalDocumentWidth = null;
-            if (this.use_pdf != 'false' && checkOriginalDocumentWidth) {
-                var pageSize = this._pdf2XmlWrapper.getPageSize();
-                originalDocumentWidth = pageSize.width;
-            }
-            return this.minimumImageWidth != null &&
-                (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
         },
 
         resizeViewerElement: function (viewerLeft) {
@@ -1002,10 +814,8 @@
             if (oldRotation == 0 && angle == 0)
                 return;
 
-            if (this.pageContentType == "image" && oldRotation != angle) {
-                page.visible(false);
-                this.addSuffixToImageUrl(page);
-                page.visible(true);
+            if (oldRotation != angle) {
+                this.refreshPageContents();
             }
 
             page.rotation(angle);
@@ -1014,20 +824,12 @@
             var pagesFromServer = this._pdf2XmlWrapper.documentDescription.pages;
             var pageSize, pageFromServer;
 
-            var pageWidth, pageHeight, maxPageHeight;
+            var pageWidth, pageHeight;
             if (this.useTabsForPages()) {
                 var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
                 var pageElement = htmlPageContents.children("div,table");
                 pageWidth = pageElement.width();
-                pageHeight = pageElement.height();
                 this.initialWidth = pageWidth;
-
-                if (newAngle > 0) {
-                    maxPageHeight = pageWidth;
-                }
-                else {
-                    maxPageHeight = pageHeight;
-                }
                 this.pageWidth(pageWidth * this.zoom() / 100);
                 return;
             }
@@ -1038,27 +840,18 @@
                     pageFromServer.rotation = angle;
                     pageWidth = pageFromServer.w;
                     pageHeight = pageFromServer.h;
-                    maxPageHeight = pageSize.height;
                 }
                 else
                     return;
             }
 
-            var scaleRatio;
-
             if (newAngle > 0) {
                 page.prop(pageWidth / pageHeight);
-                if (this.pageContentType == "html") {
-                    scaleRatio = this.getScaleRatioForPage(pageSize.width, pageSize.height, pageHeight, pageWidth);
-                    page.heightRatio(scaleRatio);
-                }
+                this.setScaleRatioForPage(page, pageSize.width, pageSize.height, pageHeight, pageWidth);
             }
             else {
                 page.prop(pageHeight / pageWidth);
-                if (this.pageContentType == "html") {
-                    scaleRatio = this.getScaleRatioForPage(pageSize.width, pageSize.height, pageWidth, pageHeight);
-                    page.heightRatio(scaleRatio);
-                }
+                this.setScaleRatioForPage(page, pageSize.width, pageSize.height, pageWidth, pageHeight);
             }
             this.calculatePagePositions();
             this.reInitSelectable();
@@ -1066,6 +859,9 @@
             if (selectable != null)
                 selectable.clearSelectionOnPage(pageNumber);
             this.loadImagesForVisiblePages(true);
+        },
+
+        refreshPageContents: function () {
         },
 
         isPageVisible: function (pageNumber) {
@@ -1081,28 +877,9 @@
             return pageSize;
         },
 
-        calculatePointToPixelRatio: function () {
-            var pointWidth = 100;
-            var testElement = $("<div/>").css("width", pointWidth + "pt").css("height", "0");
-            testElement.appendTo(this.documentSpace);
-            var pixelWidth = testElement.width();
-            this.pointToPixelRatio = pixelWidth / pointWidth;
-            testElement.remove();
-        },
-
-        
         adjustInitialZoom: function () {
             if (this.zoomToFitHeight)
                 this.setZoom(this.getFitHeightZoom());
-
-            if (this.pageContentType == "html" && this.zoomToFitWidth) {
-                var fittingWidth = this.getFitWidth();
-                var originalPageWidth = this.pageWidth();
-                if (!this.onlyShrinkLargePages || originalPageWidth > fittingWidth) {
-                    var zoom = fittingWidth / originalPageWidth * 100;
-                    this.setZoom(zoom);
-                }
-            }
         },
 
         intToColor: function (num) {
@@ -1136,14 +913,8 @@
             this.inprogress(set);
         },
 
-        getScaleRatioForPage: function (widthForMaxHeight, maxPageHiegt, pageWidth, pageHeight) {
-            var widthRatio, scaleRatio;
-            if (widthForMaxHeight === undefined)
-                widthRatio = 1;
-            else
-                widthRatio = widthForMaxHeight / pageWidth;
-            scaleRatio = widthRatio;
-            return scaleRatio;
+        // overriden in children
+        setScaleRatioForPage: function (page, widthForMaxHeight, maxPageHiegt, pageWidth) {
         },
 
         pageElementStyle: function (index) {
@@ -1194,7 +965,7 @@
             var layout = this.layout();
             return { height: this.useVirtualScrolling ? (this.documentHeight() + "px") : "auto",
                 width: (layout == this.Layouts.TwoPagesInRow || layout == this.Layouts.CoverThenTwoPagesInRow) ?
-                        (this.pageWidth() + this.imageHorizontalMargin) * 2 + "px" : "auto"
+                        (this.pageWidth() + this.pageWrapperHorizontalMargin) * 2 + "px" : "auto"
             };
         },
 
@@ -1216,7 +987,7 @@
 
         calculatePagePositions: function () {
             var pageVerticalMargin = 15; // pixels
-            var pageHorizontalMargin = 7 + 0; // pixels from left
+            var pageHorizontalMargin = this.pageWrapperHorizontalMargin; // pixels from left
             var pages = this.pages();
             var width = this.pageWidth();
             var documentHeight = 0;
@@ -1271,17 +1042,6 @@
             this.documentHeight(documentHeight);
         },
         
-        
-        highlightSearch: function () {
-            if (this.pageContentType == "image" && this.useVirtualScrolling) {
-                var selectable = this.getSelectableInstance();
-                if (selectable) {
-                    selectable.highlightSearch(this.firstVisiblePageForVirtualMode(),
-                                               this.lastVisiblePageForVirtualMode());
-                }
-            }
-        },
-
         getPageTop: function (initialValue) {
             if (this.useVirtualScrolling)
                 return this.bindingProvider.getObservable(initialValue);

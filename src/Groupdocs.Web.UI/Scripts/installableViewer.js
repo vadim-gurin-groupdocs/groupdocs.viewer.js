@@ -482,7 +482,6 @@
                     //layout: settings.viewerStyle,
                     usePageNumberInUrlHash: false,
                     selectionContent: selectionContent,
-                    imageHorizontalMargin: 14,
                     imageVerticalMargin: 14,
                     useJavaScriptDocumentDescription: true,
                     searchPartialWords: true,

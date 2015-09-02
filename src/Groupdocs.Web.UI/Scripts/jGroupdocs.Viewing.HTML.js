@@ -109,80 +109,7 @@
     };
 
     $.extend(window.groupdocs.documentHtmRenderingComponentViewModel.prototype, window.groupdocs.documentComponentViewModel.prototype, {
-        Layouts: { ScrollMode: 1, BookMode: 2, OnePageInRow: 3, TwoPagesInRow: 4, CoverThenTwoPagesInRow: 5 },
-        _model: null,
-        pagesDimension: null,
-        pageImageWidth: 0,
-        imageHorizontalMargin: 34,
-        imageVerticalMargin: 0,
-        initialZoom: 100,
-        zoom: null,
-        scale: null,
-        docWasLoadedInViewer: false,
-        scrollPosition: [0, 0],
-        inprogress: null,
-        pages: null,
-        pageInd: null,
-        pageWidth: null,
-        pageHeight: null,
-        pageCount: null,
-        docType: null,
-        fileId: null,
-        _dvselectable: null,
-        _thumbnailHeight: 140,
-        _sessionToken: '',
-        imageUrls: [],
-        pagePrefix: "page-",
-        documentName: null,
-        _pageBounds: null,
-        unscaledPageHeight: null,
-        unscaledPageWidth: null,
-        pageLeft: null,
-        preloadPagesCount: null,
-        viewerLayout: 1,
-        changedUrlHash: false,
-        hashPagePrefix: "page",
-        pageContentType: "image",
-        scrollbarWidth: null,
-        password: null,
-        useJavaScriptDocumentDescription: false,
-        minimumImageWidth: null,
-        fileDisplayName: null,
-        hyperlinks: null,
-        watermarkText: null,
-        watermarkWidth: null,
-        watermarkColor: null,
-        watermarkLeft: null,
-        watermarkTop: null,
-        watermarkScreenWidth: null,
-        searchText: null,
-        htmlSearchHighlightClassName: "search_highlight_html",
-        htmlSearchHighlightElement: "span",
-        htmlSearchHighlightSvgElement: "tspan",
-        currentWordCounter: 0,
-        matchedNods: null,
-        searchMatches: null,
-        matchedNodsCount: 0,
-        matchesCount: null,
-        searchSeparatorsList: "\\-[\\]{}()*+?\\\\^|\\s.,:;+\"/",
-        usePngImagesForHtmlBasedEngine: false,
-        loadAllPagesOnSearch: false,
-        serverPages: null,
-        convertWordDocumentsCompletely: false,
-        ignoreDocumentAbsence: false,
-        tabs: null,
-        useTabsForPages: null,
-        tabPanelHeight: 30,
-        supportPageRotation: false,
-        fileType: null,
-        activeTab: null,
-        autoHeight: null,
-        isHtmlDocument: null,
-        rotatedWidth: null,
-        alwaysShowLoadingSpinner: null,
-        supportListOfContentControls: false,
-        supportListOfBookmarks: false,
-        isDocumentLoaded: false,
+        imageHorizontalMargin: 0,
 
         options: {
             showHyperlinks: true
@@ -194,100 +121,8 @@
         },
 
         _init: function (options) {
+            this.calculatePointToPixelRatio();
             window.groupdocs.documentComponentViewModel.prototype._init.call(this, options);
-            return;
-            var self = this;
-            
-            if (this.viewerLeft != 0) {
-                this.viewerWidth -= this.viewerLeft;
-                this.documentSpace.css("width", this.viewerWidth + "px");
-            }
-            var defaultPageImageWidth = 852;
-            var defaultPageImageHeight = 1100;
-            this.pageImageWidth = defaultPageImageWidth;
-
-            this.pages = this.bindingProvider.getObservableArray([]);
-            this.scale = this.bindingProvider.getObservable(this.initialZoom / 100);
-            this.inprogress = this.bindingProvider.getObservable(false),
-            this.pageLeft = this.bindingProvider.getObservable(0);
-            this.pageInd = this.bindingProvider.getObservable(1);
-            this.pageWidth = this.bindingProvider.getObservable(defaultPageImageWidth);
-            this.pageHeight = this.bindingProvider.getObservable(defaultPageImageHeight);
-            this.pageCount = this.bindingProvider.getObservable(0);
-            this.docType = this.bindingProvider.getObservable(-1);
-            this.documentName = this.bindingProvider.getObservable("");
-            this.password = this.bindingProvider.getObservable("");
-            this.preloadPagesCount = options.preloadPagesCount;
-            this.browserIsChrome = this.bindingProvider.getObservable(false);
-            this.hyperlinks = this.bindingProvider.getObservableArray();
-            this.useTabsForPages = this.bindingProvider.getObservable(null); // it's undefined 
-            this.tabs = this.bindingProvider.getObservableArray([]);
-            this.activeTab = this.bindingProvider.getObservable(0);
-            this.autoHeight = this.bindingProvider.getObservable(false);
-            this.isHtmlDocument = this.bindingProvider.getObservable(false);
-            this.alwaysShowLoadingSpinner = this.bindingProvider.getObservable(false);
-            this.rotatedWidth = this.bindingProvider.getComputedObservable(function () {
-                if (self.useTabsForPages()) {
-                    var width = self.pageWidth();
-                    return width / self.zoom() * 100.0 + "px";
-                }
-                else
-                    return "auto";
-            });
-
-            this.layout = this.bindingProvider.getObservable(this.viewerLayout);
-            this.firstVisiblePageForVirtualMode = this.bindingProvider.getObservable(0);
-            if (this.firstVisiblePageForVirtualMode.extend)
-                this.firstVisiblePageForVirtualMode.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } });;
-            this.lastVisiblePageForVirtualMode = this.bindingProvider.getObservable(0);
-            if (this.lastVisiblePageForVirtualMode.extend)
-                this.lastVisiblePageForVirtualMode.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } });;
-            this.documentHeight = this.bindingProvider.getObservable(0);
-
-            if (this.pageContentType == "html") {
-                this.imageHorizontalMargin = 0;
-                this.calculatePointToPixelRatio();
-            }
-
-            this.pagePrefix = this.docViewerId + "-page-";
-
-            if (this.pageContentType == "image")
-                this.initialWidth = this.pageImageWidth;
-
-            if (this.zoomToFitWidth) {
-                this.initialWidth = this.pageImageWidth = this.getFitWidth();
-            }
-
-            this.zoom = this.bindingProvider.getObservable(this.initialZoom);
-            this.documentHeight = this.bindingProvider.getObservable(0);
-
-            this.options.showHyperlinks = (options.showHyperlinks != false && this.use_pdf != 'false');
-            this.options.highlightColor = options.highlightColor;
-            this.matchedNods = [];
-            this.searchMatches = [];
-            this.serverPages = [{ w: this.initialWidth, h: 100 }];
-
-            var pageDescription;
-            pageDescription = { number: 1, visible: this.bindingProvider.getObservable(false), url: this.bindingProvider.getObservable(this.emptyImageUrl), htmlContent: this.bindingProvider.getObservable(""), searchText: this.bindingProvider.getObservable(null) };
-            if (this.supportPageRotation)
-                pageDescription.rotation = this.bindingProvider.getObservable(0);
-            if (this.variablePageSizeSupport) {
-                pageDescription.prop = this.bindingProvider.getObservable(1);
-                pageDescription.heightRatio = this.bindingProvider.getObservable(1);
-            }
-            pageDescription.left = 0;
-            pageDescription.top = this.getPageTop(0);
-            this.pages.push(pageDescription);
-            this.pagesContainerElement = this.documentSpace.find(".pages_container");
-            this.contentControlsFromHtml = new Array();
-            this.getScrollbarWidth();
-
-            if (options.fileId) {
-                this.loadDocument();
-            }
-            else {
-                pageDescription.visible(true);
-            }
         },
 
         loadDocument: function (fileId) {
@@ -588,8 +423,6 @@
                 this.applyPageRotationInBrowser(0, firstPage, rotationFromServer);
             }
 
-            this.imageHorizontalMargin = 7;
-
             var pageWidthFromServer = pageSize.width;
             var onlyImageInHtml = false;
             var pageElementChildren = pageElement.children();
@@ -649,30 +482,36 @@
             return pagesNotObservable;
         },
 
-        loadImagesForPages: function (start, end, forceLoading) {
-            var pages = this.pages();
-            var cssForAllPages = "";
-            var page;
-            var isPageVisible;
-            for (var i = start; i <= end; i++) {
-                page = pages[i - 1];
-                isPageVisible = page.visible();
-                if (isPageVisible)
-                    this.markContentControls(i - 1);
+        ScrollDocView: function () {
+            if (!this.useTabsForPages())
+                window.groupdocs.documentComponentViewModel.prototype.ScrollDocView.call(this, item, e);
+        },
 
-                if (this.pageContentType == "image") {
-                    this.triggerImageLoadedEvent(i);
+        ScrollDocViewEnd: function(item, e) {
+            if (!this.useTabsForPages())
+                window.groupdocs.documentComponentViewModel.prototype.ScrollDocViewEnd.call(this, item, e);
+        },
 
-                    if (this.supportPageRotation && forceLoading) {
-                        this.addSuffixToImageUrl(page);
-                    }
-                }
-                else if (this.pageContentType == "html") {
-                    if (!isPageVisible) {
-                        this.getDocumentPageHtml(i - 1);
-                    }
-                }
-                page.visible(true);
+        getVisiblePagesNumbers: function() {
+            if (this.useTabsForPages())
+                return { start: 1, end: 1 };
+            else
+                return window.groupdocs.documentComponentViewModel.prototype.getVisiblePagesNumbers.call(this);
+        },
+
+        loadImageForPage: function (number, page, forceLoading) {
+            var isPageVisible = page.visible();
+            if (isPageVisible)
+                this.markContentControls(number);
+                
+            if (!isPageVisible) {
+                this.getDocumentPageHtml(number);
+            }
+        },
+
+        makePageVisible: function (pageNumber, page) {
+            if (!page.visible()) {
+                this.getDocumentPageHtml(pageNumber);
             }
         },
 
@@ -727,52 +566,16 @@
 
         
         setZoom: function (value) {
-            this.zoom(value);
-            this.loadPagesZoomed();
-            this.clearContentControls();
-
-            if (this.pageContentType == "image") {
-                if (this._pdf2XmlWrapper) {
-                    var pageSize = this._pdf2XmlWrapper.getPageSize();
-                    this.scale(this.pageImageWidth / pageSize.width * value / 100);
-                }
-
-                var selectable = this.getSelectableInstance();
-                selectable.changeSelectedRowsStyle(this.scale());
-                this.reInitSelectable();
-                if (this.useVirtualScrolling) {
-                    selectable.recalculateSearchPositions(this.scale());
-                    this.highlightSearch();
-                }
-                this.setPage(this.pageInd());
-
-                if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
-                    this.loadImagesForVisiblePages();
-
-                if (this.options.showHyperlinks) {
-                    this._refreshHyperlinkFrames();
-                }
-            }
-            else if (this.pageContentType == "html") {
-                this.reInitSelectable();
-                this.setPage(this.pageInd());
-                this.loadImagesForVisiblePages();
-            }
-
+            window.groupdocs.documentComponentViewModel.prototype.setZoom.call(this, value);
+            this.reInitSelectable();
+            this.setPage(this.pageInd());
+            this.loadImagesForVisiblePages();
             this.reflowPagesInChrome(true);
-            
         },
 
         loadPagesZoomed: function () {
-            var newWidth = Math.round(this.initialWidth * (this.zoom()) / 100);
-            var newHeight = Math.round(newWidth * this.heightWidthRatio);
-            var pages = this.pages();
-
-            if (newWidth != this.pageWidth() || newHeight != this.pageHeight()) {
-                this.pagesDimension = Math.floor(newWidth) + 'x';
-
-                this.pageWidth(newWidth);
-                this.pageHeight(newHeight);
+            var newWidth = window.groupdocs.documentComponentViewModel.prototype.loadPagesZoomed.call(this);
+            if (newWidth !== null) {
                 if (this.useTabsForPages()) {
                     var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
                     var pageElement = htmlPageContents.children("div,table,img");
@@ -786,46 +589,31 @@
                 else {
                     this.calculatePagePositions();
                 }
-
-                if (this.pageContentType == "image") {
-                    var pageCount = this.pageCount();
-                    if (!this.shouldMinimumWidthBeUsed(newWidth, true))
-                        this.retrieveImageUrls(pageCount);
-                }
             }
         },
 
-        performSearch: function (value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch) {
-            if (this.pageContentType == "image") {
-                var selectable = this.getSelectableInstance();
-                if (selectable != null) {
-                    var searchCountItem = selectable.performSearch(value, this.scale(), isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact, useAccentInsensitiveSearch);
-                    this.triggerEvent('onSearchPerformed', [searchCountItem]);
-                }
-            }
-            else {
-                this.searchText = value;
-                this.searchForSeparateWords = searchForSeparateWords;
-                this.treatPhrasesInDoubleQuotesAsExact = treatPhrasesInDoubleQuotesAsExact;
-                var pages = this.pages();
-                var page;
+        performSearch: function (value, isCaseSensitive, searchForSeparateWords, treatPhrasesInDoubleQuotesAsExact) {
+            this.searchText = value;
+            this.searchForSeparateWords = searchForSeparateWords;
+            this.treatPhrasesInDoubleQuotesAsExact = treatPhrasesInDoubleQuotesAsExact;
+            var pages = this.pages();
+            var page;
 
-                if (this.loadAllPagesOnSearch)
-                    this.loadImagesForPages(1, pages.length);
+            if (this.loadAllPagesOnSearch)
+                this.loadImagesForPages(1, pages.length);
 
-                for (var i = 0; i < pages.length; i++) {
-                    page = pages[i];
-                    if (page.visible()) {
-                        var searchParameters = {
-                            text: value,
-                            isCaseSensitive: isCaseSensitive,
-                            searchForSeparateWords: searchForSeparateWords,
-                            treatPhrasesInDoubleQuotesAsExact: treatPhrasesInDoubleQuotesAsExact,
-                            pageNumber: i
-                        };
+            for (var i = 0; i < pages.length; i++) {
+                page = pages[i];
+                if (page.visible()) {
+                    var searchParameters = {
+                        text: value,
+                        isCaseSensitive: isCaseSensitive,
+                        searchForSeparateWords: searchForSeparateWords,
+                        treatPhrasesInDoubleQuotesAsExact: treatPhrasesInDoubleQuotesAsExact,
+                        pageNumber: i
+                    };
 
-                        page.searchText(searchParameters);
-                    }
+                    page.searchText(searchParameters);
                 }
             }
         },
@@ -1253,10 +1041,9 @@
         },
 
         adjustInitialZoom: function () {
-            if (this.zoomToFitHeight)
-                this.setZoom(this.getFitHeightZoom());
+            window.groupdocs.documentComponentViewModel.prototype.adjustInitialZoom.call(this);
 
-            if (this.pageContentType == "html" && this.zoomToFitWidth) {
+            if (this.zoomToFitWidth) {
                 var fittingWidth = this.getFitWidth();
                 var originalPageWidth = this.pageWidth();
                 if (!this.onlyShrinkLargePages || originalPageWidth > fittingWidth) {
@@ -1420,6 +1207,21 @@
             if (vertical == top || vertical == bottom)
                 returnValue += 'translate(0,' + firstShift + ') rotate(' + rotation + ',' + rotationCenterX + ',' + rotationCenterY + ') translate(' + secondHorizontalShift + ',' + secondShift + ')';
             return returnValue;
+        },
+
+        getScaleRatioForPage: function (widthForMaxHeight, maxPageHiegt, pageWidth) {
+            var widthRatio, scaleRatio;
+            if (widthForMaxHeight === undefined)
+                widthRatio = 1;
+            else
+                widthRatio = widthForMaxHeight / pageWidth;
+            scaleRatio = widthRatio;
+            return scaleRatio;
+        },
+
+        setScaleRatioForPage: function (page, widthForMaxHeight, maxPageHiegt, pageWidth) {
+            var scaleRatio = this.getScaleRatioForPage(widthForMaxHeight, maxPageHiegt, pageWidth);
+            page.heightRatio(scaleRatio);
         },
 
         pageElementStyle: function (index) {
@@ -1755,16 +1557,6 @@
                     viewModel.searchHtmlElement(element, null, null, words, wordsWithAccentedChars,
                                                 value.searchForSeparateWords, isCaseSensitive, treatTextAsExact, value.pageNumber);
                     return;
-                }
-            }
-        },
-
-        highlightSearch: function () {
-            if (this.pageContentType == "image" && this.useVirtualScrolling) {
-                var selectable = this.getSelectableInstance();
-                if (selectable) {
-                    selectable.highlightSearch(this.firstVisiblePageForVirtualMode(),
-                                               this.lastVisiblePageForVirtualMode());
                 }
             }
         }
