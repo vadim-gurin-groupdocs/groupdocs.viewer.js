@@ -87,7 +87,6 @@
     $.extend(window.groupdocs.documentComponentViewModel.prototype, {
         Layouts: { ScrollMode: 1, BookMode: 2, OnePageInRow: 3, TwoPagesInRow: 4, CoverThenTwoPagesInRow: 5 },
         _model: null,
-        pagesDimension: null,
         pageImageWidth: 0,
         defaultPageImageWidth: 852,
         imageHorizontalMargin: 34,
@@ -100,19 +99,16 @@
         scrollPosition: [0, 0],
         inprogress: null,
         pages: null,
-        pageInd: null,
+        pageIndex: null,
         pageWidth: null,
         pageHeight: null,
         pageCount: null,
         docType: null,
         fileId: null,
         _dvselectable: null,
-        _thumbnailHeight: 140,
-        _sessionToken: '',
         imageUrls: [],
         pagePrefix: "page-",
         documentName: null,
-        _pageBounds: null,
         unscaledPageHeight: null,
         unscaledPageWidth: null,
         pageLeft: null,
@@ -120,7 +116,6 @@
         viewerLayout: 1,
         changedUrlHash: false,
         hashPagePrefix: "page",
-        pageContentType: "image",
         scrollbarWidth: null,
         password: null,
         useJavaScriptDocumentDescription: false,
@@ -186,7 +181,7 @@
             this.scale = this.bindingProvider.getObservable(this.initialZoom / 100);
             this.inprogress = this.bindingProvider.getObservable(false),
             this.pageLeft = this.bindingProvider.getObservable(0);
-            this.pageInd = this.bindingProvider.getObservable(1);
+            this.pageIndex = this.bindingProvider.getObservable(1);
             this.pageWidth = this.bindingProvider.getObservable(defaultPageImageWidth);
             this.pageHeight = this.bindingProvider.getObservable(defaultPageImageHeight);
             this.pageCount = this.bindingProvider.getObservable(0);
@@ -196,21 +191,8 @@
             this.preloadPagesCount = options.preloadPagesCount;
             this.browserIsChrome = this.bindingProvider.getObservable(false);
             this.hyperlinks = this.bindingProvider.getObservableArray();
-            this.useTabsForPages = this.bindingProvider.getObservable(null); // it's undefined 
-            this.tabs = this.bindingProvider.getObservableArray([]);
-            this.activeTab = this.bindingProvider.getObservable(0);
             this.autoHeight = this.bindingProvider.getObservable(false);
-            this.isHtmlDocument = this.bindingProvider.getObservable(false);
             this.alwaysShowLoadingSpinner = this.bindingProvider.getObservable(false);
-            this.rotatedWidth = this.bindingProvider.getComputedObservable(function () {
-                if (self.useTabsForPages()) {
-                    var width = self.pageWidth();
-                    return width / self.zoom() * 100.0 + "px";
-                }
-                else
-                    return "auto";
-            });
-
             this.layout = this.bindingProvider.getObservable(this.viewerLayout);
             this.firstVisiblePageForVirtualMode = this.bindingProvider.getObservable(0);
             if (this.firstVisiblePageForVirtualMode.extend)
@@ -293,8 +275,7 @@
             };
 
             options.synchronousWork = this.textSelectionSynchronousCalculation;
-            options.descForHtmlBasedEngine = (this.pageContentType == "html"
-                || this.use_pdf == 'false');
+            options.descForHtmlBasedEngine = (this.useHtmlBasedEngine || this.use_pdf == 'false');
             this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
             this._onDocumentLoaded(response);
         },
@@ -310,7 +291,6 @@
             this.triggerEvent('onDocumentLoaded', response);
             var self = this;
 
-            this._sessionToken = response.token;
             this.pageCount(response.pageCount);
             this.documentName(response.name);
             this.docType(response.doc_type);
@@ -366,7 +346,7 @@
                     this.get(firstPageLocation, openFirstPage);
 
                     function openFirstPage() {
-                        if (self.pageInd() != 1)
+                        if (self.pageIndex() != 1)
                             self.setPage(1);
                     }
 
@@ -518,7 +498,7 @@
             pageIndex = nearestPageNumber + 1;
             
             if (pageIndex !== null) {
-                this.pageInd(pageIndex);
+                this.pageIndex(pageIndex);
                 this.setPageNumerInUrlHash(pageIndex);
                 this.triggerEvent('onScrollDocView', { pi: pageIndex, position: st });
                 this.triggerEvent("documentScrolledToPage.groupdocs", [pageIndex]);
@@ -533,8 +513,8 @@
             if (this._dvselectable) {
                 $(this._dvselectable).groupdocsSelectable("setVisiblePagesNumbers", numbers);
             }
-            this.triggerEvent('onDocumentPageSet', [this.pageInd()]);
-            this.triggerEvent("documentScrolledToPage.groupdocs", [this.pageInd()]);
+            this.triggerEvent('onDocumentPageSet', [this.pageIndex()]);
+            this.triggerEvent("documentScrolledToPage.groupdocs", [this.pageIndex()]);
         },
 
         getVisiblePagesNumbers: function () {
@@ -621,7 +601,7 @@
             if (isNaN(newPageIndex) || newPageIndex < 1)
                 newPageIndex = 1;
 
-            this.pageInd(newPageIndex);
+            this.pageIndex(newPageIndex);
 
             var pageTop;
             if (this.useVirtualScrolling) {
@@ -655,42 +635,17 @@
         setZoom: function (value) {
             this.zoom(value);
             this.loadPagesZoomed();
-            this.clearContentControls();
         },
 
         loadPagesZoomed: function () {
             var newWidth = Math.round(this.initialWidth * (this.zoom()) / 100);
             var newHeight = Math.round(newWidth * this.heightWidthRatio);
-            var pages = this.pages();
-
             var changed = false;
             if (newWidth != this.pageWidth() || newHeight != this.pageHeight()) {
-                this.pagesDimension = Math.floor(newWidth) + 'x';
-
                 this.pageWidth(newWidth);
                 this.pageHeight(newHeight);
                 changed = true;
-                if (this.useTabsForPages()) {
-                    var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
-                    var pageElement = htmlPageContents.children("div,table,img");
-                    var dimensions = pageElement[0].getBoundingClientRect();
-                    var reserveHeight = 20;
-                    var autoHeight = this.autoHeight();
-                    this.autoHeight(true);
-                    pages[0].prop((dimensions.height + reserveHeight) / newWidth);
-                    this.autoHeight(autoHeight);
-                }
-                else {
-                    this.calculatePagePositions();
-                }
-
-                if (this.pageContentType == "image") {
-                    var pageCount = this.pageCount();
-                    if (!this.shouldMinimumWidthBeUsed(newWidth, true))
-                        this.retrieveImageUrls(pageCount);
-                }
             }
-
             return changed ? newWidth : null;
         },
 
@@ -728,7 +683,7 @@
         },
 
         openCurrentPage: function () {
-            this.setPage(this.pageInd());
+            this.setPage(this.pageIndex());
         },
 
         setPageNumerInUrlHash: function (pageIndex) {
@@ -769,7 +724,7 @@
             this._model.reorderPage(this.fileId, oldPosition, newPosition,
                 this.instanceIdToken,
                 function (response) {
-                    if (this.pageContentType == "image") {
+                    if (!this.useHtmlBasedEngine) {
                         var pages = this.pages();
                         var pageImageUrl;
                         var minPosition = Math.min(oldPosition, newPosition);
@@ -792,7 +747,7 @@
         },
 
         rotatePage: function (rotationAmount) {
-            var pageNumber = this.pageInd() - 1;
+            var pageNumber = this.pageIndex() - 1;
             this._model.rotatePage(this.fileId, pageNumber, rotationAmount,
                 this.instanceIdToken,
                 function (response) {
@@ -815,35 +770,29 @@
                 return;
 
             if (oldRotation != angle) {
-                this.refreshPageContents();
+                this.refreshPageContents(page);
             }
 
             page.rotation(angle);
-            var newAngle = page.rotation() % 180;
+
+            var pageWidth, pageHeight;
+            if (this.calculatePageSize())
+                return;
 
             var pagesFromServer = this._pdf2XmlWrapper.documentDescription.pages;
             var pageSize, pageFromServer;
 
-            var pageWidth, pageHeight;
-            if (this.useTabsForPages()) {
-                var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
-                var pageElement = htmlPageContents.children("div,table");
-                pageWidth = pageElement.width();
-                this.initialWidth = pageWidth;
-                this.pageWidth(pageWidth * this.zoom() / 100);
+            if (pagesFromServer) {
+                pageSize = this.getPageSize();
+                pageFromServer = pagesFromServer[pageNumber];
+                pageFromServer.rotation = angle;
+                pageWidth = pageFromServer.w;
+                pageHeight = pageFromServer.h;
+            }
+            else
                 return;
-            }
-            else {
-                if (pagesFromServer) {
-                    pageSize = this.getPageSize();
-                    pageFromServer = pagesFromServer[pageNumber];
-                    pageFromServer.rotation = angle;
-                    pageWidth = pageFromServer.w;
-                    pageHeight = pageFromServer.h;
-                }
-                else
-                    return;
-            }
+
+            var newAngle = page.rotation() % 180;
 
             if (newAngle > 0) {
                 page.prop(pageWidth / pageHeight);
@@ -859,9 +808,6 @@
             if (selectable != null)
                 selectable.clearSelectionOnPage(pageNumber);
             this.loadImagesForVisiblePages(true);
-        },
-
-        refreshPageContents: function () {
         },
 
         isPageVisible: function (pageNumber) {
@@ -913,9 +859,19 @@
             this.inprogress(set);
         },
 
-        // overriden in children
+        // protected interface - overriden in children
+        refreshPageContents: function () {
+        },
+
         setScaleRatioForPage: function (page, widthForMaxHeight, maxPageHiegt, pageWidth) {
         },
+
+        calculatePageSize: function() {
+        },
+
+        reflowPagesInChrome: function () {
+        },
+        // end of protected interface
 
         pageElementStyle: function (index) {
             var result = {};

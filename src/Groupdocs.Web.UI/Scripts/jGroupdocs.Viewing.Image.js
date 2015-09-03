@@ -52,7 +52,7 @@
         this._init();
     };
 
-    $.extend(window.groupdocs.documentImageRenderingComponentModel.prototype, {
+    $.extend(window.groupdocs.documentImageRenderingComponentModel.prototype, window.groupdocs.documentComponentModel.prototype, {
         _init: function () {
             this._portalService = Container.Resolve("ServerExchange");
         },
@@ -330,7 +330,7 @@
                 selectable.recalculateSearchPositions(this.scale());
                 this.highlightSearch();
             }
-            this.setPage(this.pageInd());
+            this.setPage(this.pageIndex());
 
             if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
                 this.loadImagesForVisiblePages();
