@@ -93,7 +93,6 @@
                         && (activeElement.is("input") || activeElement.is("textarea")))
                         return;
                     self.options.txtarea.focus().select();
-                    //$('#' + self.options.txtarea).focus().select();
                 }
             });
 
@@ -272,7 +271,16 @@
             return this.pages;
         },
 
-        _getPageLocations: function() {
+        _getPageLocations: function () {
+            var pageLocations = null;
+            if (!this.options.bookLayout) {
+                pageLocations = $.map(this.options.pageLocations,
+                        function(page) {
+                            return new groupdocs.Point(page.left, page.top());
+                        });
+                return pageLocations;
+            }
+
             var self = this;
             var docSpaceId = this.options.docSpace.attr("id");
             var imagesSelector = ".page-image";
@@ -283,8 +291,6 @@
             }
 
             this._canvasScroll = this.getCanvasScroll();
-
-            var pageLocations;
             if (this.options.bookLayout) {
                 pageLocations = $.map(images, function(img) {
                     var imgJquery = $(img);
@@ -293,13 +299,7 @@
                     return new groupdocs.Point(x, y);
                 });
             }
-            else {
-                pageLocations =
-                    $.map(this.options.pageLocations,
-                        function(page) {
-                            return new groupdocs.Point(page.left, page.top());
-                        });
-            }
+            
             return pageLocations;
         },
 
@@ -704,13 +704,14 @@
             this.buttonPaneContainer = containers;
         },
 
-        reInitPages: function (scaleFactor, visiblePagesNumbers, scrollPosition, pageHeight, pageLocations) {
+        reInitPages: function (scaleFactor, visiblePagesNumbers, scrollPosition, pageHeight, pagesCount, pageLocations) {
             this._initialized = false;
 
             this.options.startNumbers = visiblePagesNumbers;
             this.options.proportion = scaleFactor;
             this.options.pageHeight = pageHeight;
             this.options.pageLocations = pageLocations;
+            this.options.pagesCount = pagesCount;
 
             this.initCanvasOffset();
             this.initStorage();

@@ -9,13 +9,15 @@ window.groupdocs.Pdf2JavaScriptWrapper = function (options) {
 };
 $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
     documentDescription: null,
-    _portalService: Container.Resolve("ServerExchange"),
-    proportion: 1,
     options: {
-        path: ''
     },
     init: function () {
         this.documentDescription = JSON.parse(this.options.documentDescription);
+    },
+
+    initWithOptions: function (options) {
+        this.options = options;
+        this.init();
     },
 
     getPageCount: function () {
@@ -56,7 +58,6 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
         var pages0 = [];
         var totalChars = 0;
 
-        this.proportion = prop;
         var pageCount = this.documentDescription.pages.length;
         if (pageCount > 0 && pagesLocation.length < pageCount
             && pagesLocation.length < endPage0 - startPage0 + 1) // document destroyed while initializing
@@ -123,37 +124,6 @@ $.extend(window.groupdocs.Pdf2JavaScriptWrapper.prototype, {
                     originalWidth: pageWidth,
                     rotation: page.rotation
                 });
-
-                /*if (index == 0) {
-                    for (var rowNum = 0; rowNum < pageRows.length; rowNum++) {
-                        $("#docViewer1PagesContainer").append($("<div/>")
-                            .css("position", "absolute")
-                            .css("z-index", 1)
-                            .css("left", pageRows[rowNum].rect.left())
-                            .css("top", pageRows[rowNum].rect.top())
-                            .css("width", pageRows[rowNum].rect.width())
-                            .css("height", pageRows[rowNum].rect.height())
-                            .css("background-color", "rgba(255, 0, 0, 0.5)")
-                        );
-                    }*/
-
-                    /*for (var rowNum = 0; rowNum < pageRows.length; rowNum++) {
-                        var row = pageRows[rowNum];
-                        for (var wordNum = 0; wordNum < row.words.length; wordNum++) {
-                            var word = row.words[wordNum];
-                            $("#docViewer1PagesContainer").append($("<div/>")
-                                .css("position", "absolute")
-                                .css("z-index", 1)
-                                .css("left", word.rect.left())
-                                .css("top", word.rect.top())
-                                .css("width", word.rect.width())
-                                .css("height", word.rect.height())
-                                .css("background-color", "rgba(255, 0, 0, 0.5)")
-                            );
-                        }
-                    }
-                }*/
-
             }
             if (synchronousWork)
                 return mustBreak;

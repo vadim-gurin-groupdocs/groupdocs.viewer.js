@@ -56,7 +56,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 quality: this.quality,
                 use_pdf: this.use_pdf,
                 pageImageWidth: this.pageImageWidth,
-                _mode: this._mode,
                 docViewerId: this.docViewerId,
                 createHtml: this.createHtml,
                 initialZoom: this.initialZoom,
@@ -73,7 +72,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 useHtmlBasedEngine: this.useHtmlBasedEngine,
                 imageHorizontalMargin: this.imageHorizontalMargin,
                 imageVerticalMargin: this.imageVerticalMargin,
-                useJavaScriptDocumentDescription: this.useJavaScriptDocumentDescription,
                 searchPartialWords: this.searchPartialWords,
                 variablePageSizeSupport: this.variablePageSizeSupport,
                 textSelectionSynchronousCalculation: this.textSelectionSynchronousCalculation,
@@ -108,7 +106,6 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 quality: this.quality,
                 use_pdf: this.use_pdf,
                 pageImageWidth: this.pageImageWidth,
-                _mode: this._mode,
                 docViewerId: this.docViewerId,
                 createHtml: this.createHtml,
                 initialZoom: this.initialZoom,
@@ -191,13 +188,8 @@ $.extend(groupdocs.ViewerEventBus.prototype, {
                 searchViewModel.scrollPositionChanged(data.position);
             }
         } .bind(this));
-        docViewer.bind('onSearchPerformed', function (e, searchCountItem) {
-            if (search) {
-                //searchViewModel.onSearchPerformed(searchCountItem);
-            }
-        } .bind(this));
 
-        docViewer.bind('onDocumentPageSet', function (e, newPageIndex) {
+        docViewer.bind('documentPageSet.groupdocs', function (e, newPageIndex) {
             if (docViewerPageFlipViewModel)
                 docViewerPageFlipViewModel.onDocumentPageSet(newPageIndex);
 

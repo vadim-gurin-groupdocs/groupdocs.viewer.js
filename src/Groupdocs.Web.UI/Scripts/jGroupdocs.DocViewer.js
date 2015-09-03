@@ -2,11 +2,7 @@
     $.groupdocsWidget("groupdocsDocumentComponent", {
         _viewModel: null,
         options: {
-            fileId: 0,
-            _mode: 'webComponent',
-            quality: null,
-            use_pdf: "true",
-            showHyperlinks: true
+            fileId: 0
         },
 
         _create: function () {
@@ -110,7 +106,6 @@
         pagePrefix: "page-",
         documentName: null,
         unscaledPageHeight: null,
-        unscaledPageWidth: null,
         pageLeft: null,
         preloadPagesCount: null,
         viewerLayout: 1,
@@ -118,7 +113,6 @@
         hashPagePrefix: "page",
         scrollbarWidth: null,
         password: null,
-        useJavaScriptDocumentDescription: false,
         minimumImageWidth: null,
         fileDisplayName: null,
         hyperlinks: null,
@@ -210,7 +204,7 @@
             this.zoom = this.bindingProvider.getObservable(this.initialZoom);
             this.documentHeight = this.bindingProvider.getObservable(0);
 
-            this.options.showHyperlinks = (options.showHyperlinks != false && this.use_pdf != 'false');
+            this.options.showHyperlinks = (options.showHyperlinks != false);
             this.options.highlightColor = options.highlightColor;
             this.matchedNods = [];
             this.searchMatches = [];
@@ -275,8 +269,11 @@
             };
 
             options.synchronousWork = this.textSelectionSynchronousCalculation;
-            options.descForHtmlBasedEngine = (this.useHtmlBasedEngine || this.use_pdf == 'false');
-            this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
+            options.descForHtmlBasedEngine = this.useHtmlBasedEngine;
+            if (this._pdf2XmlWrapper)
+                this._pdf2XmlWrapper.initWithOptions(options);
+            else
+                this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
             this._onDocumentLoaded(response);
         },
 
@@ -628,7 +625,6 @@
             this.makePageVisible(newPageIndex - 1, page);
 
             this.setPageNumerInUrlHash(newPageIndex);
-            this.triggerEvent('onDocumentPageSet', [newPageIndex]);
             this.triggerEvent("documentPageSet.groupdocs", newPageIndex);
         },
 
@@ -673,7 +669,7 @@
             var selectable = this.getSelectableInstance();
             if (selectable != null) {
                 selectable.reInitPages(this.scale(), visiblePagesNumbers,
-                    this.scrollPosition, this.getPageHeight(), this.pages());
+                    this.scrollPosition, this.getPageHeight(), this.pageCount(), this.pages());
             }
         },
 
@@ -859,20 +855,6 @@
             this.inprogress(set);
         },
 
-        // protected interface - overriden in children
-        refreshPageContents: function () {
-        },
-
-        setScaleRatioForPage: function (page, widthForMaxHeight, maxPageHiegt, pageWidth) {
-        },
-
-        calculatePageSize: function() {
-        },
-
-        reflowPagesInChrome: function () {
-        },
-        // end of protected interface
-
         pageElementStyle: function (index) {
             var result = {};
             var pages = this.pages();
@@ -1017,6 +999,21 @@
 
         triggerEvent: function (name, params) {
             this.documentSpace.trigger(name, params);
-        }
+        },
+
+        // protected interface - overriden in children
+        refreshPageContents: function () {
+        },
+
+        setScaleRatioForPage: function (page, widthForMaxHeight, maxPageHiegt, pageWidth) {
+        },
+
+        calculatePageSize: function () {
+        },
+
+        reflowPagesInChrome: function () {
+        },
+        // end of protected interface
+
     });
 })(jQuery);

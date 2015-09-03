@@ -3,9 +3,8 @@
         _viewModel: null,
         options: {
             fileId: 0,
-            _mode: 'webComponent',
             quality: null,
-            use_pdf: "true",
+            supportTextSelection: true,
             showHyperlinks: true
         },
 
@@ -74,7 +73,7 @@
                 }
             };
 
-            this._portalService.viewDocument(fileId, imageWidth, this.quality, this.usePdf, this.preloadPagesCount, password, fileDisplayName,
+            this._portalService.viewDocument(fileId, imageWidth, this.quality, this.supportTextSelection, this.preloadPagesCount, password, fileDisplayName,
                 watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                 ignoreDocumentAbsence, supportPageRotation,
                 supportListOfContentControls, supportListOfBookmarks,
@@ -102,7 +101,7 @@
                                          instanceIdToken,
                                          locale,
                                          callback, errorCallback) {
-            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf,
+            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.supportTextSelection,
                                               watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                               ignoreDocumentAbsence,
                                               useHtmlBasedEngine, supportPageRotation,
@@ -373,7 +372,7 @@
 
         shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
             var originalDocumentWidth = null;
-            if (this.use_pdf != 'false' && checkOriginalDocumentWidth) {
+            if (this.supportTextSelection && checkOriginalDocumentWidth) {
                 var pageSize = this._pdf2XmlWrapper.getPageSize();
                 originalDocumentWidth = pageSize.width;
             }
