@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget("groupdocsDocumentImageRendering", {
         _viewModel: null,
         options: {

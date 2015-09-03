@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     // File explorer view
     $.groupdocsWidget('groupdocsExplorer', {
         _viewModel: null,

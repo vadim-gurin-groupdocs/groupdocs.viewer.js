@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget("groupdocsSelectable", {
         customArea: [],
         search: null,
@@ -262,7 +264,6 @@
                 this._mouseStop(event);
             }
 
-            mouseHandled = false;
             return false;
         },
 

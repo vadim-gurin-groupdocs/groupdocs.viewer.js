@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget("groupdocsDocumentComponent", {
         _viewModel: null,
         options: {
@@ -262,18 +264,15 @@
             }
 
             var options = {
-                fileId: this.fileId,
-                path: response.path,
                 documentDescription: response.documentDescription,
-                callback: callOnDocumentLoaded
+                callback: callOnDocumentLoaded,
+                synchronousWork: this.textSelectionSynchronousCalculation
             };
 
-            options.synchronousWork = this.textSelectionSynchronousCalculation;
-            options.descForHtmlBasedEngine = this.useHtmlBasedEngine;
             if (this._pdf2XmlWrapper)
                 this._pdf2XmlWrapper.initWithOptions(options);
             else
-                this._pdf2XmlWrapper = new groupdocs.Pdf2JavaScriptWrapper(options);
+                this._pdf2XmlWrapper = new groupdocs.JavaScriptDocumentDescriptionWrapper(options);
             this._onDocumentLoaded(response);
         },
 
@@ -302,14 +301,11 @@
                 this.bookmarks = this._pdf2XmlWrapper.getBookmarks();
 
             var pagesNotObservable = this.initPagesAfterDocumentLoad(response);
-
             this.pages(pagesNotObservable);
             this.calculatePagePositions();
-
             this.inprogress(false);
 
             var scale = this.scale();
-
             this._dvselectable = this.pagesContainerElement;
             if (this.getSelectableInstance() == null) {
                 this.pagesContainerElement.groupdocsSelectable({
@@ -475,6 +471,7 @@
             var documentSpaceHeight = this.documentSpace.height();
             var nearestPageNumber = null, maxPartWhichIntersects = null;
             var topOfIntersection, bottomOfIntersection, lengthOfIntersection, partWhichIntersects;
+            var pageHeight;
             for (var i = visiblePageNumbers.start - 1; i <= visiblePageNumbers.end - 1; i++) {
                 if (this.useVirtualScrolling)
                     pageImageTop = pages[i].top();

@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget('groupdocsFileOpenDialog', {
         _viewModel: null,
         options: {

@@ -106,7 +106,6 @@
     <Content Include="Scripts\libs\rx.js" />
     <Content Include="Scripts\plugins\rx.jQuery.js" />
     <Content Include="Scripts\plugins\scroll-startstop.events.jquery.js" />
-    <Content Include="TestInstallableViewer.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Fonts\PT_Sans-Web-Bold.eot" />

@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget('zooming', {
         options: {
             zoomValues: [5, 15, 25, 50, 75, 100, 125, 150, 175, 200, 300, 400, 600]
@@ -20,7 +22,7 @@
                 return this._viewModel;
             }
             var options = $.extend({ element: this.element }, this.options);
-            var vm = new zoomingViewModel(options);
+            var vm = new window.groupdocs.zoomingViewModel(options);
             return vm;
         },
 
@@ -31,17 +33,13 @@
         }
     });
 
-    // Zooming Model
-    zoomingModel = function () {
-    };
-
     // Zooming ViewModel
-    zoomingViewModel = function (options) {
+    window.groupdocs.zoomingViewModel = function (options) {
         $.extend(this, options);
         this._init(options);
     };
 
-    $.extend(zoomingViewModel.prototype, {
+    $.extend(window.groupdocs.zoomingViewModel.prototype, {
         _model: null,
         zooms: null,
         _currentZoom: null,
@@ -196,7 +194,7 @@
 
         _indexOfZoom: function (value) {
             var zooms = this.zooms();
-            for (i = 0; i < zooms.length; i++) {
+            for (var i = 0; i < zooms.length; i++) {
                 if (zooms[i].value == value) {
                     return i;
                 }

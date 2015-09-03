@@ -1,5 +1,7 @@
 ﻿(function ($, undefined) {
-    fileOpenDialogViewModel = function (fileOpenDialog, fileExplorer) {
+    "use strict";
+
+    window.fileOpenDialogViewModel = function (fileOpenDialog, fileExplorer) {
         this.fileOpenDialog = fileOpenDialog;
         this.fileExplorer = fileExplorer;
 

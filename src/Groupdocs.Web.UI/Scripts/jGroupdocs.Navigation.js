@@ -1,4 +1,6 @@
 ﻿(function ($, undefined) {
+    "use strict";
+
     $.groupdocsWidget('navigation', {
         _viewModel: null,
         _pageCount: 0,
