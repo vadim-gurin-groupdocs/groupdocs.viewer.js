@@ -359,19 +359,6 @@
             }
         },
 
-        selectTextInRect: function (rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers) {
-            if (this._dvselectable) {
-                return $(this._dvselectable).groupdocsSelectable('highlightPredefinedArea', rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers);
-            }
-            return null;
-        },
-
-        deselectTextInRect: function (rect, deleteStatic, pageNumber, selectionCounter) {
-            if (this._dvselectable) {
-                $(this._dvselectable).groupdocsSelectable('unhighlightPredefinedArea', rect, deleteStatic, pageNumber, selectionCounter);
-            }
-        },
-
         shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
             var originalDocumentWidth = null;
             if (this.supportTextSelection && checkOriginalDocumentWidth) {

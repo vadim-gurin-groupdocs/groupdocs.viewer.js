@@ -90,7 +90,7 @@
     <Content Include="Scripts\jGroupdocs.PdfToJavaScriptWrapper.js" />
     <Content Include="Scripts\jGroupdocs.Selectable.js" />
     <Content Include="Scripts\jGroupdocs.ViewerEventBus.js" />
-    <Content Include="Scripts\jGroupdocs.ViewerPortalService.js" />
+    <Content Include="Scripts\jGroupdocs.ViewerServerExchange.js" />
     <Content Include="Scripts\jGroupdocs.StringExtensions.js" />
     <Content Include="Scripts\jGroupdocs.WidgetFactory.js" />
     <Content Include="Scripts\jGroupdocs.Navigation.js" />

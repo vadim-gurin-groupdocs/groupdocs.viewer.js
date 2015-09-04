@@ -27,16 +27,10 @@
         _canvasOffset: null,
         _canvasScroll: null,
         _mouseStartPos: null,
-        _selectionInfo: {
-            position: -1,
-            length: 0
-        },
-
         SelectionModes: { SelectText: 0, SelectRectangle: 1, SelectTextToStrikeout: 2, ClickPoint: 3, TrackMouseMovement: 4, DoNothing: 5 },
         _mode: null,
         _lassoCssElement: null,
         parentElement: null,
-        _viewModel: null,
         selectionCounter: 0,
 
         _create: function () {
@@ -85,9 +79,6 @@
             $(self.element).bind({
                 click: function (e) {
                     return self.mouseClickHandler(e);
-                    //return false;
-                    //self.initHighlightPaneContainer();
-                    //self.clearShown();
                 }
             });
         },
@@ -156,7 +147,7 @@
 
         _mouseDestroy: function() {
             this.element.unbind("." + this.widgetName);
-            if ( this._mouseMoveDelegate ) {
+            if (this._mouseMoveDelegate) {
                 this.document
                     .unbind("mousemove." + this.widgetName, this._mouseMoveDelegate)
                     .unbind("mouseup." + this.widgetName, this._mouseUpDelegate);
@@ -206,18 +197,18 @@
             // at least once. This prevents the firing of mouseup in the case of IE<9, which will
             // fire a mousemove event if content is placed under the cursor. See #7778
             // Support: IE <9
-            if ( this._mouseMoved ) {
+            if (this._mouseMoved) {
                 // IE mouseup check - mouseup happened when mouse was out of window
                 if ($.browser.msie && (!document.documentMode || document.documentMode < 9) && !event.button) {
                     return this._mouseUp(event);
 
                     // Iframe mouseup check - mouseup occurred in another document
-                } else if ( !event.which ) {
-                    return this._mouseUp( event );
+                } else if (!event.which) {
+                    return this._mouseUp(event);
                 }
             }
 
-            if ( event.which || event.button ) {
+            if (event.which || event.button) {
                 this._mouseMoved = true;
             }
 
@@ -235,8 +226,8 @@
 
         _mouseUp: function(event) {
             $(window.document)
-                .unbind( "mousemove." + this.widgetName, this._mouseMoveDelegate )
-                .unbind( "mouseup." + this.widgetName, this._mouseUpDelegate );
+                .unbind("mousemove." + this.widgetName, this._mouseMoveDelegate)
+                .unbind("mouseup." + this.widgetName, this._mouseUpDelegate);
 
             if (this._mouseStarted) {
                 this._mouseStarted = false;
@@ -247,7 +238,6 @@
 
                 this._mouseStop(event);
             }
-
             return false;
         },
 
@@ -304,17 +294,10 @@
         },
 
         _mouseCapture: function (event) {
-            var page = null;
-
             this._canvasScroll = this.getCanvasScroll();
             this._mouseStartPos = new groupdocs.Point(
                 event.pageX - this._canvasOffset.x + this._canvasScroll.x,
                 event.pageY - this._canvasOffset.y + this._canvasScroll.y);
-
-            //if (this.options.useVirtualScrolling) {
-                //this._initialized = false;
-                //this.initStorage();
-            //}
 
             return (this._mode != this.SelectionModes.DoNothing &&
                 this._findPageAt(this._mouseStartPos) != null)
@@ -322,8 +305,6 @@
 
         _mouseStart: function (event) {
             this.options.docSpace.focus();
-            //if (this.options.useVirtualScrolling)
-            //    this._initialized = false;
             this.initStorage();
             this.clearSelection();
 
@@ -340,21 +321,13 @@
             if (this.checkMouseIsInEdgeInBookMode(this._mouseStartPos.x, this._mouseStartPos.y))
                 return false;
 
-            if (this._mode == this.SelectionModes.TrackMouseMovement) {
-                var top = this._mouseStartPos.y;
-                var page = this.findPageAtVerticalPosition(top);
-                var pageNumber = parseInt(page.pageId) - 1;
-
-                this.element.trigger("onMouseMoveStarted", [pageNumber, { left: this._mouseStartPos.x, top: top}]);
-            } else {
-                this.element.append(this.helper);
-                this.helper.css({
-                    "left": this._mouseStartPos.x,
-                    "top": this._mouseStartPos.y,
-                    "width": 0,
-                    "height": 0
-                });
-            }
+            this.element.append(this.helper);
+            this.helper.css({
+                "left": this._mouseStartPos.x,
+                "top": this._mouseStartPos.y,
+                "width": 0,
+                "height": 0
+            });
 
             this.options.txtarea.val("");
             this.lasso = new groupdocs.Rect();
@@ -379,13 +352,8 @@
             if (y1 > y2) { var tmp = y2; y2 = y1; y1 = tmp; }
 
             this.lasso.set(x1, y1, x2, y2);
-
-            if (this._mode != this.SelectionModes.ClickPoint && this._mode != this.SelectionModes.TrackMouseMovement) {
-                this.helper.css({ left: x1, top: y1, width: this.lasso.width(), height: this.lasso.height() });
-            }
-
+            this.helper.css({ left: x1, top: y1, width: this.lasso.width(), height: this.lasso.height() });
             this.findSelectedPages(false, null, undefined, this.options.highlightColor);
-
             this.element.trigger("onMouseDrag", [{ left: currentX, top: currentY}]);
             return false;
         },
@@ -405,7 +373,7 @@
 
             if (pageNumber < 0) return false;
 
-            if (this._mode == this.SelectionModes.SelectText || this._mode == this.SelectionModes.SelectTextToStrikeout) {
+            if (this._mode == this.SelectionModes.SelectText) {
                 if (!this.dragged) {
                     return false;
                 }
@@ -445,50 +413,17 @@
                     lowestBottom = Math.max(lowestBottom, bounds.bottom());
                 }
 
-                var scale = this.options.proportion;
-                if (this.options.storeAnnotationCoordinatesRelativeToPages) {
-                    top = Math.min(highestTop, top);
-                    bottom = Math.max(lowestBottom, bottom);
-                }
-                else {
-                    pageOffset = pageNumber * this.options.pageHeight;
-                    pageOffset /= scale;
-
-                    top = Math.max(pageOffset + highestTop, top);
-                    bottom = Math.min(pageOffset + lowestBottom, bottom);
-                }
+                top = Math.min(highestTop, top);
+                bottom = Math.max(lowestBottom, bottom);
                 var selectionBounds = new groupdocs.Rect(left, top, right, bottom);
                 var selectionBoundsScaled = selectionBounds.clone();
 
-                this.options.txtarea.val($.trim(text)); //.focus().select();
+                this.options.txtarea.val($.trim(text));
             }
 
             switch (this._mode) {
                 case this.SelectionModes.SelectText:
                     this.element.trigger('onTextSelected', [pageNumber, selectionBoundsScaled, pos, len, this.selectionCounter, originalRects]);
-                    break;
-
-                case this.SelectionModes.SelectTextToStrikeout:
-                    this.element.trigger('onTextToStrikeoutSelected', [pageNumber, selectionBoundsScaled, pos, len, this.selectionCounter, originalRects]);
-                    break;
-
-                case this.SelectionModes.SelectRectangle:
-                    var selectedRectangle;
-                    if (this.options.storeAnnotationCoordinatesRelativeToPages) {
-                        selectedRectangle = this.convertRectToRelativeToPageUnscaledCoordinates(this.lasso, this._mouseStartPos);
-                    }
-                    else {
-                        selectedRectangle = this.convertRectToAbsoluteCoordinates(this.lasso, this._mouseStartPos);
-                    }
-                    this.element.trigger('onRectangleSelected', [pageNumber, selectedRectangle]);
-                    break;
-
-                case this.SelectionModes.ClickPoint:
-                    this.mouseClickHandler(event);
-                    break;
-
-                case this.SelectionModes.TrackMouseMovement:
-                    $(this.element).trigger('onMouseMoveStopped', []);
                     break;
 
                 default:
@@ -499,31 +434,6 @@
 
         mouseClickHandler: function (event) {
             this.options.docSpace.focus();
-
-            if (this._mode == this.SelectionModes.ClickPoint) {
-                this.initStorage();
-                this._canvasScroll = this.getCanvasScroll();
-
-                var lastX = event.pageX - this._canvasOffset.x + this._canvasScroll.x;
-                var lastY = event.pageY - this._canvasOffset.y + this._canvasScroll.y;
-                var lastPoint = new groupdocs.Rect(lastX, lastY, lastX, lastY);
-                var page = this._findPageAt(lastPoint.topLeft);
-
-                if (!page)
-                    return true;
-
-                var pageNumber = parseInt(page.pageId) - 1;
-                if (this.options.storeAnnotationCoordinatesRelativeToPages) {
-                    lastPoint = this.convertRectToRelativeToPageUnscaledCoordinates(lastPoint);
-                }
-                else {
-                    lastPoint = this.convertRectToAbsoluteCoordinates(lastPoint);
-                }
-
-                this.element.trigger('onPointClicked', [pageNumber, lastPoint]);
-                return false;
-            }
-
             return true;
         },
 
@@ -604,72 +514,8 @@
             return bounds;
         },
 
-        highlightPredefinedArea: function (rect, clickHandler, pageNumber, selectionCounter, color, hoverHandlers) {
-            this.initStorage();
-            this.dragged = true;
-
-            if (this.options.storeAnnotationCoordinatesRelativeToPages) {
-                this.lasso = this.convertPageAndRectToScreenCoordinates(pageNumber, rect);
-            }
-            else {
-                this.lasso = this.convertRectToScreenCoordinates(rect);
-            }
-            this.selectionCounter++;
-            var page = this._findPageAt(this.lasso.topLeft) || this.pages[0];
-
-            var pageNumbers = this.options.startNumbers;
-            this.options.startNumbers = { start: parseInt(page.pageId), end: parseInt(page.pageId) };
-
-            this.findSelectedPages(true, clickHandler, selectionCounter, color || this.options.highlightColor, hoverHandlers);
-
-            this.options.startNumbers = pageNumbers;
-            this.dragged = false;
-            if (typeof selectionCounter == "undefined")
-                return this.selectionCounter;
-            else {
-                return selectionCounter;
-            }
-        },
-
-        unhighlightPredefinedArea: function (rect, deleteStatic, pageNumber, selectionCounter) {
-            if (this.options.storeAnnotationCoordinatesRelativeToPages) {
-                this.lasso = this.convertPageAndRectToScreenCoordinates(pageNumber, rect);
-            }
-            else {
-                this.lasso = this.convertRectToScreenCoordinates(rect);
-            }
-            var rects = this._getDocumentHighlightRects();
-
-            if (!rects || rects.length == 0) {
-                return;
-            }
-
-            if (typeof selectionCounter == "undefined")
-                selectionCounter = "";
-
-            for (var i = 0; i < rects.length; i++) {
-                var pageId = rects[i].page + 1;
-                var rowId = rects[i].row + 1;
-                //var elementSelector = "#" + this.pagePrefix + pageId + "-highlight-" + rowId;
-                var elementSelector = "#" + this.pagePrefix + pageId + "-highlight-" + rowId + "-" + selectionCounter;
-                if (deleteStatic) {
-                    elementSelector += ".static";
-                }
-                else {
-                    elementSelector += ":not(.static)";
-                }
-                $(elementSelector).remove();
-            }
-        },
-
         setVisiblePagesNumbers: function (vPagesNumbers) {
             this.options.startNumbers = vPagesNumbers;
-        },
-
-        handleDoubleClick: function (event) {
-            this.lasso = new groupdocs.Rect(event.pageX, event.pageY, event.pageX, event.pageY);
-            this.initStorage();
-            this.findSelectedPages();
         },
 
         initHighlightSearchPaneContainer: function () {
@@ -906,7 +752,6 @@
 
                     var searchElement = window.groupdocs.stringExtensions.format(this.searchTemplate, this.pagePrefix + pageId + "-search-highlight-" + wordIndex, t, h, w, l);
                     result += searchElement;
-                    //result += this.searchTemplate.format(this.pagePrefix + pageId + "-search-highlight-" + wordIndex, t, h, w, l);
                 }
                 containers[pageId - 1].innerHTML = result;
             }
@@ -1027,7 +872,6 @@
                     }
                 }
             }
-
             return rects;
         },
 
@@ -1042,7 +886,6 @@
                         $("#" + this.pagePrefix + (pageIndex + (this.options.bookLayout ? this.options.startNumbers.start : 1)) +
                           "-highlight-" + (i + 1) + "-" + selectionCounter + ":not(.static)").remove();
                     }
-
                     continue;
                 }
 
@@ -1077,8 +920,7 @@
                     if (r != null) {
                         rects.push(r);
                     }
-                    else
-                        if (this.dragged) {
+                    else if (this.dragged) {
                             $("#" + this.pagePrefix + (pageIndex + (this.options.bookLayout ? this.options.startNumbers.start : 1)) +
                             "-highlight-" + (i + 1) + "-" + selectionCounter + ":not(.static)").remove();
                         }
@@ -1173,15 +1015,12 @@
 
             var originalBounds = new groupdocs.Rect(originalLeft, originalTop + 1, originalRight, originalBottom - 1);
             result.originalRect = originalBounds;
-
-            // result.length = (objectToSelect.position - result.position + objectToSelect.text.length);
             result.length = (objectToSelect.position + objectToSelect.text.length);
 
             return result;
         },
 
         _findPageAt: function (point) {
-
             if (this.pages != null) {
                 for (var i = 0; i < this.pages.length; i++) {
                     if (this.pages[i].rect.contains(point)) {
@@ -1240,7 +1079,7 @@
         setMode: function (mode) {
             this._mode = mode;
 
-            if (mode == this.SelectionModes.SelectText || mode == this.SelectionModes.SelectTextToStrikeout) {
+            if (mode == this.SelectionModes.SelectText) {
                 if (this._lassoCssElement == null)
                     this._lassoCssElement = $('<style type="text/css">.ui-selectable-helper { visibility: hidden; }</style>').appendTo('head');
             }
@@ -1253,24 +1092,6 @@
 
         getMode: function () {
             return this._mode;
-        },
-
-        getRowsFromRect: function (bounds) {
-            this.initStorage();
-
-            var rect = null;
-            this.lasso = bounds.clone();
-            this.lasso = new groupdocs.Rect(Math.round(this.lasso.left()), Math.round(this.lasso.top()) + 0.001,
-                                            Math.round(this.lasso.right()), Math.round(this.lasso.bottom()) - 0.001);
-
-            var rects = this._getDocumentHighlightRects();
-            for (var i = 0; i < rects.length; i++) {
-                rect = rects[i].bounds;
-                var pageOffsetX = this.pages[rects[i].page].rect.topLeft.x - this.pages[0].rect.topLeft.x;
-                var pageOffsetY = this.pages[rects[i].page].rect.topLeft.y; // -this.pages[0].rect.topLeft.y;
-                rect.add(new groupdocs.Point(pageOffsetX, pageOffsetY));
-            }
-            return rects;
         }
     });
 })(jQuery);

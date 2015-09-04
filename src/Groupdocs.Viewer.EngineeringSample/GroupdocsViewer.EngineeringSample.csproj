@@ -169,8 +169,8 @@
       <Link>Client\Scripts\jGroupdocs.ViewerEventBus.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerPortalService.js">
-      <Link>Client\Scripts\jGroupdocs.ViewerPortalService.js</Link>
+    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerServerExchange.js">
+      <Link>Client\Scripts\jGroupdocs.ViewerServerExchange.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Viewing.HTML.js">
