@@ -466,6 +466,7 @@
             this.serverPages = pages = this._pdf2XmlWrapper.documentDescription.pages;
             pageDescription = this.pages()[0];
             pagesNotObservable.push(pageDescription);
+            var proportion;
             for (i = 1; i < pageCount; i++) {
                 scaleRatio = this.getScaleRatioForPage(pageSize.width, pageSize.height, pages[i].w, pages[i].h);
                 proportion = pages[i].h / pages[i].w;
@@ -826,7 +827,7 @@
             when SVG watermarks are enabled */
             if (this.browserIsChrome() && this.watermarkText && !this.useVirtualScrolling) {
                 var self = this;
-                function internalReflow() {
+                var internalReflow = function () {
                     self.pagesContainerElement.children().each(function () {
                         $(this).css("top", 0).css("left", 0);
                     });

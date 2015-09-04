@@ -209,9 +209,7 @@
         htmlPageContents
     )
     :
-    '           <div class="button-pane"></div>' +
     '           <div class="highlight-pane"></div>' +
-    '           <div class="custom-pane"></div>' +
     '           <div class="search-pane"></div>' +
     '           <img class="page-image" src="' + options.emptyImageUrl + '" data-bind="attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (visible() ? url : $root.emptyImageUrl) }, ' +
     '           style: { width: $parent.pageWidth() + \'px\', height: $parent.pageWidth() * $data.prop() + \'px\' }"/>'

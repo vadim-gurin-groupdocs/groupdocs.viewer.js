@@ -1061,10 +1061,7 @@
                     fileDisplayName = this.fileDisplayName;
 
                 var self = this;
-                function printFromIframe() {
-                    printFrame[0].contentWindow.focus();
-                    printFrame[0].contentWindow.print();
-                }
+                
                 var useHtmlContentBasedPrinting = this.useHtmlBasedEngine && !this.useImageBasedPrinting;
                 //var printFrame = this.groupdocsViewerWrapper.find("iframe[name=groupdocsPrintFrame]");
                 //var printFrame = this.groupdocsViewerWrapper.find("div.groupdocsPrintFrame");
@@ -1128,7 +1125,7 @@
                             for (pageNum = 0; pageNum < self.printImageElements.length; pageNum++) {
                                 var imageElement;
 
-                                function pageImageLoadHandler() {
+                                var pageImageLoadHandler = function () {
                                     pagesLoaded++;
                                     self._updateMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, pagesLoaded / pageCount * 100.);
                                     if (pagesLoaded >= pageCount) {
@@ -1151,6 +1148,11 @@
                 }
             }
             return false;
+        },
+
+        printFromIframe: function(printFrame) {
+            printFrame[0].contentWindow.focus();
+            printFrame[0].contentWindow.print();
         },
 
         _showMessageDialog: function (message, title, progress) {

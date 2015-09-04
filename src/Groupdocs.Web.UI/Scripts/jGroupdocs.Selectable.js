@@ -2,28 +2,13 @@
     "use strict";
 
     $.groupdocsWidget("groupdocsSelectable", {
-        customArea: [],
         search: null,
         lasso: null,
         pages: [],
-        prevProportions: 1,
-        prevCustomTemplateProportions: 1,
         searchProportions: 1,
-        selectedRowsCoordinates: [],
-        highlightPaneContainer: null,
         highlightSearchPaneContainer: null,
-        buttonPaneContainer: null,
         template: "<div id={0} class='highlight selection-highlight' style='top: {1}px; height: {2}px; width: {3}px; left: {4}px;'></div>",
         searchTemplate: "<div id={0} class='highlight search-highlight' style='top: {1}px; height: {2}px; width: {3}px; left: {4}px;'></div>",
-        addTemplate: "<div id={0} class='{3}' style='top: {1}px; left: {2}px;' index='{4}'></div>",
-        cAreaPageIndex: 0,
-        cAreaFieldIndex: 0,
-
-        annotationContainer: "<div id={0} style='position:relative'>{1}</div>",
-        annotationTemplate: "<div class='highlight annotation-highlight' style='top: {0}px; height: {1}px; width: {2}px; left: {3}px;'></div>",
-
-        timeouts: [],
-        flag: 0,
         options: {
             appendTo: "body",
             txtarea: "",
@@ -50,7 +35,6 @@
         SelectionModes: { SelectText: 0, SelectRectangle: 1, SelectTextToStrikeout: 2, ClickPoint: 3, TrackMouseMovement: 4, DoNothing: 5 },
         _mode: null,
         _lassoCssElement: null,
-        rightMargin: 35,
         parentElement: null,
         _viewModel: null,
         selectionCounter: 0,
@@ -63,7 +47,7 @@
                 this.dragged = false;
 
                 if (this.options.preventTouchEventsBubbling) {
-                    function preventEventBubble(event) {
+                    var preventEventBubble = function (event) {
                         event.preventBubble();
                     }
 
@@ -696,14 +680,6 @@
                     containers[i].innerHTML = '';
             this.highlightSearchPaneContainer = containers;
         },
-        initButtonPaneContainer: function () {
-            var containers = this._getElementsByClassName('button-pane', document.getElementById(this.options.docSpace.attr('id') + '-pages-container'));
-            var len = containers.length;
-            for (var i = len; i--; )
-                if (containers[i].children.length != 0)
-                    containers[i].innerHTML = '';
-            this.buttonPaneContainer = containers;
-        },
 
         reInitPages: function (scaleFactor, visiblePagesNumbers, scrollPosition, pageHeight, pagesCount, pageLocations) {
             this._initialized = false;
@@ -719,7 +695,6 @@
         },
 
         changeSelectedRowsStyle: function (proportions) {
-            this.changeCustomAreasStyle(proportions);
             this.changeSearchStyle(proportions);
 
             var highlights = this.element.find('.highlight-pane .highlight');
@@ -864,133 +839,6 @@
                             }
                         }
                     }
-                    else {
-                        var currentImageWidth = this.options.proportion * this.options.pdf2XmlWrapper.getPageSize().width;
-
-                        var textPosition;
-                        if (useAccentInsensitiveSearch)
-                            textPosition = rowText.search(searchValueWithAccentedWords);
-                        else
-                            textPosition = rowText.indexOf(searchValue);
-                        while (textPosition != -1) {
-                            rowWords = row.words;
-                            if (this.options.searchPartialWords) {
-                                var spaceCountRegex = /\s/g;
-                                var containingSubstring = rowText.substring(0, textPosition);
-                                var initialWords = containingSubstring.match(spaceCountRegex);
-                                var overlappedWords = searchValue.match(spaceCountRegex);
-                                var firstWordNumber = 0, overlappedWordCount = 0;
-                                if (initialWords)
-                                    firstWordNumber = initialWords.length;
-                                if (overlappedWords)
-                                    overlappedWordCount = overlappedWords.length;
-                                var lastWordNumber = firstWordNumber + overlappedWordCount;
-                                var characterCoordinates = this.options.pdf2XmlWrapper.getRowCharacterCoordinates(pageId, rowId);
-                                var firstWordLeft = rowWords[firstWordNumber].originalRect.left();
-                                var lastWordLeft = rowWords[lastWordNumber].originalRect.left();
-
-                                var wordRight = rowWords[lastWordNumber].originalRect.right();
-                                //var wordLength = words[firstWordNumber].text.length;
-                                var rowRight = row.originalRect.right();
-
-                                startingCharacterInWordNum = containingSubstring.length - containingSubstring.lastIndexOf(" ") - 1;
-                                var firstWordStartPosition = 0, lastWordStartPosition = 0;
-
-                                var foundFirstWordStartPosition = false;
-                                for (var charNum = 0; charNum < characterCoordinates.length; charNum++) {
-                                    var characterCoordinate = characterCoordinates[charNum];
-                                    if (!foundFirstWordStartPosition && Math.round(characterCoordinate) >= Math.round(firstWordLeft)) {
-                                        firstWordStartPosition = charNum;
-                                        foundFirstWordStartPosition = true;
-                                    }
-                                    if (Math.round(characterCoordinate) >= Math.round(lastWordLeft)) {
-                                        lastWordStartPosition = charNum;
-                                        break;
-                                    }
-                                }
-
-                                var searchStartPosition = firstWordStartPosition + startingCharacterInWordNum;
-                                if (searchStartPosition < characterCoordinates.length) {
-                                    left = characterCoordinates[searchStartPosition];
-                                }
-                                else
-                                    left = firstWordLeft;
-                                if (left < firstWordLeft || left > wordRight)
-                                    left = firstWordLeft;
-
-                                //var searchEndPosition = searchStartPosition + searchValue.length;
-                                var lastSpacePosition = searchValue.lastIndexOf(" ");
-                                var lastWordOfSearchPhrase = searchValue.substring(lastSpacePosition + 1, searchValue.length);
-                                var searchEndPosition;
-                                if (firstWordNumber == lastWordNumber)
-                                    searchEndPosition = searchStartPosition + searchValue.length;
-                                else
-                                    searchEndPosition = lastWordStartPosition + lastWordOfSearchPhrase.length;
-                                var lastWordMatches = true;
-                                if (searchEndPosition < characterCoordinates.length) {
-                                    var lastWordText = rowWords[lastWordNumber].text.toLowerCase();
-                                    //if (startingCharacterInWordNum + searchValue.length == wordLength)
-                                    if (lastWordText.substring(lastWordText.length - lastWordOfSearchPhrase.length, lastWordText.length) == lastWordOfSearchPhrase)
-                                        right = wordRight;
-                                    else {
-                                        right = characterCoordinates[searchEndPosition];
-                                        lastWordMatches = false;
-                                    }
-                                }
-                                else
-                                    right = rowRight;
-                                if (right < left)
-                                    right = rowRight;
-
-                                if (!treatPhrasesInDoubleQuotesAsExact || !phraseIsInDoubleQuotes || lastWordMatches) {
-                                    r = rowWords[firstWordNumber].rect.clone();
-                                    r.subtract(rowWords[firstWordNumber].pageLocation);
-                                    var scale = currentImageWidth / pages[pageId].originalWidth;
-                                    var scaledLeft = left * scale;
-                                    var scaledRight = right * scale;
-                                    r.setLeft(scaledLeft);
-                                    r.setRight(scaledRight);
-                                    pageWords.push(r);
-
-                                    r = rowWords[firstWordNumber].originalRect.clone();
-                                    r.setLeft(left);
-                                    r.setRight(right);
-                                    pageWordsUnscaled.push(r);
-                                }
-                                textPosition = rowText.indexOf(searchValue, textPosition + searchValue.length);
-                            }
-                            else {
-                                searchWords = this.getWords(searchValue);
-                                searchWordsLen = searchWords.length;
-                                if (searchWordsLen == 0)
-                                    break;
-                                rowWordsLen = rowWords.length;
-                                if (searchWordsLen == 1) {
-                                    for (wordId = 0; wordId < rowWordsLen; wordId++) {
-                                        if (rowWords[wordId].text.toLowerCase() == $.trim(searchWords[0].toLowerCase())) {
-                                            r = rowWords[wordId].rect.clone();
-                                            r.subtract(rowWords[wordId].pageLocation);
-                                            pageWords.push(r);
-                                        }
-                                    }
-
-                                }
-                                else {
-                                    startIndex = 0;
-                                    endIndex = searchWordsLen - 1;
-                                    for (wordId = 0; wordId < rowWordsLen; wordId++) {
-                                        if (rowWords[wordId].text.toLowerCase() == $.trim(searchWords[startIndex].toLowerCase())) {
-                                            r = rowWords[wordId].rect.clone();
-                                            r.subtract(rowWords[wordId].pageLocation);
-                                            r.setRight(r.left() + rowWords[wordId + endIndex].rect.right() - rowWords[wordId].rect.left());
-                                            pageWords.push(r);
-                                        }
-                                    }
-                                }
-                                textPosition = -1;
-                            }
-                        }
-                    }
                 }
 
                 if (pageWords.length > 0) {
@@ -1086,17 +934,6 @@
             }
         },
 
-        clearAllTimeOuts: function () {
-            var timeouts = this.timeouts;
-            var len = timeouts.length;
-            if (len > 0) {
-                for (var i = len; i--; ) {
-                    clearTimeout(timeouts[i]);
-                }
-                timeouts = [];
-            }
-        },
-
         _getElementsByClassName: function (classname, node) {
             if (!node) node = document.getElementsByTagName("body")[0];
             var a = [];
@@ -1106,121 +943,7 @@
                 if (re.test(els[i].className)) a.push(els[i]);
             return a;
         },
-
-        highlightTemplateAreas: function (data, proportion) {
-            this.customArea = $.extend(true, [], data);
-            this.changeCustomAreasStyle(proportion);
-        },
-
-        changeCustomAreasStyle: function (proportions) {
-            if (typeof (this.customArea) === "undefined") {
-                return;
-            }
-            if (this.customArea.length == 0)
-                return;
-            //this.prevCustomTemplateProportions
-            var self = this;
-            var area = this.customArea;
-            var dif = 31;
-            var len = area.length;
-
-            $('#' + this.options.docSpace.attr('id') + '-pages-container .custom-pane').html('');
-
-            var pageIndex = 0;
-            var result = '';
-
-            (function changeCustomAreasStyleAsync() {
-                var fields = area[pageIndex].fields;
-                var fieldsLen = fields.length;
-                var pageId = area[pageIndex].PageId;
-
-                for (var fieldsIndex = 0; fieldsIndex < fieldsLen; fieldsIndex++) {
-                    var w = Math.round(Math.round(fields[fieldsIndex].Width) * proportions);
-                    var h = Math.round(Math.round(fields[fieldsIndex].Height) * proportions);
-                    var t = Math.round(Math.round(fields[fieldsIndex].Y) * proportions);
-                    var l = Math.round(((fields[fieldsIndex].X - dif)) * proportions + dif);
-
-                    var extraStyles = (self.cAreaPageIndex == pageIndex && self.cAreaFieldIndex == fieldsIndex ? 'border-color:blue' : '');
-                    result += "<div id=" + this.pagePrefix + pageIndex + "-custom-highlight-" + fieldsIndex + " index=" + pageIndex + "/" + fieldsIndex + " class='input-overlay1' style='position:absolute; cursor:pointer; padding: 0px; top: " + t + "px; height: " + h + "px; width: " + w + "px; left: " + l + "px;" + extraStyles + "'></div>";
-
-                    var customAreaHtml = window.groupdocs.stringExtensions.format(self.addTemplate, this.pagePrefix + pageIndex + "-custom-check-" + fieldsIndex, t - 5, l + w - 8, fields[fieldsIndex].iconType == 1 ? "selection-check" : "selection-del", pageIndex + "/" + fieldsIndex);
-                    result += customAreaHtml;
-                    //result += self.addTemplate.format(this.pagePrefix + pageIndex + "-custom-check-" + fieldsIndex, t - 5, l + w - 8, fields[fieldsIndex].iconType == 1 ? "selection-check" : "selection-del", pageIndex + "/" + fieldsIndex);
-                }
-
-                ++pageIndex;
-                var nextPageId = (pageIndex < len ? area[pageIndex].PageId : -1);
-
-                if (result != '' && nextPageId != pageId) {
-                    $('#' + this.pagePrefix + pageId + ' .custom-pane').html(result);
-                    self.bindCustomHandler(pageId);
-                    result = '';
-                }
-
-                if (pageIndex < len) {
-                    setTimeout(changeCustomAreasStyleAsync, 0);
-                }
-            })();
-        },
-
-        bindCustomHandler: function (pageId) {
-            var self = this;
-            $("#" + this.pagePrefix + pageId + " div.input-overlay1, #" + this.pagePrefix + pageId + " div.selection-check, #" + this.pagePrefix + pageId + " div.selection-del").bind({
-                click: function () {
-                    var index = $(this).attr('index');
-                    var dvViewModel = $('#doc-space').docAssemblyViewer('getViewModel');
-                    if (typeof (index) !== "undefined") {
-                        var indexArray = index.split("/");
-                        var pageIndex = indexArray[0];
-                        var fieldIndex = indexArray[1];
-                        self.cAreaPageIndex = pageIndex;
-                        self.cAreaFieldIndex = fieldIndex;
-                        dvViewModel.moveTo({ groupIndex: parseInt(pageIndex), fieldIndex: parseInt(fieldIndex) });
-                        return false;
-                    }
-                }
-            });
-            $("#" + this.pagePrefix + pageId + " div.input-overlay1").bind({
-                mouseover: function (e) {
-                    var index = $(this).attr('index');
-                    var dvViewModel = $('#doc-space').docAssemblyViewer('getViewModel');
-                    if (typeof (index) !== "undefined") {
-                        var indexArray = index.split("/");
-                        var pageIndex = indexArray[0];
-                        var fieldIndex = indexArray[1];
-                        dvViewModel.mouseover(e, { groupIndex: parseInt(pageIndex), fieldIndex: parseInt(fieldIndex) });
-                    }
-                },
-                mouseout: function (e) {
-                    var index = $(this).attr('index');
-                    var dvViewModel = $('#doc-space').docAssemblyViewer('getViewModel');
-                    if (typeof (index) !== "undefined") {
-                        var indexArray = index.split("/");
-                        var pageIndex = indexArray[0];
-                        var fieldIndex = indexArray[1];
-                        dvViewModel.mouseout(e, { groupIndex: parseInt(pageIndex), fieldIndex: parseInt(fieldIndex) });
-                    }
-                }
-            });
-        },
-
-        setCustomAreaIndex: function (data) {
-            var pageIndex = data.pageIndex;
-            var fieldIndex = data.fieldIndex;
-            this.cAreaPageIndex = pageIndex;
-            this.cAreaFieldIndex = fieldIndex;
-        },
-
-        changeTemplateAreaIcon: function (data) {
-            var customArea = this.customArea;
-            var fields = customArea[data.pageIndex].fields;
-            var elementIdTemplate = this.pagePrefix + "{0}-custom-check-{1}";
-            var elementId = window.groupdocs.stringExtensions.format(elementIdTemplate, data.pageIndex, data.fieldIndex);
-            //var elementId = elementIdTemplate.format(data.pageIndex, data.fieldIndex);
-            $('#' + elementId).attr('class', data.iconType == 1 ? "selection-check" : "selection-del");
-            fields[data.fieldIndex].iconType = data.iconType;
-        },
-
+        
         findSelectedPages: function (isStatic, clickHandler, selectionCounter, color, hoverHandlers) {
             if (this._mode != this.SelectionModes.SelectText && this._mode != this.SelectionModes.SelectTextToStrikeout) {
                 return;
@@ -1296,9 +1019,6 @@
             var self = this;
             var lasso = self.lasso;
             var rects = [];
-            //var i = self.options.startNumbers.start;
-
-            //for (; i <= self.options.startNumbers.end; i++) {
             for (var i = 0; i < pages.length; i++) {
                 if (pages[i] && lasso.intersects(pages[i].rect)) {
                     var r = self._getPageHighlightRects(i, selectionCounter);
@@ -1364,7 +1084,6 @@
                         }
                 }
             }
-
             return rects;
         },
 
