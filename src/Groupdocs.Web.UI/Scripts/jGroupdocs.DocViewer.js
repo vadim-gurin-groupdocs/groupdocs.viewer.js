@@ -898,7 +898,7 @@
 
         pagesContainerStyle: function () {
             var layout = this.layout();
-            return { height: this.useVirtualScrolling ? (this.documentHeight() + "px") : "auto",
+            return { height: (!this.useTabsForPages() && this.useVirtualScrolling) ? (this.documentHeight() + "px") : "auto",
                 width: (layout == this.Layouts.TwoPagesInRow || layout == this.Layouts.CoverThenTwoPagesInRow) ?
                         (this.pageWidth() + this.pageWrapperHorizontalMargin) * 2 + "px" : "auto"
             };
@@ -1012,5 +1012,14 @@
         },
         // end of protected interface
 
+        highlightSearch: function () {
+            if (this.useVirtualScrolling) {
+                var selectable = this.getSelectableInstance();
+                if (selectable) {
+                    selectable.highlightSearch(this.firstVisiblePageForVirtualMode(),
+                                                this.lastVisiblePageForVirtualMode());
+                }
+            }
+        }
     });
 })(jQuery);

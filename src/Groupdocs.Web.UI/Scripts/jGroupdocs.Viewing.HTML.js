@@ -129,14 +129,31 @@
             this.tabs = this.bindingProvider.getObservableArray([]);
             this.activeTab = this.bindingProvider.getObservable(0);
             this.isHtmlDocument = this.bindingProvider.getObservable(false);
-            this.rotatedWidth = this.bindingProvider.getComputedObservable(function () {
-                if (self.useTabsForPages()) {
-                    var width = self.pageWidth();
-                    return width / self.zoom() * 100.0 + "px";
-                }
-                else
-                    return "auto";
-            });
+            this.rotatedWidth = this.bindingProvider.getComputedObservable(
+                function () {
+                    if (self.useTabsForPages()) {
+                        var width = self.pageWidth();
+                        return width / self.zoom() * 100.0 + "px";
+                    }
+                    else
+                        return "auto";
+                    
+                    //if (self.useTabsForPages()) {
+                    //    var width;
+                    //    if (self.supportPageRotation && self.useTabsForPages() && self.pages) {
+                    //        var page = this.pages()[0];
+                    //        if (page && page.rotation() % 180 > 0)
+                    //            width = this.pageWidth() * page.prop();
+                    //    }
+                    //    else
+                    //        width = this.pageWidth();
+
+                    //    return width / self.zoom() * 100.0 + "px";
+                    //}
+                    //else
+                    //    return "auto";
+                });
+                
             window.groupdocs.documentComponentViewModel.prototype._init.call(this, options);
         },
 
@@ -541,19 +558,29 @@
         },
 
         loadPagesZoomed: function () {
+            if (this.useTabsForPages()) {
+                var self = this;
+                var htmlPageContents = self.documentSpace.find(".html_page_contents:first");
+                var pageElement = htmlPageContents.children("div,table,img");
+                var dimensions = pageElement[0].getBoundingClientRect();
+                var reserveHeight = 20;
+                var autoHeight = self.autoHeight();
+                self.autoHeight(true);
+                var page = self.pages()[0];
+                var screenWidth = dimensions.width;
+                var screenHeight = dimensions.height;
+                if (page && page.rotation() % 180 > 0) {
+                    var t = screenWidth;
+                    screenWidth = screenHeight;
+                    screenHeight = t;
+                }
+                screenHeight += reserveHeight;
+                page.prop(screenHeight / screenWidth);
+                self.autoHeight(false);
+            }
             var newWidth = window.groupdocs.documentComponentViewModel.prototype.loadPagesZoomed.call(this);
             if (newWidth !== null) {
-                if (this.useTabsForPages()) {
-                    var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
-                    var pageElement = htmlPageContents.children("div,table,img");
-                    var dimensions = pageElement[0].getBoundingClientRect();
-                    var reserveHeight = 20;
-                    var autoHeight = this.autoHeight();
-                    this.autoHeight(true);
-                    pages[0].prop((dimensions.height + reserveHeight) / newWidth);
-                    this.autoHeight(autoHeight);
-                }
-                else {
+                if (!this.useTabsForPages()) {
                     this.calculatePagePositions();
                 }
             }
@@ -1132,7 +1159,17 @@
                 result.height = this.serverPages[index].h * this.pointToPixelRatio / 16. + 'em';
             }
             else {
-                result.width = pageWidth + (this.useHtmlBasedEngine ? this.imageHorizontalMargin : 0) + 'px';
+                if (this.supportPageRotation && this.useTabsForPages()) {
+                    var page = pages[index];
+                    if (page && page.rotation() % 180 > 0) {
+                        result.width = pageWidth * page.prop();
+                        result.height = pageWidth;
+                        return result;
+                    }
+                }
+                else
+                    result.width = pageWidth + (this.useHtmlBasedEngine ? this.imageHorizontalMargin : 0) + 'px';
+
                 if (this.autoHeight()) {
                     result.height = 'auto';
                     result.overflow = 'visible';

@@ -282,6 +282,7 @@ div.thumbnailsContainer ul li .html_page_contents {
     background-color: white;
     z-index: 1;
     position: relative;
+    overflow: hidden;
 }
 
 .grpdx .html_pages_container .viewer_loading_overlay{

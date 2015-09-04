@@ -435,16 +435,6 @@
                 }
             }
             return result;
-        },
-
-        highlightSearch: function () {
-            if (this.useVirtualScrolling) {
-                var selectable = this.getSelectableInstance();
-                if (selectable) {
-                    selectable.highlightSearch(this.firstVisiblePageForVirtualMode(),
-                                               this.lastVisiblePageForVirtualMode());
-                }
-            }
         }
     });
 })(jQuery);
