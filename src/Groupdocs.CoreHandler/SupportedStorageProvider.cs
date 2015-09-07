@@ -1,6 +1,4 @@
-﻿using Groupdocs.Common.InstallableViewer;
-
-namespace Groupdocs.Web.UI
+﻿namespace Groupdocs.Web.UI
 {
     /// <summary>
     /// Contains the supported storage providers.

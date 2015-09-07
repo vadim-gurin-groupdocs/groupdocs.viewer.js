@@ -5,10 +5,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using Groupdocs.Common;
 using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Web.UI
+namespace Groupdocs.Viewer.UI
 {
     public class LargeJsonResult : JsonResult
     {

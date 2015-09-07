@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Groupdocs.Web.UI;
+using System;
 using System.Globalization;
 using System.Web;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Viewer.UI.Handlers
 {
     public class GetDocumentPageImageHandler : BaseAspNetHandler, IHttpHandler
     {

@@ -1,5 +1,4 @@
-﻿using Groupdocs.Web.UI.ActionFilters;
-using Groupdocs.Web.UI.Handlers;
+﻿using Groupdocs.Viewer.UI.ActionFilters;
 using System;
 using System.Net;
 using System.Net.Mime;
@@ -7,9 +6,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
+using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 
-namespace Groupdocs.Web.UI.Controllers
+namespace Groupdocs.Viewer.UI.Controllers
 {
     [AllowCrossDomain]
     public class GroupdocsViewerController : Controller, IUrlsCreator
@@ -17,13 +17,12 @@ namespace Groupdocs.Web.UI.Controllers
         private readonly IApplicationPathFinder _applicationPathFinder;
         private readonly IPrintableHtmlCreator _printableHtmlCreator;
         private readonly IHelper _helper;
-        private readonly IRootPathFinder _rootPathFinder;
+        //private readonly IRootPathFinder _rootPathFinder;
         private readonly ICoreHandler _coreHandler;
 
         public GroupdocsViewerController()
         {
-            _rootPathFinder = new RootPathFinder();
-
+            //_rootPathFinder = new RootPathFinder();
             _applicationPathFinder = new ApplicationPathFinder();
             _printableHtmlCreator = new PrintableHtmlCreator();
             _helper = new Helper();
@@ -36,7 +35,7 @@ namespace Groupdocs.Web.UI.Controllers
                                         IHelper helper,
                                         ICoreHandler coreHandler)
         {
-            _rootPathFinder = rootPathFinder;
+            //_rootPathFinder = rootPathFinder;
             _applicationPathFinder = applicationPathFinder;
             _printableHtmlCreator = printableHtmlCreator;
             _helper = helper;
@@ -85,9 +84,9 @@ namespace Groupdocs.Web.UI.Controllers
                                          bool supportListOfContentControls = false,
                                          bool supportListOfBookmarks = false,
                                          bool embedImagesIntoHtmlForWordFiles = false,
-                                         string callback = null,
                                          string instanceIdToken = null,
-                                         string locale = null)
+                                         string locale = null,
+                                         string callback = null)
         {
             //throw new ArgumentException("test exception");
             //return CreateJsonOrJsonpResponse(new { success = false, Reason = "test Message test Message test Message" }, callback);

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Groupdocs.Web.UI")]
+[assembly: AssemblyTitle("Groupdocs.Viewer.UI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Groupdocs.Web.UI")]
+[assembly: AssemblyProduct("Groupdocs.Viewer.UI")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

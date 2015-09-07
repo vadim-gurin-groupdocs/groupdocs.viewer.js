@@ -72,8 +72,13 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\WebActivator\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -301,9 +306,9 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Web.UI\Groupdocs.Web.UI.csproj">
+    <ProjectReference Include="..\Groupdocs.Web.UI\Groupdocs.Viewer.UI.csproj">
       <Project>{6610B9BB-E085-4521-858F-A534B9688655}</Project>
-      <Name>Groupdocs.Web.UI</Name>
+      <Name>Groupdocs.Viewer.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

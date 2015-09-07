@@ -1,5 +1,4 @@
 ﻿using Groupdocs.Common;
-using Groupdocs.Common.InstallableViewer;
 using Groupdocs.Engine.Viewing;
 using Groupdocs.Engine.Viewing.InstallableViewer;
 using Groupdocs.Storage;
@@ -15,8 +14,9 @@ using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.Helpers;
 using Groupdocs.Web.UI.Core;
+using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Web.UI.Core
 {
     public class CoreHandler : ICoreHandler
     {

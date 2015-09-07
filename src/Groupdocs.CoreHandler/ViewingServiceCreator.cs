@@ -2,10 +2,10 @@
 using System.Collections;
 using System.IO;
 using Groupdocs.Common;
-using Groupdocs.Common.InstallableViewer;
 using Groupdocs.Engine.Viewing;
 using Groupdocs.Engine.Viewing.InstallableViewer;
 using Groupdocs.Storage;
+using Groupdocs.Common.InstallableViewer;
 
 namespace Groupdocs.Web.UI
 {
@@ -69,10 +69,10 @@ namespace Groupdocs.Web.UI
             Hashtable options = new Hashtable();
             options[Constants.ApiKey] = apiKey;
             options[Constants.ApiSecretKey] = apiSecretKey;
-            options[Groupdocs.Common.InstallableViewer.CommonConstants.BucketNameKey] = bucketName;
+            options[CommonConstants.BucketNameKey] = bucketName;
             options[Constants.ServiceHostKey] = serviceHost;
-            options[Groupdocs.Common.InstallableViewer.CommonConstants.CacheFolderKey] = _downloadPath;
-            options[Groupdocs.Common.InstallableViewer.CommonConstants.CacheBucketNameKey] = cacheBucketName;
+            options[CommonConstants.CacheFolderKey] = _downloadPath;
+            options[CommonConstants.CacheBucketNameKey] = cacheBucketName;
 
             return GetViewingServiceForOptions(null, null, storageProvider, options, rootStoragePath, workingFolder);
         }

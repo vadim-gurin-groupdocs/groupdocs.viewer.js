@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Groupdocs.Web.UI;
+using Groupdocs.Viewer.UI;
 
 namespace GroupdocsViewer.EngineeringSample
 {
@@ -37,10 +37,21 @@ namespace GroupdocsViewer.EngineeringSample
             Viewer.SetBaseUrl("/");
             string rootStoragePath = @"d:\temp\";
             Viewer.SetRootStoragePath(rootStoragePath);
+            Viewer.SetLicensePath(@"d:\temp\TestLicensesWithNewKey\GroupDocs Viewer2015-05-29.lic");
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            ControllerBuilder.Current.SetControllerFactory(new ViewerSelectiveControlerFactory());
+        }
+    }
 
+    public class ViewerSelectiveControlerFactory : DefaultControllerFactory
+    {
+        protected override Type GetControllerType(RequestContext requestContext, string controllerName)
+        {
+            if (controllerName == "GroupdocsViewer")
+                return typeof (Groupdocs.Viewer.UI.Controllers.GroupdocsViewerController);
+            return base.GetControllerType(requestContext, controllerName);
         }
     }
 }

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Groupdocs.Web.UI</RootNamespace>
-    <AssemblyName>Groupdocs.Web.UI</AssemblyName>
+    <AssemblyName>Groupdocs.Viewer.UI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,12 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Groupdocs.Common.InstallableViewer">
-      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Common.Viewer\bin\Debug\Groupdocs.Common.InstallableViewer.dll</HintPath>
-    </Reference>
-    <Reference Include="Groupdocs.Viewer, Version=2.15.1.20585, Culture=neutral, PublicKeyToken=c037f897af36d52e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Web.UI\bin\Debug\Groupdocs.Viewer.dll</HintPath>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\dependencies\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,6 +40,9 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="WebActivator">
+      <HintPath>..\..\dependencies\WebActivator\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionFilters\AllowCrossDomainAttribute.cs" />
@@ -52,6 +51,8 @@
     <Compile Include="Core\LargeJsonResult.cs" />
     <Compile Include="Core\StringProvider.cs" />
     <Compile Include="Core\Viewer.cs" />
+    <Compile Include="DependencyResolution\IoC.cs" />
+    <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
     <Compile Include="Handlers\BaseAspNetHandler.cs" />
     <Compile Include="Handlers\CrossOriginHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />
@@ -114,6 +115,16 @@
     <None Include="Fonts\PT_Sans-Web-Regular.eot" />
     <None Include="Fonts\PT_Sans-Web-Regular.ttf" />
     <None Include="Fonts\PT_Sans-Web-Regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Groupdocs.Common\Groupdocs.Common.csproj">
+      <Project>{91c486ad-1971-4256-a8ab-661ba34907cb}</Project>
+      <Name>Groupdocs.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.CoreHandler\Groupdocs.CoreHandler.csproj">
+      <Project>{25af850f-6f55-4fd8-824d-fe273ae96780}</Project>
+      <Name>Groupdocs.CoreHandler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

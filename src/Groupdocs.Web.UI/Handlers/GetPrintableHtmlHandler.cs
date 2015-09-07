@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Groupdocs.Web.UI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Viewer.UI.Handlers
 {
     public class GetPrintableHtmlHandler : BaseAspNetHandler, IHttpHandler
     {

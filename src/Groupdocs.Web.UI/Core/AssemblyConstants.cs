@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Groupdocs.Web.UI
+namespace Groupdocs.Viewer.UI
 {
     public static class AssemblyConstants
     {

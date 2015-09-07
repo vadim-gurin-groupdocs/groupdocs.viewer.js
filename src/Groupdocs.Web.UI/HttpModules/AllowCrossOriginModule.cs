@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Groupdocs.Web.UI.Handlers;
+using Groupdocs.Viewer.UI.Handlers;
 
-namespace Groupdocs.Web.UI.HttpModules
+namespace Groupdocs.Viewer.UI.HttpModules
 {
     public class AllowCrossOriginModule : IHttpModule
     {

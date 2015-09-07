@@ -5,9 +5,12 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Groupdocs.Viewer.UI.DependencyResolution;
+using StructureMap;
+using Groupdocs.Web.UI;
 using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Web.UI
+namespace Groupdocs.Viewer.UI
 {
     /// <summary>
     /// Viewer global settings
@@ -266,6 +269,13 @@ namespace Groupdocs.Web.UI
         {
             BaseUrl = url;
         }
+
+        public static void InitDependencyInjection()
+        {
+            IContainer container = IoC.Initialize();
+            DependencyResolver.SetResolver(new SmDependencyResolver(container));
+        }
+
 
         /// <summary>
         /// 

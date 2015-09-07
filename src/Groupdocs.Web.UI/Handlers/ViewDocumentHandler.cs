@@ -1,11 +1,13 @@
-﻿using Groupdocs.Common.InstallableViewer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Common;
+using Groupdocs.Web.UI;
+using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Viewer.UI.Handlers
 {
     public class ViewDocumentHandler : BaseAspNetHandler, IHttpHandler
     {

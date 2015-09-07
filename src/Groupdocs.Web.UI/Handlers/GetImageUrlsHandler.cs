@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Web.UI;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Viewer.UI.Handlers
 {
     public class GetImageUrlsHandler : BaseAspNetHandler, IHttpHandler
     {

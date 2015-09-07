@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 
-namespace Groupdocs.Web.UI.ActionFilters
+namespace Groupdocs.Viewer.UI.ActionFilters
 {
     public class AllowCrossDomain : ActionFilterAttribute
     {

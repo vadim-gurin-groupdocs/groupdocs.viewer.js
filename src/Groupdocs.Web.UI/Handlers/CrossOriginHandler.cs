@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 
-namespace Groupdocs.Web.UI.Handlers
+namespace Groupdocs.Viewer.UI.Handlers
 {
     public class CrossOriginHandler : BaseAspNetHandler, IHttpHandler
     {

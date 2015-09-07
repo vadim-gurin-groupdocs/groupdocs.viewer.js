@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Groupdocs.Web.UI
+namespace Groupdocs.Viewer.UI
 {
     internal class StringProvider
     {

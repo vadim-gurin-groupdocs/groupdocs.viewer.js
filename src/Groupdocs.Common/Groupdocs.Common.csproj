@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Groupdocs.Common</RootNamespace>
-    <AssemblyName>Groupdocs.Common</AssemblyName>
+    <AssemblyName>Groupdocs.Viewer.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

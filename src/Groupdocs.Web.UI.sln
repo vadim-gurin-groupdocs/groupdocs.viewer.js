@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groupdocs.Web.UI", "Groupdocs.Web.UI\Groupdocs.Web.UI.csproj", "{6610B9BB-E085-4521-858F-A534B9688655}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Groupdocs.Viewer.UI", "Groupdocs.Web.UI\Groupdocs.Viewer.UI.csproj", "{6610B9BB-E085-4521-858F-A534B9688655}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupdocsViewer.EngineeringSample", "Groupdocs.Viewer.EngineeringSample\GroupdocsViewer.EngineeringSample.csproj", "{EEAE9A96-52D1-404B-9F5A-D05EE8B48620}"
 EndProject
