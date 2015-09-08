@@ -18,7 +18,6 @@ namespace Groupdocs.Web.UI.Core
             bool supportListOfContentControls = false,
             bool supportListOfBookmarks = false,
             bool embedImagesIntoHtmlForWordFiles = false,
-            string callback = null,
             string instanceId = null,
             string locale = null);
 
@@ -32,7 +31,6 @@ namespace Groupdocs.Web.UI.Core
             bool ignoreDocumentAbsence = false,
             bool useHtmlBasedEngine = false,
             bool supportPageRotation = false,
-            string callback = null,
             string instanceId = null,
             string locale = null);
 
@@ -81,8 +79,8 @@ namespace Groupdocs.Web.UI.Core
             string instanceId = null,
             string locale = null);
 
-        void ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceId = null);
-        int RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceId = null);
+        void ReorderPage(string path, int oldPosition, int newPosition, string instanceId = null);
+        int RotatePage(string path, int pageNumber, int rotationAmount, string instanceId = null);
 
         string[] GetPageImageUrlsOnThirdPartyStorage(string path, int pageCount, int? quality, int? width,
             int? height, bool usePdf);

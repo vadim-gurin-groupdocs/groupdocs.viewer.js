@@ -11,7 +11,7 @@ namespace Groupdocs.Viewer.UI.Handlers
     /// <summary>
     /// Returns information about all files and folders, which can be opened via "Document Browser" button on toolbar, in a form of JSON
     /// </summary>
-    public class LoadFileBrowserTreeDataHandler : BaseAspNetHandler, IHttpHandler
+    public class LoadFileBrowserTreeDataHandler : BaseAspNetHandler
     {
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
@@ -25,14 +25,14 @@ namespace Groupdocs.Viewer.UI.Handlers
 
         #region IHttpHandler Members
 
-        public bool IsReusable
+        public override bool IsReusable
         {
             // Return false in case your Managed Handler cannot be reused for another request.
             // Usually this would be false in case you have some state information preserved per request.
             get { return true; }
         }
 
-        public void ProcessRequest(HttpContext context)
+        public override void ProcessRequest(HttpContext context)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Groupdocs.Viewer.UI.Handlers
                 GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
                 
                 object data = LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
-                                                              fileTypes, extended, null, instanceId);
+                                                              fileTypes, extended, instanceId);
                 if (data == null)
                     return;
 

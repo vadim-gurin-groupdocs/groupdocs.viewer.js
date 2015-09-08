@@ -13,11 +13,9 @@ namespace Groupdocs.Viewer.UI.DependencyResolution
                                     {
                                         scan.TheCallingAssembly();
                                         scan.WithDefaultConventions();
-                                        scan.AssemblyContainingType<IRootPathFinder>();
                                         scan.AssemblyContainingType<ICoreHandler>();
                                     });
                             x.For<ICoreHandler>().Use<CoreHandler>().Ctor<string>("productName").Is((string)null);
-                            //x.For<ICoreHandler>().Use<CoreHandler>().WithCtorArg("productName").EqualTo(null);
                             //                x.For<IExample>().Use<Example>();
                         });
             return ObjectFactory.Container;

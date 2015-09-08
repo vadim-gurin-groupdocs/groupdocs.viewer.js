@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Groupdocs.Viewer.UI.Handlers
 {
-    public class GetResourceForHtmlHandler : BaseAspNetHandler, IHttpHandler
+    public class GetResourceForHtmlHandler : BaseAspNetHandler
     {
         public GetResourceForHtmlHandler()
         {
@@ -18,14 +18,14 @@ namespace Groupdocs.Viewer.UI.Handlers
         /// </summary>
         #region IHttpHandler Members
 
-        public bool IsReusable
+        public override bool IsReusable
         {
             // Return false in case your Managed Handler cannot be reused for another request.
             // Usually this would be false in case you have some state information preserved per request.
             get { return true; }
         }
 
-        public void ProcessRequest(HttpContext context)
+        public override void ProcessRequest(HttpContext context)
         {
             try
             {

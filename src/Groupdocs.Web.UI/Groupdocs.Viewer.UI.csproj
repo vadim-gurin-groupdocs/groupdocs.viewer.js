@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Groupdocs.Common.InstallableViewer">
+      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Common.Viewer\bin\Debug\Groupdocs.Common.InstallableViewer.dll</HintPath>
+    </Reference>
+    <Reference Include="Groupdocs.Viewer">
+      <HintPath>..\..\..\..\GroupDocs\trunk\src\Platform\Groupdocs.Web.UI\bin\Debug\Groupdocs.Viewer.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\dependencies\StructureMap\StructureMap.dll</HintPath>
     </Reference>
@@ -115,16 +121,6 @@
     <None Include="Fonts\PT_Sans-Web-Regular.eot" />
     <None Include="Fonts\PT_Sans-Web-Regular.ttf" />
     <None Include="Fonts\PT_Sans-Web-Regular.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Common\Groupdocs.Common.csproj">
-      <Project>{91c486ad-1971-4256-a8ab-661ba34907cb}</Project>
-      <Name>Groupdocs.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.CoreHandler\Groupdocs.CoreHandler.csproj">
-      <Project>{25af850f-6f55-4fd8-824d-fe273ae96780}</Project>
-      <Name>Groupdocs.CoreHandler</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

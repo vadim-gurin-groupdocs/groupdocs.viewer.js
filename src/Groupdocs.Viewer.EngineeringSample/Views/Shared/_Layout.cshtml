@@ -4,8 +4,19 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/jquery-1.9.1.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/angular.js")"></script>
+
+    @*<script type='text/javascript'>if (!window.Modernizr.csstransforms)
+        $.ajax({
+            url: '/document-viewer/GetScriptHandler?name=libs/turn.html4.min.js',
+            dataType: 'script',
+            type: 'GET',
+            async: false
+        });
+    </script>*@
     
+
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/angular.js")"></script>
+        
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/knockout-3.3.0.debug.js")"></script>
     
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/JsInject.min.js")"></script>
@@ -18,6 +29,10 @@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.ViewerServerExchange.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.ViewerEventBus.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/installableViewer.js")"></script>
+    <script type='text/javascript'>
+        $.fn.groupdocsViewer.prototype.applicationPath = '/';
+        $.fn.groupdocsViewer.prototype.useHttpHandlers = true;
+    </script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.InitJsInject.js")"></script>
 
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.MVVMProvider.Angular.js")"></script>
@@ -30,7 +45,7 @@
 
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Navigation.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Thumbnails.js")"></script>
-
+        
     <script type="text/javascript">
         if (window.angular) {
             var viewerModule = angular.module("groupdocsViewer", []);

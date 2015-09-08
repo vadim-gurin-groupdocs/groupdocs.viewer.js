@@ -47,7 +47,6 @@ namespace Groupdocs.Web.UI.Core
                                          bool supportListOfContentControls = false,
                                          bool supportListOfBookmarks = false,
                                          bool embedImagesIntoHtmlForWordFiles = false,
-                                         string callback = null,
                                          string instanceId = null,
                                          string locale = null)
         {
@@ -134,7 +133,6 @@ namespace Groupdocs.Web.UI.Core
                                          bool ignoreDocumentAbsence = false,
                                          bool useHtmlBasedEngine = false,
                                          bool supportPageRotation = false,
-                                         string callback = null,
                                          string instanceId = null,
                                          string locale = null)
         {
@@ -256,12 +254,12 @@ namespace Groupdocs.Web.UI.Core
             throw new NotImplementedException();
         }
 
-        public void ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceId = null)
+        public void ReorderPage(string path, int oldPosition, int newPosition, string instanceId = null)
         {
             throw new NotImplementedException();
         }
 
-        public int RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceId = null)
+        public int RotatePage(string path, int pageNumber, int rotationAmount, string instanceId = null)
         {
             throw new NotImplementedException();
         }

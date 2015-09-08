@@ -6,11 +6,21 @@ using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI.Core;
 using Groupdocs.Common.InstallableViewer;
+using System.Web.Routing;
 
 namespace Groupdocs.Viewer.UI.Handlers
 {
-    public class BaseAspNetHandler: CoreHandler
+    public abstract class BaseAspNetHandler: CoreHandler, IHttpHandler, IRouteHandler
     {
+        #region IHttpHandler
+        public abstract bool IsReusable
+        {
+            get;
+        }
+
+        public abstract void ProcessRequest(HttpContext context);
+        #endregion
+
         public BaseAspNetHandler(string productName = null) :
             base(productName)
         {
@@ -126,6 +136,11 @@ namespace Groupdocs.Viewer.UI.Handlers
                     fileModificationDateTime = now;
                 context.Response.Cache.SetLastModified((DateTime)fileModificationDateTime);
             }
+        }
+
+        public IHttpHandler GetHttpHandler(RequestContext requestContext)
+        {
+            return this;
         }
     }
 }

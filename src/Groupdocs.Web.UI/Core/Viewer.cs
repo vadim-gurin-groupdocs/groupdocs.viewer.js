@@ -9,6 +9,7 @@ using Groupdocs.Viewer.UI.DependencyResolution;
 using StructureMap;
 using Groupdocs.Web.UI;
 using Groupdocs.Common.InstallableViewer;
+using Groupdocs.Viewer.UI.Handlers;
 
 namespace Groupdocs.Viewer.UI
 {
@@ -67,6 +68,63 @@ namespace Groupdocs.Viewer.UI
                "document-viewer/{action}",
                new { controller = "GroupdocsViewer" }
                );
+        }
+
+
+        /// <summary>
+        /// Initializes the ASP.NET handlers routes used by Viewer.
+        /// </summary>
+        public static void InitAspNetRoutes()
+        {
+            RouteCollection routes = RouteTable.Routes;
+            if (routes == null)
+            {
+                throw new InvalidOperationException("Cannot obtain 'RouteTable.Routes' collection");
+            }
+
+            routes.Add(null, new Route("document-viewer/ViewDocumentHandler",
+               new ViewDocumentHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetDocumentPageImageHandler",
+               new GetDocumentPageImageHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/LoadFileBrowserTreeDataHandler",
+               new LoadFileBrowserTreeDataHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetImageUrlsHandler",
+               new GetImageUrlsHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetFileHandler",
+               new GetFileHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetPdfWithPrintDialogHandler",
+               new GetPdfWithPrintDialogHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetPrintableHtmlHandler",
+               new GetPrintableHtmlHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetResourceForHtmlHandler",
+               new GetResourceForHtmlHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/GetDocumentPageHtmlHandler",
+               new GetDocumentPageHtmlHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/ReorderPageHandler",
+               new ReorderPageHandler()
+            ));
+
+            routes.Add(null, new Route("document-viewer/RotatePageHandler",
+               new RotatePageHandler()
+            ));
         }
 
         /// <summary>

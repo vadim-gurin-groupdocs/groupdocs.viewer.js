@@ -63,7 +63,7 @@ namespace Groupdocs.Viewer.UI.Controllers
                                                     bool extended = false, string callback = null, string instanceIdToken = null)
         {
             object data = _coreHandler.LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
-                                                              fileTypes, extended, callback, instanceIdToken);
+                                                              fileTypes, extended, instanceIdToken);
             if (data == null)
                 return new EmptyResult();
 
@@ -104,7 +104,6 @@ namespace Groupdocs.Viewer.UI.Controllers
                                            supportListOfContentControls,
                                            supportListOfBookmarks,
                                            embedImagesIntoHtmlForWordFiles,
-                                           callback,
                                            instanceIdToken,
                                            locale);
             return CreateJsonOrJsonpResponse(data, callback);
@@ -129,7 +128,7 @@ namespace Groupdocs.Viewer.UI.Controllers
                                                    ignoreDocumentAbsence,
                                                    useHtmlBasedEngine,
                                                    supportPageRotation,
-                                                   callback, instanceIdToken, locale);
+                                                   instanceIdToken, locale);
 
             return CreateJsonOrJsonpResponse(data, callback);
         }
@@ -329,7 +328,7 @@ namespace Groupdocs.Viewer.UI.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceIdToken = null)
         {
-            _coreHandler.ReorderPage(path, oldPosition, newPosition, null, instanceIdToken);
+            _coreHandler.ReorderPage(path, oldPosition, newPosition, instanceIdToken);
             var data = new { success = true };
             return CreateJsonOrJsonpResponse(data, callback);
         }
@@ -337,7 +336,7 @@ namespace Groupdocs.Viewer.UI.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceIdToken = null)
         {
-            int resultAngle = _coreHandler.RotatePage(path, pageNumber, rotationAmount, null, instanceIdToken);
+            int resultAngle = _coreHandler.RotatePage(path, pageNumber, rotationAmount, instanceIdToken);
             var data = new { resultAngle, success = true };
             return CreateJsonOrJsonpResponse(data, callback);
         }
@@ -354,14 +353,6 @@ namespace Groupdocs.Viewer.UI.Controllers
                                               string locale = null)
         {
             string[] pageUrls;
-            //if (ControllerContext == null)
-            //{
-            //    pageUrls = _urlsCreator.GetImageUrlsInternal(path, startingPageNumber, pageCount, pageWidth, quality, usePdf,
-            //                                         watermarkText, watermarkColor, watermarkPosition ?? WatermarkPosition.Diagonal, watermarkWidth ?? 0,
-            //                                         useHtmlBasedEngine, supportPageRotation);
-            //}
-            //else
-            //{
             UrlHelper url = new UrlHelper(ControllerContext.RequestContext);
             string applicationHost = _applicationPathFinder.GetApplicationHost();
             if (applicationHost.EndsWith("/"))
