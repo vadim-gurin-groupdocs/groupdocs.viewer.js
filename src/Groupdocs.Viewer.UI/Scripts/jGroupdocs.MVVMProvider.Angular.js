@@ -64,49 +64,11 @@
                         link: function (scope, elem, attributes, controller) {
                             var attribute = attributes.ngGroupdocsHtml;
                             if (attribute) {
-                                //if (scope.viewModel.isHtmlDocument()) {
-                                //    var iframe = document.createElement('iframe');
-                                //    elem.appendChild(iframe);
-
-                                //    var doc = iframe.contentWindow || iframe.contentDocument;
-                                //    if (doc.document) {
-                                //        doc = doc.document;
-                                //    }
-
-                                //    // open, write content to, and close the document
-                                //    doc.open();
-                                //    doc.write(attribute);
-                                //    doc.close();
-                                //}
-                                //else
                                 elem.html(scope.$eval(attribute));
                             }
 
                             var unwatch = scope.$watch(attribute, function (newValue, oldValue) {
                                 if (newValue && newValue !== oldValue) {
-                                    //if (scope.viewModel.isHtmlDocument()) {
-                                    //    var doc;
-                                    //    var iframe = elem.children("iframe");
-                                    //    if (iframe.length == 0) {
-                                    //        iframe = document.createElement('iframe');
-                                    //        var iframeJquery = $(iframe);
-                                    //        iframeJquery.addClass("html_document_wrapper");
-                                    //        iframeJquery.css("width", scope.viewModel.getFitWidth());
-                                    //        elem.append(iframe);
-                                    //        iframeJquery.load(function () {
-                                    //            iframeJquery.css("width", $(doc.body).width());
-                                    //        });
-                                    //    }
-                                    //    else
-                                    //        iframe = iframe[0];
-                                    //    doc = iframe.contentWindow.document;
-
-                                    //    // open, write content to, and close the document
-                                    //    doc.open();
-                                    //    doc.write(newValue);
-                                    //    doc.close();
-                                    //}
-                                    //else
                                     elem.html(newValue);
                                 }
                             });
