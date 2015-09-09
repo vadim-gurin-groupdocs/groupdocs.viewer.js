@@ -6,18 +6,6 @@ li.thumb-page {
     z-index: -1;
 }
 
-/*
-.viewer_mainwrapper {
-    background: url("../images/mainbg.png") repeat scroll 0 0 transparent;
-    bottom: 0;
-    display: inline-block;
-    left: 0;
-    position: absolute;
-    top: 62px;
-    width: 100%;
-}
-*/
-
 .embedded_viewer_wrapper {
     background: url("../images/mainbg.png") repeat scroll 0 0 transparent;
     bottom: 0;
@@ -46,11 +34,6 @@ li.thumb-page {
     position: relative;
     width: 100%;
 }
-
-/*.viewer_mainwrapper 
-{
-    width: auto;
-}*/
 
 .groupdocs_viewer_wrapper
 {
@@ -268,7 +251,7 @@ div.thumbnailsContainer ul li .html_page_contents {
 /* HTML Viewer */
    
 .grpdx .doc-page {
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
     
 .grpdx .html_page_contents {
@@ -282,7 +265,7 @@ div.thumbnailsContainer ul li .html_page_contents {
     background-color: white;
     z-index: 1;
     position: relative;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .grpdx .html_pages_container .viewer_loading_overlay{

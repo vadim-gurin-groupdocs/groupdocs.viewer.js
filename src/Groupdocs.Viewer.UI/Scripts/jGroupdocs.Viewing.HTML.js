@@ -345,23 +345,21 @@
                         var headContents = this.getHtmlElementContents(firstPageHtml, "head");
                         if (headContents) {
                             var styleElementContents = this.getHtmlElements(headContents, "style");
-                            var linkElementContents = this.getHtmlElementAttributess(headContents, "link");
+                            var linkElementContents = this.getHtmlElementAttributes(headContents, "link");
 
                             if (linkElementContents != null) {
+                                var self = this;
                                 for (i = 0; i < linkElementContents.length; i++) {
                                     element = $(linkElementContents[i]);
                                     var rel = element.attr("rel");
                                     if (rel == "stylesheet") {
                                         var uri = element.attr("href");
-
-                                        if (document.createStyleSheet) {
-                                            document.createStyleSheet(uri);
-                                        }
-                                        else {
-                                            element = $("<link rel='stylesheet' href='" + uri + "' type='text/css' />");
-                                            this.pageCssElement = this.pageCssElement.add(element);
-                                            element.appendTo("head");
-                                        }
+                                        $.get(uri, function (response) {
+                                            var styleElement = $("<style type='text/css'>" + response + "</style>");
+                                            self.pageCssElement = self.pageCssElement.add(styleElement);
+                                            styleElement.prependTo("head");
+                                            self._calculatePageSizeFromDOM();
+                                        });
                                     }
                                 }
                             }
@@ -376,6 +374,7 @@
 
                         bodyContents = this.getPageBodyContentsWithReplace(firstPageHtml);
                     }
+
                     var bodyContentsElement = $(bodyContents);
                     bodyContentsElement.find("script").remove();
                     bodyContentsElement.addClass('html_document_wrapper');
@@ -395,7 +394,7 @@
 
             element = $("<style>" + pageCss + "</style>");
             this.pageCssElement = this.pageCssElement.add(element);
-            element.appendTo("head");
+            element.prependTo("head");
 
             var sharedCss = response.sharedCss;
             if (sharedCss) {
@@ -461,9 +460,10 @@
             if (pageElementChildren.length == 1 && pageElementChildren.filter("img").length == 1)
                 onlyImageInHtml = true;
 
-
-            if (this.isHtmlDocument())
+            if (this.isHtmlDocument()) {
                 pageElementWidth = this.getFitWidth();
+                this.pageWidth(pageElementWidth);
+            }
             else
                 pageElementWidth = pageElement.width();
 
@@ -474,7 +474,6 @@
 
             this.pageHeight(Math.round(this.pageWidth() * this.heightWidthRatio));
             this.initialWidth = this.pageWidth();
-
 
             var pageCount = this.pageCount();
             var pagesNotObservable = [];
@@ -559,24 +558,7 @@
 
         loadPagesZoomed: function () {
             if (this.useTabsForPages()) {
-                var self = this;
-                var htmlPageContents = self.documentSpace.find(".html_page_contents:first");
-                var pageElement = htmlPageContents.children("div,table,img");
-                var dimensions = pageElement[0].getBoundingClientRect();
-                var reserveHeight = 20;
-                var autoHeight = self.autoHeight();
-                self.autoHeight(true);
-                var page = self.pages()[0];
-                var screenWidth = dimensions.width;
-                var screenHeight = dimensions.height;
-                if (page && page.rotation() % 180 > 0) {
-                    var t = screenWidth;
-                    screenWidth = screenHeight;
-                    screenHeight = t;
-                }
-                screenHeight += reserveHeight;
-                page.prop(screenHeight / screenWidth);
-                self.autoHeight(false);
+                this._calculatePageSizeFromDOM();
             }
             var newWidth = window.groupdocs.documentComponentViewModel.prototype.loadPagesZoomed.call(this);
             if (newWidth !== null) {
@@ -839,14 +821,37 @@
 
         calculatePageSize: function () {
             if (this.useTabsForPages()) {
-                var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
-                var pageElement = htmlPageContents.children("div,table");
-                var pageWidth = pageElement.width();
-                this.initialWidth = pageWidth;
-                this.pageWidth(pageWidth * this.zoom() / 100);
+                var self = this;
+                window.setTimeout(function() {
+                    self._calculatePageSizeFromDOM();
+                }, 50);
                 return true;
             }
             return false;
+        },
+
+        _calculatePageSizeFromDOM: function() {
+            var htmlPageContents = this.documentSpace.find(".html_page_contents:first");
+            var pageElement = htmlPageContents.children("div,table,iframe");
+            var pageWidth = pageElement.width();
+            this.initialWidth = pageWidth;
+            this.pageWidth(pageWidth * this.zoom() / 100);
+
+            var dimensions = pageElement[0].getBoundingClientRect();
+            var reserveHeight = 0;
+            this.autoHeight(true);
+            var page = this.pages()[0];
+            var screenWidth = dimensions.width;
+            var screenHeight = dimensions.height;
+            if (page && page.rotation() % 180 > 0) {
+                var t = screenWidth;
+                screenWidth = screenHeight;
+                screenHeight = t;
+            }
+            screenHeight += reserveHeight;
+            page.prop(screenHeight / screenWidth);
+            this.autoHeight(false);
+            //console.log("_calculatePageSizeFromDOM");
         },
 
         reflowPagesInChrome: function (async) {
@@ -882,7 +887,7 @@
             return contentsFromHtml;
         },
 
-        getHtmlElementAttributess: function (pageHtml, tagName) {
+        getHtmlElementAttributes: function (pageHtml, tagName) {
             var contentsRegex = new RegExp("<" + tagName + "[^>]*/?>", "gi");
             var contentsFromHtml = pageHtml.match(contentsRegex);
             return contentsFromHtml;

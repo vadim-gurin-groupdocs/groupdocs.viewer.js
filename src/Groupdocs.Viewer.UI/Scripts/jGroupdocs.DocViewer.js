@@ -882,6 +882,12 @@
                 result.height = this.serverPages[index].h * this.pointToPixelRatio / 16. + 'em';
             }
             else {
+                if (this.autoHeight()) {
+                    result.height = 'auto';
+                    result.overflow = 'visible';
+                    return result;
+                }
+
                 if (this.supportPageRotation && this.useTabsForPages()) {
                     var page = pages[index];
                     if (page.rotation() % 180 > 0) {
@@ -897,15 +903,9 @@
                 else
                     result.width = pageWidth + (this.useHtmlBasedEngine ? this.imageHorizontalMargin : 0) + 'px';
 
-                if (this.autoHeight()) {
-                    result.height = 'auto';
-                    result.overflow = 'visible';
-                }
-                else {
-                    if (index < pages.length)
-                        result.height = pageWidth * pages[index].prop() + 'px';
-                    result.overflow = 'hidden';
-                }
+                if (index < pages.length)
+                    result.height = pageWidth * pages[index].prop() + 'px';
+                result.overflow = 'hidden';
             }
             return result;
         },
