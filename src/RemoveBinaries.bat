@@ -17,8 +17,8 @@ rmdir Groupdocs.Viewer.EngineeringSample\bin /s /q
 rmdir Groupdocs.Viewer.EngineeringSample\obj /s /q
 rmdir Groupdocs.Viewer.EngineeringSample\Temp /s /q
 
-rmdir Groupdocs.Web.UI\bin /s /q
-rmdir Groupdocs.Web.UI\obj /s /q
+rmdir Groupdocs.Viewer.UI\bin /s /q
+rmdir Groupdocs.Viewer.UI\obj /s /q
 
 rmdir Groupdocs.CoreHandler\bin /s /q
 rmdir Groupdocs.CoreHandler\obj /s /q

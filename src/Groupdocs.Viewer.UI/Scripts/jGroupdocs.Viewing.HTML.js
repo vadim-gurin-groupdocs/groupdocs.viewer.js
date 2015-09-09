@@ -1129,61 +1129,7 @@
             page.heightRatio(scaleRatio);
         },
 
-        pageElementStyle: function (index) {
-            var result = {};
-            var pages = this.pages();
-            if (this.useVirtualScrolling) {
-                var firstVisiblePageNum = this.firstVisiblePageForVirtualMode();
-                index += firstVisiblePageNum;
-                if (firstVisiblePageNum < pages.length)
-                    result.top = pages[firstVisiblePageNum].top() + 'px';
-            }
-            else
-                result.top = '';
-
-            if (this.layout() == this.Layouts.OnePageInRow) {
-                result.display = 'block';
-                result.marginLeft = 'auto';
-                result.marginRight = 'auto';
-            }
-            else {
-                result.display = '';
-                result.marginLeft = '';
-                result.marginRight = '';
-            }
-
-            var pageWidth = this.pageWidth();
-
-            if (this.options.useEmScaling) {
-                result.width = this.serverPages[index].w * this.pointToPixelRatio / 16. + 'em';
-                result.height = this.serverPages[index].h * this.pointToPixelRatio / 16. + 'em';
-            }
-            else {
-                if (this.supportPageRotation && this.useTabsForPages()) {
-                    var page = pages[index];
-                    if (page && page.rotation() % 180 > 0) {
-                        result.width = pageWidth * page.prop();
-                        result.height = pageWidth;
-                        return result;
-                    }
-                }
-                else
-                    result.width = pageWidth + (this.useHtmlBasedEngine ? this.imageHorizontalMargin : 0) + 'px';
-
-                if (this.autoHeight()) {
-                    result.height = 'auto';
-                    result.overflow = 'visible';
-                }
-                else {
-                    if (index < pages.length)
-                        result.height = pageWidth * pages[index].prop() + 'px';
-                    result.overflow = 'hidden';
-                }
-            }
-            return result;
-        },
-
-
+        
         clearContentControls: function () {
             if (!this.supportListOfContentControls || !this.contentControlsFromHtml)
                 return;

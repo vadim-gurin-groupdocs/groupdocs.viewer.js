@@ -73,6 +73,7 @@ namespace Groupdocs.Viewer.UI
 
         /// <summary>
         /// Initializes the ASP.NET handlers routes used by Viewer.
+        /// Requires setup: https://msdn.microsoft.com/en-us/library/cc668202%28v=VS.90%29.aspx
         /// </summary>
         public static void InitAspNetRoutes()
         {

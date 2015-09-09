@@ -11,30 +11,34 @@
 	    var containerElement = $("#test");
 	    $("#test").groupdocsViewer({
 	        //filePath: "candy.pdf",
-	        filePath: "Deutschland201207Arbeit.pdf",
+	        //filePath: "Deutschland201207Arbeit.pdf",
 	        //filePath: "Налоговый кодекс Республики Беларусь - общая часть.doc" ,
 	        //filePath: "Excel\\excel.xls",
 	        //filePath: "Excel\\excel-examples.xls",
+	        filePath: "HTML\\HTML Version.htm",
 	        showHeader: true,
-	        showFolderBrowser: false,
-            showThumbnails: true,
+	        showFolderBrowser: true,
+	        showThumbnails: true,
+	        openThumbnails: true,
             showZoom: true,
             showSearch: true,
             showPaging: true,
             useInnerThumbnails: true,
             useHtmlBasedEngine: true,
+            useHtmlThumbnails: false,
             supportTextSelection: true,
             useVirtualScrolling: false,
             preloadPageCount: null,
-            supportPageRotation: false,
-            watermarkText: "John Fitzjerald",
+            supportPageRotation: true,
+            //watermarkText: "John Fitzjerald",
             watermarkPosition: "Diagonal",
             //watermarkPosition: "TopCenter",
             //watermarkPosition: "BottomCenter",
             watermarkWidth: 50
+	        //thumbnailsContainerWidth: 100
         });
 
-        window.onresize = resize;
+        //window.onresize = resize;
         function resize() {
             var width = containerElement.width();
             containerElement.groupdocsViewer("setWidth", width);

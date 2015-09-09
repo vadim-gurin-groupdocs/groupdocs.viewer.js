@@ -268,7 +268,7 @@ div.thumbnailsContainer ul li .html_page_contents {
 /* HTML Viewer */
    
 .grpdx .doc-page {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
     
 .grpdx .html_page_contents {
@@ -282,7 +282,7 @@ div.thumbnailsContainer ul li .html_page_contents {
     background-color: white;
     z-index: 1;
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .grpdx .html_pages_container .viewer_loading_overlay{

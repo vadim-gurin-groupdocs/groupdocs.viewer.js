@@ -86,151 +86,151 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Groupdocs.Web.UI\CSS\bootstrap.css">
+    <Content Include="..\Groupdocs.Viewer.UI\CSS\bootstrap.css">
       <Link>Client\CSS\bootstrap.css</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\CSS\DocumentViewer.css">
+    <Content Include="..\Groupdocs.Viewer.UI\CSS\DocumentViewer.css">
       <Link>Client\CSS\DocumentViewer.css</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\CSS\fixes.css">
+    <Content Include="..\Groupdocs.Viewer.UI\CSS\fixes.css">
       <Link>Client\CSS\fixes.css</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Images\mainbg.png">
+    <Content Include="..\Groupdocs.Viewer.UI\Images\mainbg.png">
       <Link>Client\Images\mainbg.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Images\spinner.gif">
+    <Content Include="..\Groupdocs.Viewer.UI\Images\spinner.gif">
       <Link>Client\Images\spinner.gif</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Images\sprites.png">
+    <Content Include="..\Groupdocs.Viewer.UI\Images\sprites.png">
       <Link>Client\Images\sprites.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\installableViewer.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\installableViewer.js">
       <Link>Client\Scripts\installableViewer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.DocViewer.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.DocViewer.js">
       <Link>Client\Scripts\jGroupdocs.DocViewer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Explorer.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Explorer.js">
       <Link>Client\Scripts\jGroupdocs.Explorer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.FileOpenDialog.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.FileOpenDialog.js">
       <Link>Client\Scripts\jGroupdocs.FileOpenDialog.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.fileOpenDialogViewModel.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.fileOpenDialogViewModel.js">
       <Link>Client\Scripts\jGroupdocs.fileOpenDialogViewModel.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Geometry.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Geometry.js">
       <Link>Client\Scripts\jGroupdocs.Geometry.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.InitJsInject.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.InitJsInject.js">
       <Link>Client\Scripts\jGroupdocs.InitJsInject.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.MVVMProvider.Angular.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.MVVMProvider.Angular.js">
       <Link>Client\Scripts\jGroupdocs.MVVMProvider.Angular.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.MVVMProvider.Knockout.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.MVVMProvider.Knockout.js">
       <Link>Client\Scripts\jGroupdocs.MVVMProvider.Knockout.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Navigation.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Navigation.js">
       <Link>Client\Scripts\jGroupdocs.Navigation.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.PdfToJavaScriptWrapper.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.PdfToJavaScriptWrapper.js">
       <Link>Client\Scripts\jGroupdocs.PdfToJavaScriptWrapper.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Search.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Search.js">
       <Link>Client\Scripts\jGroupdocs.Search.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Selectable.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Selectable.js">
       <Link>Client\Scripts\jGroupdocs.Selectable.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.StringExtensions.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.StringExtensions.js">
       <Link>Client\Scripts\jGroupdocs.StringExtensions.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Thumbnails.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Thumbnails.js">
       <Link>Client\Scripts\jGroupdocs.Thumbnails.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerEventBus.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.ViewerEventBus.js">
       <Link>Client\Scripts\jGroupdocs.ViewerEventBus.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.ViewerServerExchange.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.ViewerServerExchange.js">
       <Link>Client\Scripts\jGroupdocs.ViewerServerExchange.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Viewing.HTML.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Viewing.HTML.js">
       <Link>Client\Scripts\jGroupdocs.Viewing.HTML.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Viewing.Image.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Viewing.Image.js">
       <Link>Client\Scripts\jGroupdocs.Viewing.Image.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.WidgetFactory.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.WidgetFactory.js">
       <Link>Client\Scripts\jGroupdocs.WidgetFactory.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\jGroupdocs.Zooming.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Zooming.js">
       <Link>Client\Scripts\jGroupdocs.Zooming.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\angular.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\angular.js">
       <Link>Client\Scripts\libs\angular.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\angular.min.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\angular.min.js">
       <Link>Client\Scripts\libs\angular.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\date.format.min.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\date.format.min.js">
       <Link>Client\Scripts\libs\date.format.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\jquery-1.9.1.min.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\jquery-1.9.1.min.js">
       <Link>Client\Scripts\libs\jquery-1.9.1.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\JsInject.min.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\JsInject.min.js">
       <Link>Client\Scripts\libs\JsInject.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\knockout-3.3.0.debug.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\knockout-3.3.0.debug.js">
       <Link>Client\Scripts\libs\knockout-3.3.0.debug.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\knockout-3.3.0.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\knockout-3.3.0.js">
       <Link>Client\Scripts\libs\knockout-3.3.0.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\libs\rx.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\rx.js">
       <Link>Client\Scripts\libs\rx.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\plugins\rx.jQuery.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\plugins\rx.jQuery.js">
       <Link>Client\Scripts\plugins\rx.jQuery.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Scripts\plugins\scroll-startstop.events.jquery.js">
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\plugins\scroll-startstop.events.jquery.js">
       <Link>Client\Scripts\plugins\scroll-startstop.events.jquery.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -306,36 +306,36 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Web.UI\Groupdocs.Viewer.UI.csproj">
-      <Project>{6610B9BB-E085-4521-858F-A534B9688655}</Project>
-      <Name>Groupdocs.Viewer.UI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.eot">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Bold.eot">
       <Link>Client\Fonts\PT_Sans-Web-Bold.eot</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.ttf">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Bold.ttf">
       <Link>Client\Fonts\PT_Sans-Web-Bold.ttf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Bold.woff">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Bold.woff">
       <Link>Client\Fonts\PT_Sans-Web-Bold.woff</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.eot">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Regular.eot">
       <Link>Client\Fonts\PT_Sans-Web-Regular.eot</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.ttf">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Regular.ttf">
       <Link>Client\Fonts\PT_Sans-Web-Regular.ttf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Groupdocs.Web.UI\Fonts\PT_Sans-Web-Regular.woff">
+    <Content Include="..\Groupdocs.Viewer.UI\Fonts\PT_Sans-Web-Regular.woff">
       <Link>Client\Fonts\PT_Sans-Web-Regular.woff</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Groupdocs.Viewer.UI\Groupdocs.Viewer.UI.csproj">
+      <Project>{6610b9bb-e085-4521-858f-a534b9688655}</Project>
+      <Name>Groupdocs.Viewer.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
