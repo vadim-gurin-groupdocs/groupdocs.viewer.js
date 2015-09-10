@@ -98,6 +98,10 @@
       <Link>Client\CSS\fixes.css</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\CSS\turnpage.css">
+      <Link>Client\CSS\turnpage.css</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Images\mainbg.png">
       <Link>Client\Images\mainbg.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -112,10 +116,6 @@
     </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\installableViewer.js">
       <Link>Client\Scripts\installableViewer.js</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.DocViewer.js">
-      <Link>Client\Scripts\jGroupdocs.DocViewer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Explorer.js">
@@ -186,6 +186,14 @@
       <Link>Client\Scripts\jGroupdocs.Viewing.Image.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Viewing.js">
+      <Link>Client\Scripts\jGroupdocs.Viewing.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.Viewing.PageFlip.js">
+      <Link>Client\Scripts\jGroupdocs.Viewing.PageFlip.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.WidgetFactory.js">
       <Link>Client\Scripts\jGroupdocs.WidgetFactory.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -224,6 +232,14 @@
     </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\rx.js">
       <Link>Client\Scripts\libs\rx.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\turn.html4.min.js">
+      <Link>Client\Scripts\libs\turn.html4.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\turn.min.js">
+      <Link>Client\Scripts\libs\turn.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\plugins\rx.jQuery.js">

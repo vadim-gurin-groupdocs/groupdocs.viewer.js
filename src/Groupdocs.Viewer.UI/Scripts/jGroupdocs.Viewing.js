@@ -888,7 +888,7 @@
                     return result;
                 }
 
-                if (this.supportPageRotation && this.useTabsForPages()) {
+                if (this.supportPageRotation && this.useTabsForPages && this.useTabsForPages()) {
                     var page = pages[index];
                     if (page.rotation() % 180 > 0) {
                         result.width = pageWidth * page.prop();
@@ -912,7 +912,8 @@
 
         pagesContainerStyle: function () {
             var layout = this.layout();
-            return { height: (!this.useTabsForPages() && this.useVirtualScrolling) ? (this.documentHeight() + "px") : "auto",
+            return {
+                height: this.useVirtualScrolling  ? (this.documentHeight() + "px") : "auto",
                 width: (layout == this.Layouts.TwoPagesInRow || layout == this.Layouts.CoverThenTwoPagesInRow) ?
                         (this.pageWidth() + this.pageWrapperHorizontalMargin) * 2 + "px" : "auto"
             };

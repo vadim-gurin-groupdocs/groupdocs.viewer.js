@@ -79,15 +79,17 @@
     <Content Include="CSS\bootstrap.css" />
     <Content Include="CSS\DocumentViewer.css" />
     <Content Include="CSS\fixes.css" />
+    <Content Include="CSS\turnpage.css" />
     <Content Include="Images\mainbg.png" />
     <Content Include="Images\spinner.gif" />
     <Content Include="Images\sprites.png" />
+    <Content Include="Scripts\jGroupdocs.Viewing.PageFlip.js" />
     <Content Include="Scripts\jGroupdocs.Viewing.HTML.js" />
     <Content Include="Scripts\jGroupdocs.Viewing.Image.js" />
     <Content Include="Scripts\jGroupdocs.Explorer.js" />
     <Content Include="Scripts\jGroupdocs.fileOpenDialogViewModel.js" />
     <Content Include="Scripts\installableViewer.js" />
-    <Content Include="Scripts\jGroupdocs.DocViewer.js" />
+    <Content Include="Scripts\jGroupdocs.Viewing.js" />
     <Content Include="Scripts\jGroupdocs.FileOpenDialog.js" />
     <Content Include="Scripts\jGroupdocs.Geometry.js" />
     <Content Include="Scripts\jGroupdocs.InitJsInject.js" />
@@ -111,6 +113,8 @@
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.js" />
     <Content Include="Scripts\libs\rx.js" />
+    <Content Include="Scripts\libs\turn.html4.min.js" />
+    <Content Include="Scripts\libs\turn.min.js" />
     <Content Include="Scripts\plugins\rx.jQuery.js" />
     <Content Include="Scripts\plugins\scroll-startstop.events.jquery.js" />
   </ItemGroup>

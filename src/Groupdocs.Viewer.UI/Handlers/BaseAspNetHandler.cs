@@ -103,9 +103,14 @@ namespace Groupdocs.Viewer.UI.Handlers
                 {
                     Type resultType = typeof(T);
                     if (resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof (Nullable<>))
-                    {
+                    { // a nullable type
                         Type underlyingResultType = Nullable.GetUnderlyingType(resultType);
                         resultType = underlyingResultType;
+                        if (parameterValueString == String.Empty)
+                        {
+                            result = default(T);
+                            return;
+                        }
                     }
 
                     if (resultType.IsEnum)

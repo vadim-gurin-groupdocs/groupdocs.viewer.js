@@ -4,9 +4,6 @@
     $.groupdocsWidget("groupdocsDocumentHtmlRendering", {
         _viewModel: null,
         options: {
-            fileId: 0,
-            quality: null,
-            use_pdf: "true",
             showHyperlinks: true
         },
 
@@ -1119,6 +1116,13 @@
             return returnValue;
         },
 
+        pagesContainerStyle: function () {
+            var styleObject = window.groupdocs.documentComponentViewModel.prototype.pagesContainerStyle.call(this);
+            if (this.useTabsForPages())
+                styleObject.height = "auto";
+            return styleObject;
+        },
+
         getScaleRatioForPage: function (widthForMaxHeight, maxPageHiegt, pageWidth) {
             var widthRatio, scaleRatio;
             if (widthForMaxHeight === undefined)
@@ -1133,7 +1137,6 @@
             var scaleRatio = this.getScaleRatioForPage(widthForMaxHeight, maxPageHiegt, pageWidth);
             page.heightRatio(scaleRatio);
         },
-
         
         clearContentControls: function () {
             if (!this.supportListOfContentControls || !this.contentControlsFromHtml)

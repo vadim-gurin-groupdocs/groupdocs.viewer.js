@@ -15,8 +15,6 @@
         zoomViewModel: null,
 
         init: function () {
-            this.docSpacePageFlip = null;
-
             var docViewer = null;
             var navigation = null;
             var thumbnails = null;
@@ -57,7 +55,6 @@
                     baseUrl: this.baseUrl,
                     fileId: this.fileId,
                     quality: this.quality,
-                    use_pdf: this.use_pdf,
                     pageImageWidth: this.pageImageWidth,
                     docViewerId: this.docViewerId,
                     createHtml: this.createHtml,
@@ -103,7 +100,7 @@
             var docViewerPageFlipViewModel = null;
 
             if (this.docSpacePageFlip) {
-                docViewerPageFlip = this.docSpacePageFlip.docViewerPageFlip({
+                docViewerPageFlip = this.docSpacePageFlip.groupdocsDocumentImageRenderingPageFlip({
                     baseUrl: this.baseUrl,
                     fileId: this.fileId,
                     quality: this.quality,
@@ -120,7 +117,7 @@
                     selectionContent: this.selectionContent,
                     minimumImageWidth: this.minimumImageWidth
                 });
-                docViewerPageFlipViewModel = this.docSpacePageFlip.docViewerPageFlip('getViewModel');
+                docViewerPageFlipViewModel = this.docSpacePageFlip.groupdocsDocumentImageRenderingPageFlip('getViewModel');
             }
 
             if (this.navigation) {
@@ -232,7 +229,7 @@
                     if (thumbnails) {
                         thumbnailsViewModel.pageInd(pageIndex);
                     }
-                    documentComponentViewModel.pageInd(pageIndex);
+                    documentComponentViewModel.pageIndex(pageIndex);
                     documentComponentViewModel.setPageNumerInUrlHash(pageIndex);
                 });
             }

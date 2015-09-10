@@ -248,7 +248,7 @@
 
         _getPageLocations: function () {
             var pageLocations = null;
-            if (!this.options.bookLayout) {
+            if (!this.options.bookLayout && this.options.initializeStorageOnly) {
                 pageLocations = $.map(this.options.pageLocations,
                         function(page) {
                             return new groupdocs.Point(page.left, page.top());
@@ -266,14 +266,12 @@
             }
 
             this._canvasScroll = this.getCanvasScroll();
-            if (this.options.bookLayout) {
-                pageLocations = $.map(images, function(img) {
-                    var imgJquery = $(img);
-                    var x = imgJquery.offset().left - self._canvasOffset.x + self._canvasScroll.x;
-                    var y = (self.options.bookLayout ? 0 : (imgJquery.offset().top - self.element.offset().top));
-                    return new groupdocs.Point(x, y);
-                });
-            }
+            pageLocations = $.map(images, function(img) {
+                var imgJquery = $(img);
+                var x = imgJquery.offset().left - self._canvasOffset.x + self._canvasScroll.x;
+                var y = (self.options.bookLayout ? 0 : (imgJquery.offset().top - self.element.offset().top));
+                return new groupdocs.Point(x, y);
+            });
             
             return pageLocations;
         },

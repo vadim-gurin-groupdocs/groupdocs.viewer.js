@@ -6,7 +6,6 @@
         
         options: {
             quality: null,
-            use_pdf: "false",
             supportPageRotation: false,
             emptyImageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
         },
@@ -71,7 +70,7 @@
                                     successHandler, errorHandler) {
             this._portalService.getImageUrlsAsync(documentPath,
                 thumbnailWidth, pageNumber, imageCount,
-                this.options.quality, this.options.use_pdf, null, null, null, null,
+                this.options.quality, false, null, null, null, null,
                 this.options.ignoreDocumentAbsence,
                 this.options.useHtmlBasedEngine, this.options.supportPageRotation,
                 this.options.instanceIdToken,

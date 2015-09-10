@@ -12,8 +12,10 @@
             widgetInstance.element = this;
             if (widgetInstance.options == undefined)
                 widgetInstance.options = options;
-            else
-                $.extend(widgetInstance.options, options);
+            else {
+                var resultOptions = $.extend({}, widgetInstance.options, options);
+                widgetInstance.options = resultOptions;
+            }
             if (widgetInstance._create)
                 widgetInstance._create();
             if (widgetInstance._init)

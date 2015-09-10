@@ -16,6 +16,7 @@
             showZoom: true,
             showSearch: true,
             showViewerStyleControl: true,
+            showPageFlipMode: false,
             embedImagesIntoHtmlForWordFiles: false,
             instanceIdToken: null,
             enableStandardErrorHandling: true
@@ -242,7 +243,7 @@
             var docViewerJquery = $(docViewerSelector);
             var searchWrapper = groupdocsViewerWrapper.find("[name='search_wrapper']");
 
-            if (settings.useHtmlBasedEngine) {
+            if (settings.useHtmlBasedEngine || !settings.showPageFlipMode) {
                 viewerHeader.find("li[name='openDoublePageFlipViewMenuItem']").hide();
 
                 if (!settings.supportTextSelection) {
@@ -376,7 +377,6 @@
                 useHtmlThumbnails: settings.useHtmlThumbnails,
                 useInnerThumbnails: settings.useInnerThumbnails,
                 supportPageReordering: settings.supportPageReordering,
-                use_pdf: settings.supportTextSelection ? "true" : "false",
                 ignoreDocumentAbsence: settings.ignoreDocumentAbsence,
                 supportPageRotation: settings.supportPageRotation,
                 openThumbnails: settings.openThumbnails,
@@ -479,7 +479,7 @@
                     search: settings.showSearch ? searchWrapper : null,
                     searchOptions: searchOptions,
                     preloadPagesCount: settings.preloadPagesCount,
-                    docSpacePageFlip: settings.useHtmlBasedEngine || (settings.viewerStyle == this.viewModes.ScrollMode && !settings.showViewerStyleControl) ? null : viewerBookModeWrapper,
+                    docSpacePageFlip: settings.useHtmlBasedEngine || !settings.showPageFlipMode || (settings.viewerStyle == this.viewModes.ScrollMode && !settings.showViewerStyleControl) ? null : viewerBookModeWrapper,
                     //layout: settings.viewerStyle,
                     usePageNumberInUrlHash: false,
                     selectionContent: selectionContent,
