@@ -10,6 +10,7 @@
         if (pluginData == undefined) {
             widgetInstance = $.extend({}, widgetObject);
             widgetInstance.element = this;
+            widgetInstance.widgetName = pluginDataKey;
             if (widgetInstance.options == undefined)
                 widgetInstance.options = options;
             else {

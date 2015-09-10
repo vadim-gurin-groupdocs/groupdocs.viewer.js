@@ -104,7 +104,7 @@
                     baseUrl: this.baseUrl,
                     fileId: this.fileId,
                     quality: this.quality,
-                    use_pdf: this.use_pdf,
+                    supportTextSelection: this.supportTextSelection,
                     pageImageWidth: this.pageImageWidth,
                     docViewerId: this.docViewerId,
                     createHtml: this.createHtml,

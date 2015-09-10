@@ -129,6 +129,11 @@
 
         _mouseInit: function() {
             var that = this;
+            this.document = $(this.element.style ?
+				// element within the document
+				this.element.ownerDocument :
+				// element is window or document
+				this.element.document || this.element);
 
             this.element
                 .bind("mousedown." + this.widgetName, function(event) {
@@ -184,7 +189,7 @@
                 return that._mouseUp(event);
             };
 
-            $(window.document)
+            this.document
                 .bind( "mousemove." + this.widgetName, this._mouseMoveDelegate )
                 .bind( "mouseup." + this.widgetName, this._mouseUpDelegate );
 
@@ -225,7 +230,7 @@
         },
 
         _mouseUp: function(event) {
-            $(window.document)
+            this.document
                 .unbind("mousemove." + this.widgetName, this._mouseMoveDelegate)
                 .unbind("mouseup." + this.widgetName, this._mouseUpDelegate);
 
@@ -302,7 +307,7 @@
         },
 
         _mouseStart: function (event) {
-            this.options.docSpace.focus();
+            this.setFocus();
             this.initStorage();
             this.clearSelection();
 
@@ -413,26 +418,22 @@
 
                 top = Math.min(highestTop, top);
                 bottom = Math.max(lowestBottom, bottom);
-                var selectionBounds = new groupdocs.Rect(left, top, right, bottom);
-                var selectionBoundsScaled = selectionBounds.clone();
-
                 this.options.txtarea.val($.trim(text));
             }
 
-            switch (this._mode) {
-                case this.SelectionModes.SelectText:
-                    this.element.trigger('onTextSelected', [pageNumber, selectionBoundsScaled, pos, len, this.selectionCounter, originalRects]);
-                    break;
-
-                default:
-                    break;
-            }
             return false;
         },
 
         mouseClickHandler: function (event) {
-            this.options.docSpace.focus();
+            this.setFocus();
             return true;
+        },
+
+        setFocus: function () {
+            if (this.options.bookLayout)
+                this.parentElement.focus();
+            else
+                this.options.docSpace.focus();
         },
 
         checkMouseIsInEdgeInBookMode: function (mouseX, mouseY) {

@@ -8,7 +8,7 @@
             baseUrl: null,
             _docGuid: '',
             quality: null,
-            use_pdf: "true"
+            supportTextSelection: true
         },
 
         _create: function () {
@@ -25,9 +25,6 @@
         },
 
         _init: function () {
-            $(this._viewModel).bind('onPageTurned', function (e, pageIndex) {
-                $(this.element).trigger('onPageTurned', [pageIndex]);
-            } .bind(this));
         },
 
         getViewModel: function () {
@@ -50,14 +47,14 @@
 
         _createHtml: function () {
             var viewerHtml =
-'<div id="' + this.options.docViewerId + '_page_flip" class="doc_viewer_flip" data-bind="event: { scroll: function(item, e) { this.ScrollDocView(item, e); }, scrollstop: function(item, e) { this.ScrollDocViewEnd(item, e); } }">' +
+'<div id="' + this.options.docViewerId + '_page_flip" class="doc_viewer_flip" >' +
 '    <a class="page_prev" href="#" style="height: 100%" data-bind="click: previousBroadside"></a>' +
 '    <a class="page_next" href="#" style="height: 100%" data-bind="click: nextBroadside"></a>' +
 
 '    <div class="bookCovers" style="display: none">' +
 '        <div class="hard hard_ie9 page">' +
 '            <a class="page_next2 first_page_link" href="#">' +
-'                <h1 class="ellipses" data-bind="text: documentName(), ellipsis: true" style="max-width: 700px;"></h1>' +
+'                <h1 class="ellipses" data-bind="text: documentName()" style="max-width: 700px;"></h1>' +
 '            </a>' +
 '        </div>' +
 '        <div class="hard hard_ie9 page"></div>' +
@@ -99,7 +96,7 @@
         },
 
         retrieveImageUrls: function (fileId, imageCount, pagesDimension, token, callback, errorCallback) {
-            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.use_pdf,
+            this._portalService.getImageUrlsAsync(fileId, pagesDimension, 0, imageCount, this.quality == null ? '' : this.quality, this.supportTextSelection,
                 function (response) {
                     callback.apply(this, [response.data]);
                 },
@@ -116,13 +113,9 @@
     };
     $.extend(window.docViewerPageFlipViewModel.prototype, {
         _model: null,
-        pagesDimension: null,
-        pageImageWidth: 568.0,
-        imageHorizontalMargin: 34,
         initialZoom: 100,
         zoom: null,
         scale: null,
-        docWasLoadedInViewer: false,
         scrollPosition: [0, 0],
         inprogress: null,
         pages: null,
@@ -133,22 +126,15 @@
         docType: null,
         fileId: null,
         _dvselectable: null,
-        _thumbnailHeight: 140,
         _firstPage: null,
-        imageUrls: [],
         pagePrefix: "page-flip-",
         documentName: null,
-        fit90PercentWidth: false,
-        _pageBounds: null,
-        changedUrlHash: false,
-        bookWidth: 0,
         pagingBarWidth: 30,
         turnPageWithoutEvent: false,
         minimumImageWidth: null,
 
         _create: function (options) {
             this._model = new docViewerPageFlipModel(options);
-
             this._init(options);
         },
 
@@ -169,7 +155,6 @@
                 this.docViewerId = this.documentSpace.attr('id');
             this.pagePrefix = this.docViewerId + "-page-flip-";
 
-            this.pagesDimension = Math.floor(this.pageImageWidth).toString() + "x";
             if (this.pages().length == 0)
                 this.pages.push({ number: 1, visible: ko.observable(false), url: ko.observable(this.emptyImageUrl) });
         },
@@ -269,7 +254,7 @@
                 startNumbers: this.getVisiblePagesNumbers(),
                 pagesCount: this.pageCount(),
                 proportion: this.scale(),
-                disabled: this.use_pdf == "true" ? false : true,
+                disabled: !this.supportTextSelection,
                 pageHeight: this.getPageHeight(),
                 horizontalPageCount: hCount,
                 docSpace: this.documentSpace,
@@ -278,8 +263,6 @@
             });
 
             this._dvselectable.groupdocsSelectable("setVisiblePagesNumbers", this.getVisiblePagesNumbers());
-
-            this.docWasLoadedInViewer = true;
 
             this.documentSpace.find("div.bookCovers > div:first").clone().prependTo(this.pagesContainerElement); //.height(this.pageHeight());
             this.documentSpace.find("div.bookCovers > div:last").clone().appendTo(this.pagesContainerElement); //.height(this.pageHeight());
@@ -341,7 +324,7 @@
                 var book = $(this);
                 book.turn('center');
                 if (!self.turnPageWithoutEvent && page > 0 && page <= pageCount)
-                    $(this).trigger('onPageTurned', page);
+                    self.documentSpace.trigger('onPageTurned', page);
                 self.turnPageWithoutEvent = false;
             });
             
@@ -516,7 +499,6 @@
         loadPagesZoomed: function () {
             var newWidth = (this.initialWidth * this.zoom() / 100) >> 0;
             var newHeight = (newWidth * this.heightWidthRatio) >> 0;
-            this.pagesDimension = newWidth + 'x';
 
             this.pageWidth(newWidth);
             this.pageHeight(newHeight);
@@ -553,7 +535,7 @@
 
         shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
             var originalDocumentWidth = null;
-            if (this.use_pdf != 'false' && checkOriginalDocumentWidth) {
+            if (this.supportTextSelection && checkOriginalDocumentWidth) {
                 var pageSize = this._pdf2XmlWrapper.getPageSize();
                 originalDocumentWidth = pageSize.width;
             }
