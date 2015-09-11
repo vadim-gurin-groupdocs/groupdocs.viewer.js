@@ -112,6 +112,7 @@
     <Content Include="Scripts\libs\JsInject.min.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.debug.js" />
     <Content Include="Scripts\libs\knockout-3.3.0.js" />
+    <Content Include="Scripts\libs\modernizr.2.6.2.Transform2d.min.js" />
     <Content Include="Scripts\libs\rx.js" />
     <Content Include="Scripts\libs\turn.html4.min.js" />
     <Content Include="Scripts\libs\turn.min.js" />

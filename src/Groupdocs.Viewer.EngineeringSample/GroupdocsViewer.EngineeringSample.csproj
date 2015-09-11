@@ -230,6 +230,10 @@
       <Link>Client\Scripts\libs\knockout-3.3.0.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\modernizr.2.6.2.Transform2d.min.js">
+      <Link>Client\Scripts\libs\modernizr.2.6.2.Transform2d.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\libs\rx.js">
       <Link>Client\Scripts\libs\rx.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -4,18 +4,7 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/jquery-1.9.1.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/turn.min.js")"></script>
-
-    @*<script type='text/javascript'>if (!window.Modernizr.csstransforms)
-        $.ajax({
-            url: '/document-viewer/GetScriptHandler?name=libs/turn.html4.min.js',
-            dataType: 'script',
-            type: 'GET',
-            async: false
-        });
-    </script>*@
     
-
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/angular.js")"></script>
         
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/knockout-3.3.0.debug.js")"></script>
@@ -75,6 +64,21 @@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.HTML.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.Image.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.PageFlip.js")"></script>
+
+    @* Page flip mode support. This block may be removed if the page flip mode is not needed. *@
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/turn.min.js")"></script>
+
+    @* Page flip mode support for IE8 (no CSS transforms).*@
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/modernizr.2.6.2.Transform2d.min.js")"></script>
+    <script type='text/javascript'>if (!window.Modernizr.csstransforms)
+        $.ajax({
+            url: "@Url.Content("~/Temp/Client/Scripts/libs/turn.html4.min.js")",
+            dataType: "script",
+            type: "GET",
+            async: false
+        });
+    </script>
+    @* End of page flip mode support *@
 
     <link rel="stylesheet" href="@Url.Content("~/Temp/Client/CSS/bootstrap.css")" type="text/css"/>
     <link rel="stylesheet" href="@Url.Content("~/Temp/Client/CSS/DocumentViewer.css")" type="text/css" />
