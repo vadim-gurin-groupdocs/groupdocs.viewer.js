@@ -3,61 +3,49 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
+    <script type='text/javascript'>
+        
+        if (!window.groupdocs)
+            window.groupdocs = {};
+        if (!window.groupdocs.viewer)
+            window.groupdocs.viewer = {};
+
+        window.groupdocs.viewer.applicationPath = '/';
+        window.groupdocs.viewer.useHttpHandlers = true;
+    </script>
+
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/jquery-1.9.1.min.js")"></script>
     
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/angular.js")"></script>
         
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/knockout-3.3.0.debug.js")"></script>
-    
+
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/JsInject.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/rx.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/plugins/rx.jquery.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/plugins/scroll-startstop.events.jquery.js")"></script>
-    
+
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.StringExtensions.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.WidgetFactory.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.ViewerServerExchange.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.ViewerEventBus.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/installableViewer.js")"></script>
-    <script type='text/javascript'>
-        $.fn.groupdocsViewer.prototype.applicationPath = '/';
-        $.fn.groupdocsViewer.prototype.useHttpHandlers = true;
-    </script>
+
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.InitJsInject.js")"></script>
 
-    @*<script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.MVVMProvider.Angular.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.MVVMProvider.Angular.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.MVVMProvider.Knockout.js")"></script>
 
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/date.format.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.FileOpenDialog.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.fileOpenDialogViewModel.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Explorer.js")"></script>
-
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Navigation.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Thumbnails.js")"></script>
-        
-    <script type="text/javascript">
-        if (window.angular) {
-            var viewerModule = angular.module("groupdocsViewer", []);
-            viewerModule.config(
-                function ($compileProvider) {
-                    window.groupdocs.bindingProvider.prototype.$compileProvider = $compileProvider;
-                }
-            );
-
-            viewerModule.run(function ($rootScope, $compile) {
-                window.groupdocs.bindingProvider.prototype.$rootScope = $rootScope;
-                window.groupdocs.bindingProvider.prototype.$compile = $compile;
-            });
-
-        }
-
-    </script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Zooming.js")"></script>
-
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Search.js")"></script>
-
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Geometry.js")"></script>
+
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.PdfToJavaScriptWrapper.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Selectable.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.js")"></script>
@@ -65,18 +53,39 @@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.Image.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.PageFlip.js")"></script>
 
-    @* Page flip mode support. This block may be removed if the page flip mode is not needed. *@
-    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/turn.min.js")"></script>
+    @* Minified scripts *@
+    @*<script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/GroupdocsViewer.all.min.js")"></script>*@
 
+    @* Angular JS code initialization *@
+    <script type="text/javascript">
+        if (window.angular) {
+            var viewerModule = angular.module("groupdocsViewer", []);
+            viewerModule.config(
+                function($compileProvider) {
+                    window.groupdocs.bindingProvider.prototype.$compileProvider = $compileProvider;
+                }
+            );
+
+            viewerModule.run(function($rootScope, $compile) {
+                window.groupdocs.bindingProvider.prototype.$rootScope = $rootScope;
+                window.groupdocs.bindingProvider.prototype.$compile = $compile;
+            });
+        }
+    </script>
+    @* End of Angular JS code initialization *@
+
+
+    @* Page flip mode support. This block can be removed if the page flip mode is not needed. *@
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/turn.min.js")"></script>
     @* Page flip mode support for IE8 (no CSS transforms).*@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/modernizr.2.6.2.Transform2d.min.js")"></script>
     <script type='text/javascript'>if (!window.Modernizr.csstransforms)
-        $.ajax({
-            url: "@Url.Content("~/Temp/Client/Scripts/libs/turn.html4.min.js")",
-            dataType: "script",
-            type: "GET",
-            async: false
-        });
+            $.ajax({
+                url: "@Url.Content("~/Temp/Client/Scripts/libs/turn.html4.min.js")",
+                dataType: "script",
+                type: "GET",
+                async: false
+            });
     </script>
     @* End of page flip mode support *@
 

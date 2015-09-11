@@ -393,6 +393,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)*.*" "$(ProjectDir)Temp\" /S /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)$(OutDir)*.*" "$(ProjectDir)Temp\" /S /Y
+xcopy "$(SolutionDir)Groupdocs.Viewer.UI\Scripts\GroupdocsViewer.all.min.js" "$(ProjectDir)Temp\Client\Scripts" /Y
+xcopy "$(SolutionDir)Groupdocs.Viewer.UI\CSS\GroupdocsViewer.all.min.css" "$(ProjectDir)Temp\Client\CSS" /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -16,7 +16,7 @@
             showZoom: true,
             showSearch: true,
             showViewerStyleControl: true,
-            showPageFlipMode: false,
+            enablePageFlipMode: false,
             embedImagesIntoHtmlForWordFiles: false,
             instanceIdToken: null,
             enableStandardErrorHandling: true
@@ -25,7 +25,7 @@
         _create: function () {
             $.extend(this.options, {
                 element: this.element,
-                applicationPath: $.fn.groupdocsViewer.prototype.applicationPath,
+                applicationPath: window.groupdocs.viewer.applicationPath,
                 widgetInstance: this
             });
             this.options.bindingProvider = new window.groupdocs.bindingProvider();
@@ -243,7 +243,7 @@
             var docViewerJquery = $(docViewerSelector);
             var searchWrapper = groupdocsViewerWrapper.find("[name='search_wrapper']");
 
-            if (settings.useHtmlBasedEngine || !settings.showPageFlipMode) {
+            if (settings.useHtmlBasedEngine || !settings.enablePageFlipMode) {
                 viewerHeader.find("li[name='openDoublePageFlipViewMenuItem']").hide();
 
                 if (!settings.supportTextSelection) {
@@ -479,7 +479,7 @@
                     search: settings.showSearch ? searchWrapper : null,
                     searchOptions: searchOptions,
                     preloadPagesCount: settings.preloadPagesCount,
-                    docSpacePageFlip: settings.useHtmlBasedEngine || !settings.showPageFlipMode || (settings.viewerStyle == this.viewModes.ScrollMode && !settings.showViewerStyleControl) ? null : viewerBookModeWrapper,
+                    docSpacePageFlip: settings.useHtmlBasedEngine || !settings.enablePageFlipMode || (settings.viewerStyle == this.viewModes.ScrollMode && !settings.showViewerStyleControl) ? null : viewerBookModeWrapper,
                     //layout: settings.viewerStyle,
                     usePageNumberInUrlHash: false,
                     selectionContent: selectionContent,
@@ -1006,7 +1006,6 @@
         },
 
         _downloadDocument: function () {
-            this.element.trigger("onGDViewerDownloadButtonClick");
             this.element.trigger("downloadButtonClick.groupdocs");
             var downloadUrl = this.downloadUrl;
 

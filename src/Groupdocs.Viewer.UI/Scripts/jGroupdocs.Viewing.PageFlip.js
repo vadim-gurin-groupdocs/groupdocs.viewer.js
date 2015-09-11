@@ -61,7 +61,7 @@
 '    </div>' +
 
 '    <div style="overflow: hidden;">' +
-'        <div class="pages_container_flip sample-docs">' +
+'        <div class="pages_container_flip page_flip_layout">' +
 '            <!-- ko foreach: pages -->' +
 '                <div class="doc-page" data-bind="attr: {id: $root.pagePrefix + number}, style: { width: $root.pageWidth() + \'px\', height: $root.pageHeight() + \'px\' }">' +
 '                     <div>' +

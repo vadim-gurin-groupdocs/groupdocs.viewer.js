@@ -20,7 +20,7 @@
             if (node.id > 0 && node.type === 'file') {
                 $(this.fileOpenDialog.fileExplorer).trigger('fileSelected', node);
             }
-        },
+        }
     });
 
 })(jQuery);
