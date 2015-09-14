@@ -93,7 +93,6 @@
         initialZoom: 100,
         zoom: null,
         scale: null,
-        docWasLoadedInViewer: false,
         scrollPosition: [0, 0],
         inprogress: null,
         pages: null,
@@ -329,49 +328,12 @@
                 this.reInitSelectable();
             }
 
-            if (!this.docWasLoadedInViewer && (this.usePageNumberInUrlHash === undefined || this.usePageNumberInUrlHash == true)) {
-                var firstPageLocation = location.pathname;
-                if (location.hash.substring(1, this.hashPagePrefix.length + 1) != this.hashPagePrefix)
-                    this.setPage(1);
-
-                Sammy(function () {
-                    this.get(/\#page(.*)/i, openPath);
-                    this.get(firstPageLocation, openFirstPage);
-
-                    function openFirstPage() {
-                        if (self.pageIndex() != 1)
-                            self.setPage(1);
-                    }
-
-                    function openPath() {
-                        if (!self.changedUrlHash) {
-                            if (this.params.splat.length == 0 || this.params.splat[0].length == 0) {
-                            }
-                            else {
-                                var hashString = this.params.splat[0];
-                                //hashString = hashString.substring(1);
-                                var newPageIndex = Number(hashString);
-                                if (isNaN(newPageIndex))
-                                    newPageIndex = 1;
-                                if (newPageIndex > self.pageCount())
-                                    newPageIndex = self.pageCount();
-                                if (newPageIndex < 1)
-                                    newPageIndex = 1;
-                                self.setPage(newPageIndex);
-                            }
-                        }
-                    }
-                }).run();
-            }
-            else {
-                this.setPage(1);
-            }
+            this.setPage(1);
 
             if (!this.zoomToFitHeight)
                 this.loadImagesForVisiblePages(true);
 
             this.adjustInitialZoom();
-            this.docWasLoadedInViewer = true;
 
             if (this.preloadPagesOnBrowserSide) {
                 var preloadPagesCount = this.preloadPagesCount;

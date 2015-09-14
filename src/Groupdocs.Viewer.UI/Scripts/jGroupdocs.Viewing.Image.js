@@ -159,9 +159,6 @@
                         this.fileId = fileId;
                     this.pageWidth(this.pageImageWidth * (this.initialZoom / 100));
                     this.zoom(this.initialZoom);
-                    if (this.docWasLoadedInViewer)
-                        this.setPageNumerInUrlHash(1);
-
                     this._onDocumentLoadedBeforePdf2Xml(response);
                 }.bind(this),
                 function (error) {
@@ -177,7 +174,7 @@
             else
                 pageWidth = this.pageWidth();
 
-            pageDimension = Math.floor(pageWidth) + "x";
+            pageDimension = Math.floor(pageWidth);
 
             this._model.retrieveImageUrls(this.fileId, imageCount, pageDimension,
                 this.watermarkText, this.watermarkColor, this.watermarkPosition, this.watermarkWidth,

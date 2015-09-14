@@ -110,7 +110,7 @@ namespace Groupdocs.Viewer.UI.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetImageUrls(string path, string dimension, string token, int firstPage = 0, int pageCount = 0,
+        public ActionResult GetImageUrls(string path, int width, int firstPage = 0, int pageCount = 0,
                                          int? quality = null, bool usePdf = true,
                                          string watermarkText = null, int? watermarkColor = null,
                                          WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
@@ -121,7 +121,7 @@ namespace Groupdocs.Viewer.UI.Controllers
                                          string instanceIdToken = null, string locale = null)
         {
             object data = _coreHandler.GetImageUrls(this,
-                                                   path, dimension, firstPage, pageCount,
+                                                   path, width, firstPage, pageCount,
                                                    quality, usePdf,
                                                    watermarkText, watermarkColor,
                                                    watermarkPosition, watermarkWidth,

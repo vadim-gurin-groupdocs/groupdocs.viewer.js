@@ -82,7 +82,7 @@
             this._runServiceAsync(this.applicationPath + this.urlPrefix + '/ViewDocument' + this._urlSuffix, data, successCallback, errorCallback);
         },
     
-        getImageUrlsAsync: function (path, dimension, firstPage, pageCount, quality, usePdf,
+        getImageUrlsAsync: function (path, width, firstPage, pageCount, quality, usePdf,
                                      watermarkText, watermarkColor, watermarkPosition, watermarkFontSize,
                                      ignoreDocumentAbsence,
                                      useHtmlBasedEngine, supportPageRotation,
@@ -90,7 +90,7 @@
                                      successCallback, errorCallback) {
             var data = {
                 path: path,
-                dimension: dimension,
+                width: width,
                 firstPage: firstPage,
                 pageCount: pageCount,
                 quality: quality,

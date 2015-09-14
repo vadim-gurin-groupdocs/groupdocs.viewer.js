@@ -42,7 +42,7 @@ namespace Groupdocs.Viewer.UI.Handlers
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 string path = null;
-                string dimension = null;
+                int width;
                 string token = null;
                 int firstPage = 0;
                 int pageCount = 0;
@@ -66,9 +66,8 @@ namespace Groupdocs.Viewer.UI.Handlers
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
                 Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetParameter(inputParameters, "path", ref path);
-                GetParameter(inputParameters, "dimension", ref dimension);
-                GetParameter(inputParameters, "token", ref token);
+                GetMandatoryParameter(inputParameters, "path", out path);
+                GetMandatoryParameter(inputParameters, "width", out width);
                 GetParameter(inputParameters, "firstPage", ref firstPage);
                 GetParameter(inputParameters, "pageCount", ref pageCount);
                 GetParameter(inputParameters, "quality", ref quality);
@@ -86,7 +85,7 @@ namespace Groupdocs.Viewer.UI.Handlers
                 GetParameter(inputParameters, "locale", ref locale);
 
                 object data = GetImageUrls(_urlsCreator,
-                                                       path, dimension, firstPage, pageCount,
+                                                       path, width, firstPage, pageCount,
                                                        quality, usePdf,
                                                        watermarkText, watermarkColor,
                                                        watermarkPosition ?? WatermarkPosition.Diagonal, watermarkWidth ?? 0,

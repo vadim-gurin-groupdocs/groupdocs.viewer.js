@@ -268,7 +268,7 @@
 
         retrieveImageUrls: function (imageCount) {
             this._model.retrieveImageUrls(this._documentPath,
-                    this._thumbnailWidth.toString() + "x", 0, imageCount,
+                    this._thumbnailWidth, 0, imageCount,
                     function (response) {
                         for (var i = 0; i < imageCount; i++) {
                             this.thumbnails()[i].url(response.data.image_urls[i]);

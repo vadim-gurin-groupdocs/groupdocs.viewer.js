@@ -187,7 +187,6 @@
     </ItemGroup>
     <ItemGroup>
       <DocViewerCssFiles Include="$(TargetCssFolder)DocumentViewer.css" />
-      <DocViewerCssFiles Include="$(TargetCssFolder)turnpage.css" />
       <DocViewerCssFiles Include="$(TargetCssFolder)fixes.css" />
     </ItemGroup>
     <ReadLinesFromFile File="%(DocViewerJsFiles.Identity)">
