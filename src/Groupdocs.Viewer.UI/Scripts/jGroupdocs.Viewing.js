@@ -455,7 +455,6 @@
             
             if (pageIndex !== null) {
                 this.pageIndex(pageIndex);
-                this.setPageNumerInUrlHash(pageIndex);
                 this.triggerEvent('onScrollDocView', { pi: pageIndex, position: st });
                 this.triggerEvent("documentScrolledToPage.groupdocs", [pageIndex]);
             }
@@ -481,7 +480,6 @@
             var end = null;
             var scrollTop = this.documentSpace.scrollTop();
             var pageHeight;
-            var startIndex = null;
             var documentSpaceHeight = this.documentSpace.height();
 
             var selectable = this.getSelectableInstance();
@@ -490,21 +488,11 @@
             var pages = this.pages();
             var pageLocations;
             var pageCount;
-            if (this.useVirtualScrolling)
-                pageCount = pages.length;
-            else {
-                pageLocations = selectable.pageLocations;
-                if (pageLocations.length != pages.length)
-                    return null;
-                pageCount = pageLocations.length;
-            }
+            pageCount = pages.length;
 
             var pageImageTop, pageImageBottom;
             for (var i = 0; i < pageCount; i++) {
-                if (this.useVirtualScrolling)
-                    pageImageTop = pages[i].top();
-                else
-                    pageImageTop = pageLocations[i].y;
+                pageImageTop = pages[i].top();
 
                 pageHeight = pages[i].prop() * this.pageWidth();
 
@@ -583,7 +571,6 @@
             var page = this.pages()[newPageIndex - 1];
             this.makePageVisible(newPageIndex - 1, page);
 
-            this.setPageNumerInUrlHash(newPageIndex);
             this.triggerEvent("documentPageSet.groupdocs", newPageIndex);
         },
 
@@ -639,16 +626,6 @@
 
         openCurrentPage: function () {
             this.setPage(this.pageIndex());
-        },
-
-        setPageNumerInUrlHash: function (pageIndex) {
-            if (this.usePageNumberInUrlHash == true) {
-                if (location.hash != "" || pageIndex > 1) {
-                    this.changedUrlHash = true;
-                    location.hash = this.hashPagePrefix + pageIndex.toString();
-                    this.changedUrlHash = false;
-                }
-            }
         },
 
         isScrollViewerVisible: function () {
@@ -904,54 +881,82 @@
             var width = this.pageWidth();
             var documentHeight = 0;
             var page, proportion, pageHeight;
-            var pageLeft = 0, pageTop = 0;
+            var pageLeft, pageTop;
             var rowHeight = 0;
             var pagesInRow;
+            var scrollbarWidth = 0;
+            var documentSpaceRect = this.documentSpace.get(0).getBoundingClientRect();
+            var documentSpaceWidth = documentSpaceRect.width;
             var layout = this.layout();
-            switch (layout) {
-            case this.Layouts.ScrollMode:
-                var widthWithMargin = width + pageHorizontalMargin;
-                var documentSpaceWidth = this.pagesContainerElement.get(0).getBoundingClientRect().width;
-                pagesInRow = Math.floor(documentSpaceWidth / widthWithMargin);
-                if (pagesInRow == 0)
+            for (var pass = 0; pass <= 1; pass++) {
+                pageLeft = pageHorizontalMargin;
+                pageTop = 0;
+                switch (layout) {
+                case this.Layouts.ScrollMode:
+                    var widthWithMargin = width + pageHorizontalMargin;
+                    var pagesContainerWidth = documentSpaceWidth - scrollbarWidth;
+                    pagesInRow = Math.floor(pagesContainerWidth / widthWithMargin);
+                    if (pagesInRow == 0)
+                        pagesInRow = 1;
+                    break;
+                case this.Layouts.OnePageInRow:
                     pagesInRow = 1;
-                break;
-            case this.Layouts.OnePageInRow:
-                pagesInRow = 1;
-                break;
-            case this.Layouts.TwoPagesInRow:
-            case this.Layouts.CoverThenTwoPagesInRow:
-                pagesInRow = 2;
-                break;
-            }
-
-            var isFirstPageInRow, isLastPageInRow;
-            for (var i = 0; i < pages.length; i++) {
-                page = pages[i];
-                proportion = page.prop();
-                pageHeight = width * proportion;
-                page.left = pageLeft;
-                page.top(pageTop);
-                isFirstPageInRow = (layout != this.Layouts.CoverThenTwoPagesInRow && i % pagesInRow == 0)
-                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 1));
-
-                isLastPageInRow = layout == this.Layouts.OnePageInRow
-                    || (layout == this.Layouts.TwoPagesInRow && i % pagesInRow == 1)
-                    || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 0))
-                    || (layout == this.Layouts.ScrollMode && i % pagesInRow == pagesInRow - 1);
-
-                if (isFirstPageInRow || (!isFirstPageInRow && pageHeight > rowHeight))
-                    rowHeight = pageHeight;
-                documentHeight = pageTop + rowHeight + pageVerticalMargin;
-
-                if (isLastPageInRow) {
-                    pageTop += rowHeight + pageVerticalMargin;
-                    pageLeft = 0;
+                    break;
+                case this.Layouts.TwoPagesInRow:
+                case this.Layouts.CoverThenTwoPagesInRow:
+                    pagesInRow = 2;
+                    break;
                 }
-                else
-                    pageLeft += width + pageHorizontalMargin;
+
+                var isFirstPageInRow, isLastPageInRow;
+                var i;
+                for (i = 0; i < pages.length; i++) {
+                    page = pages[i];
+                    proportion = page.prop();
+                    pageHeight = width * proportion;
+                    page.left = pageLeft;
+                    page.top(pageTop);
+                    isFirstPageInRow = (layout != this.Layouts.CoverThenTwoPagesInRow && i % pagesInRow == 0)
+                        || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 1));
+
+                    isLastPageInRow = layout == this.Layouts.OnePageInRow
+                        || (layout == this.Layouts.TwoPagesInRow && i % pagesInRow == 1)
+                        || (layout == this.Layouts.CoverThenTwoPagesInRow && (i == 0 || i % pagesInRow == 0))
+                        || (layout == this.Layouts.ScrollMode && i % pagesInRow == pagesInRow - 1);
+
+                    if (isFirstPageInRow || (!isFirstPageInRow && pageHeight > rowHeight))
+                        rowHeight = pageHeight;
+                    documentHeight = pageTop + rowHeight + pageVerticalMargin;
+
+                    if (isLastPageInRow) {
+                        pageTop += rowHeight + pageVerticalMargin;
+                        if (layout != this.Layouts.OnePageInRow)
+                            pageLeft = pageHorizontalMargin;
+                    }
+                    else {
+                        if (layout != this.Layouts.OnePageInRow)
+                            pageLeft += width + pageHorizontalMargin;
+                    }
+                }
+                this.documentHeight(documentHeight);
+
+                var isScrollbarPresent = false;
+                if (layout == this.Layouts.OnePageInRow || layout == this.Layouts.ScrollMode) {
+                    isScrollbarPresent = documentHeight > documentSpaceRect.height;
+                    if (isScrollbarPresent)
+                        scrollbarWidth = this.getScrollbarWidth();
+                }
+                if (layout != this.Layouts.ScrollMode || !isScrollbarPresent)
+                    break;
             }
-            this.documentHeight(documentHeight);
+
+            if (layout == this.Layouts.OnePageInRow) {
+                pageLeft = (documentSpaceWidth - width - scrollbarWidth) / 2;
+                for (i = 0; i < pages.length; i++) {
+                    page = pages[i];
+                    page.left = pageLeft;
+                }
+            }
         },
         
         getPageTop: function (initialValue) {

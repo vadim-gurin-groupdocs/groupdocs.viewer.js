@@ -253,7 +253,7 @@
 
         _getPageLocations: function () {
             var pageLocations = null;
-            if (!this.options.bookLayout && this.options.initializeStorageOnly) {
+            if (!this.options.bookLayout) {
                 pageLocations = $.map(this.options.pageLocations,
                         function(page) {
                             return new groupdocs.Point(page.left, page.top());
