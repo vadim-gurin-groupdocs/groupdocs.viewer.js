@@ -7,10 +7,6 @@ namespace Groupdocs.Viewer.UI.Handlers
 {
     public class GetResourceForHtmlHandler : BaseAspNetHandler
     {
-        public GetResourceForHtmlHandler()
-        {
-        }
-
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
         /// web and register it with IIS before being able to use it. For more information

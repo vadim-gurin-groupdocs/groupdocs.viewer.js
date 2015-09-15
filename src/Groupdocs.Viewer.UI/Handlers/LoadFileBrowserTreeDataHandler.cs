@@ -19,10 +19,6 @@ namespace Groupdocs.Viewer.UI.Handlers
         /// see the following link: http://go.microsoft.com/?linkid=8101007
         /// </summary>
 
-        public LoadFileBrowserTreeDataHandler()
-        {
-        }
-
         #region IHttpHandler Members
 
         public override bool IsReusable

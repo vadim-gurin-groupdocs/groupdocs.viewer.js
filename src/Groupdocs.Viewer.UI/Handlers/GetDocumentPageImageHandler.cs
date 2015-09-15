@@ -89,14 +89,6 @@ namespace Groupdocs.Viewer.UI.Handlers
                                                                locale);
                 context.Response.ContentType = "image/jpeg";
                 context.Response.BinaryWrite(imageBytes);
-
-                //TODO: add support of a "Last-Modified" header along with HTTP 304 Not Modified response
-                /*
-                //obtaining and adding the last modification datetime of a file
-                IFileStorage storage = base._viewingService.GetStorage();
-                DateTime lastModificationDateTime = storage.GetFileDateTime(path);
-                context.Response.Cache.SetLastModified(lastModificationDateTime);
-                */
             }
             catch (Exception exception)
             {

@@ -584,8 +584,7 @@
             var pagesLen = pages.length;
             var pageWords = [], pageWordsUnscaled = [];
             var searchWords = [];
-            var searchWordsLen, wordsLen;
-            var startIndex, endIndex, wordId;
+            var searchWordsLen;
             var seachCountItem = 0;
             var startingCharacterInWordNum;
             var searchValueWithAccentedWords;
@@ -638,7 +637,6 @@
                                     rowWord = rowWord.toLowerCase();
                                 }
                                 startingCharacterInWordNum = rowWord.indexOf(searchWord);
-                                //if (rowWords[rowWordIndex].text.toLowerCase() == $.trim(searchWords[searchWordIndex].toLowerCase())) {
                                 if (startingCharacterInWordNum != -1) {
                                     var characterCoordinates = this.options.pdf2XmlWrapper.getRowCharacterCoordinates(pageId, rowId);
                                     var firstWordLeft = rowWords[rowWordIndex].originalRect.left();
@@ -681,6 +679,103 @@
                                     r.setRight(right);
                                     pageWordsUnscaled.push(r);
                                 }
+                            }
+                        }
+                    }
+                    else {
+                        var currentImageWidth = this.options.proportion * this.options.pdf2XmlWrapper.getPageSize().width;
+
+                        var textPosition;
+                        if (useAccentInsensitiveSearch)
+                            textPosition = rowText.search(searchValueWithAccentedWords);
+                        else
+                            textPosition = rowText.indexOf(searchValue);
+                        while (textPosition != -1) {
+                            rowWords = row.words;
+                            if (this.options.searchPartialWords) {
+                                var spaceCountRegex = /\s/g;
+                                var containingSubstring = rowText.substring(0, textPosition);
+                                var initialWords = containingSubstring.match(spaceCountRegex);
+                                var overlappedWords = searchValue.match(spaceCountRegex);
+                                var firstWordNumber = 0, overlappedWordCount = 0;
+                                if (initialWords)
+                                    firstWordNumber = initialWords.length;
+                                if (overlappedWords)
+                                    overlappedWordCount = overlappedWords.length;
+                                var lastWordNumber = firstWordNumber + overlappedWordCount;
+                                var characterCoordinates = this.options.pdf2XmlWrapper.getRowCharacterCoordinates(pageId, rowId);
+                                var firstWordLeft = rowWords[firstWordNumber].originalRect.left();
+                                var lastWordLeft = rowWords[lastWordNumber].originalRect.left();
+
+                                var wordRight = rowWords[lastWordNumber].originalRect.right();
+                                //var wordLength = words[firstWordNumber].text.length;
+                                var rowRight = row.originalRect.right();
+
+                                startingCharacterInWordNum = containingSubstring.length - containingSubstring.lastIndexOf(" ") - 1;
+                                var firstWordStartPosition = 0, lastWordStartPosition = 0;
+
+                                var foundFirstWordStartPosition = false;
+                                for (var charNum = 0; charNum < characterCoordinates.length; charNum++) {
+                                    var characterCoordinate = characterCoordinates[charNum];
+                                    if (!foundFirstWordStartPosition && Math.round(characterCoordinate) >= Math.round(firstWordLeft)) {
+                                        firstWordStartPosition = charNum;
+                                        foundFirstWordStartPosition = true;
+                                    }
+                                    if (Math.round(characterCoordinate) >= Math.round(lastWordLeft)) {
+                                        lastWordStartPosition = charNum;
+                                        break;
+                                    }
+                                }
+
+                                var searchStartPosition = firstWordStartPosition + startingCharacterInWordNum;
+                                if (searchStartPosition < characterCoordinates.length) {
+                                    left = characterCoordinates[searchStartPosition];
+                                }
+                                else
+                                    left = firstWordLeft;
+                                if (left < firstWordLeft || left > wordRight)
+                                    left = firstWordLeft;
+
+                                //var searchEndPosition = searchStartPosition + searchValue.length;
+                                var lastSpacePosition = searchValue.lastIndexOf(" ");
+                                var lastWordOfSearchPhrase = searchValue.substring(lastSpacePosition + 1, searchValue.length);
+                                var searchEndPosition;
+                                if (firstWordNumber == lastWordNumber)
+                                    searchEndPosition = searchStartPosition + searchValue.length;
+                                else
+                                    searchEndPosition = lastWordStartPosition + lastWordOfSearchPhrase.length;
+                                var lastWordMatches = true;
+                                if (searchEndPosition < characterCoordinates.length) {
+                                    var lastWordText = rowWords[lastWordNumber].text.toLowerCase();
+                                    //if (startingCharacterInWordNum + searchValue.length == wordLength)
+                                    if (lastWordText.substring(lastWordText.length - lastWordOfSearchPhrase.length, lastWordText.length) == lastWordOfSearchPhrase)
+                                        right = wordRight;
+                                    else {
+                                        right = characterCoordinates[searchEndPosition];
+                                        lastWordMatches = false;
+                                    }
+                                }
+                                else
+                                    right = rowRight;
+                                if (right < left)
+                                    right = rowRight;
+
+                                if (!treatPhrasesInDoubleQuotesAsExact || !phraseIsInDoubleQuotes || lastWordMatches) {
+                                    r = rowWords[firstWordNumber].rect.clone();
+                                    r.subtract(rowWords[firstWordNumber].pageLocation);
+                                    var scale = currentImageWidth / pages[pageId].originalWidth;
+                                    var scaledLeft = left * scale;
+                                    var scaledRight = right * scale;
+                                    r.setLeft(scaledLeft);
+                                    r.setRight(scaledRight);
+                                    pageWords.push(r);
+
+                                    r = rowWords[firstWordNumber].originalRect.clone();
+                                    r.setLeft(left);
+                                    r.setRight(right);
+                                    pageWordsUnscaled.push(r);
+                                }
+                                textPosition = rowText.indexOf(searchValue, textPosition + searchValue.length);
                             }
                         }
                     }

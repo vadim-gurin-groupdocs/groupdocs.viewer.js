@@ -80,12 +80,6 @@ namespace Groupdocs.Viewer.UI.Handlers
             string requestMethod = context.Request.Headers["Access-Control-Request-Method"];
 
             context.Response.AppendHeader("Access-Control-Allow-Methods", "GET,POST");
-
-            //We allow any custom headers
-            //string requestHeaders = context.Request.Headers["Access-Control-Request-Headers"];
-            //if (!String.IsNullOrEmpty(requestHeaders))
-            //    context.Response.AppendHeader("Access-Control-Allow-Headers", requestHeaders);
-            //context.Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Accept-Encoding, Accept-Language, Cache-Control, Content-Length, Pragma, Origin, Authorization");
             context.Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
         }
 

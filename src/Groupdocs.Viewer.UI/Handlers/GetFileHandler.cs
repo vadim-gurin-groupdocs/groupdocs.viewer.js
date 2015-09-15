@@ -10,11 +10,6 @@ namespace Groupdocs.Viewer.UI.Handlers
 {
     public class GetFileHandler : BaseAspNetHandler
     {
-        public GetFileHandler()
-        {
-        }
-
-
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
         /// web and register it with IIS before being able to use it. For more information
