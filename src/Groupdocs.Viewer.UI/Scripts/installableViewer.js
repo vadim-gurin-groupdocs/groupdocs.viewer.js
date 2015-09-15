@@ -743,7 +743,6 @@
                 dialogElementPdf.removeClass("min");
             });
 
-
             this.resizeHandler();
         },
 
@@ -776,6 +775,7 @@
         documentLoadCompleteHandler: function (data, groupdocsViewerWrapper, viewerMainWrapper) {
             var self = this;
 
+            this._setFitWidthAndHeightValues();
             this.downloadUrl = data.url;
             this.pdfDownloadUrl = data.pdfDownloadUrl;
             this.pdfPrintUrl = data.pdfPrintUrl;

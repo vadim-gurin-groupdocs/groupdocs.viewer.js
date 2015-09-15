@@ -210,7 +210,7 @@
                 nearestSmallerValue = null, nearestSmallerValueIndex = null;
             var current, currentElement;
 
-            for (i = startIndex; i >= 0; i--) {
+            for (var i = startIndex; i >= 0; i--) {
                 currentElement = zooms[i];
                 current = currentElement.value;
                 if (!currentElement.fitWidth && !currentElement.fitHeight) {

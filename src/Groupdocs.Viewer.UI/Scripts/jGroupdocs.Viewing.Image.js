@@ -201,7 +201,7 @@
             this.unscaledPageWidth = Number(pageSize.width);
             this.unscaledPageHeight = Number(pageSize.height);
 
-            this.heightWidthRatio = parseFloat(pageSize.Height / pageSize.Width);
+            this.heightWidthRatio = parseFloat(pageSize.height / pageSize.width);
             this.pageHeight(Math.round(this.pageImageWidth * this.heightWidthRatio * (this.initialZoom / 100)));
 
             this.triggerEvent('_onProcessPages', response);
