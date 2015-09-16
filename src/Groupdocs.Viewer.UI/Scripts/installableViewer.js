@@ -778,7 +778,7 @@
             this.downloadUrl = data.url;
             this.pdfDownloadUrl = data.pdfDownloadUrl;
             this.pdfPrintUrl = data.pdfPrintUrl;
-            this.documentPath = data.path;
+            this.documentPath = (data.path == null ? data.guid : data.path);
             var downloadButton = groupdocsViewerWrapper.find(".btn_download");
             var printButton = groupdocsViewerWrapper.find(".print_button");
             downloadButton.unbind();
@@ -1368,14 +1368,14 @@
                 watermarkText, watermarkColor,
                 watermarkPosition, watermarkWidth,
                 ignoreDocumentAbsence,
+                instanceIdToken,
+                locale,
                 function (response) {
                     callback.apply(this, [response.data]);
                 },
                 function (error) {
                     errorCallback.apply(this, [error]);
-                },
-                instanceIdToken,
-                locale
+                }
             );
         }
     });

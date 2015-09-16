@@ -116,8 +116,8 @@
         getPrintableHtml: function (path, useHtmlBasedEngine, fileDisplayName,
                                     watermarkText, watermarkColor, watermarkPosition, watermarkWidth,
                                     ignoreDocumentAbsence,
-                                    successCallback, errorCallback,
-                                    instanceIdToken, locale) {
+                                    instanceIdToken, locale,
+                                    successCallback, errorCallback) {
             var data = {
                 path: path, useHtmlBasedEngine: useHtmlBasedEngine, displayName: fileDisplayName,
                 watermarkText: watermarkText, watermarkColor: watermarkColor,
