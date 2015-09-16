@@ -119,11 +119,12 @@
 
         initCanvasOffset: function () {
             this.parentElement = this.options.docSpace.parent();
-            var offset = this.element.parent().offset();
-            var offsetX = offset.left, offsetY = offset.top;
-
+            var offset = this.options.docSpace.offset();
+            var offsetX, offsetY = this.parentElement.offset().top;
             if (this.options.bookLayout)
-                offsetY = this.parentElement.offset().top;
+                offsetX = offset.left;
+            else
+                offsetX = this.options.documentSpaceLeft;
             this._canvasOffset = new groupdocs.Point(offsetX, offsetY);
         },
 
@@ -527,7 +528,7 @@
             this.highlightSearchPaneContainer = containers;
         },
 
-        reInitPages: function (scaleFactor, visiblePagesNumbers, scrollPosition, pageHeight, pagesCount, pageLocations) {
+        reInitPages: function (scaleFactor, visiblePagesNumbers, scrollPosition, pageHeight, pagesCount, pageLocations, documentSpaceLeft) {
             this._initialized = false;
 
             this.options.startNumbers = visiblePagesNumbers;
@@ -535,6 +536,7 @@
             this.options.pageHeight = pageHeight;
             this.options.pageLocations = pageLocations;
             this.options.pagesCount = pagesCount;
+            this.options.documentSpaceLeft = documentSpaceLeft;
 
             this.initCanvasOffset();
             this.initStorage();

@@ -321,7 +321,8 @@
                     preventTouchEventsBubbling: this.preventTouchEventsBubbling,
                     highlightColor: this.options.highlightColor,
                     useVirtualScrolling: this.useVirtualScrolling,
-                    pageLocations: this.pages()
+                    pageLocations: this.pages(),
+                    documentSpaceLeft: this.viewerLeft
                 });
             }
             else {
@@ -615,7 +616,8 @@
             var selectable = this.getSelectableInstance();
             if (selectable != null) {
                 selectable.reInitPages(this.scale(), visiblePagesNumbers,
-                    this.scrollPosition, this.getPageHeight(), this.pageCount(), this.pages());
+                    this.scrollPosition, this.getPageHeight(), this.pageCount(), this.pages(),
+                    this.viewerLeft);
             }
         },
 
@@ -648,6 +650,7 @@
             else
                 this.viewerLeft = viewerLeft;
             this.documentSpace.width(parentWidth - viewerLeft);
+            this.calculatePagePositions();
             this.reInitSelectable();
             this.loadImagesForVisiblePages();
         },

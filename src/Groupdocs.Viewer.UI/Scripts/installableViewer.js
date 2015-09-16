@@ -29,7 +29,6 @@
                 widgetInstance: this
             });
             this.options.bindingProvider = new window.groupdocs.bindingProvider();
-
             this._viewModel = this.getViewModel();
         },
 

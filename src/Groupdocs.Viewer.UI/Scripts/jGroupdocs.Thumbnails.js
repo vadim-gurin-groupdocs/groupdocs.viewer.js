@@ -169,7 +169,7 @@
                 var resultWidth = thumbnailStripeWidth;
                 if (this.openThumbnails())
                     resultWidth += thumbnailContainerWidth + borderWidth;
-                this.rootElement.trigger("onResizeThumbnails", resultWidth);//this.thumbnailPanelElement.width()
+                this.rootElement.trigger("onResizeThumbnails", resultWidth);
             }
         },
 
