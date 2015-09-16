@@ -129,11 +129,12 @@
 
         _mouseInit: function() {
             var that = this;
-            this.document = $(this.element.style ?
+            var domElement = this.element.get(0);
+            this.document = $(domElement.style ?
 				// element within the document
-				this.element.ownerDocument :
+				domElement.ownerDocument :
 				// element is window or document
-				this.element.document || this.element);
+				domElement.document || domElement);
 
             this.element
                 .bind("mousedown." + this.widgetName, function(event) {
