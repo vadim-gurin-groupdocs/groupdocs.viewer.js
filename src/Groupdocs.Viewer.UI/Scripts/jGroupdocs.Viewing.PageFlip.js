@@ -184,11 +184,6 @@
             } .bind(this));
         },
 
-        _onError: function (error) {
-            this.inprogress(false);
-            jerror(error.Reason || "The document couldn't be loaded...");
-        },
-
         _onDocumentLoaded: function (response, pdf2XmlWrapper) {
             this.fileId = response.guid;
             this.docGuid = response.guid;

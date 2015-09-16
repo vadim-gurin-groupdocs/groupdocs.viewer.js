@@ -134,21 +134,6 @@
                     }
                     else
                         return "auto";
-                    
-                    //if (self.useTabsForPages()) {
-                    //    var width;
-                    //    if (self.supportPageRotation && self.useTabsForPages() && self.pages) {
-                    //        var page = this.pages()[0];
-                    //        if (page && page.rotation() % 180 > 0)
-                    //            width = this.pageWidth() * page.prop();
-                    //    }
-                    //    else
-                    //        width = this.pageWidth();
-
-                    //    return width / self.zoom() * 100.0 + "px";
-                    //}
-                    //else
-                    //    return "auto";
                 });
                 
             window.groupdocs.documentComponentViewModel.prototype._init.call(this, options);
@@ -276,13 +261,6 @@
             var styleElement = $("<style type='text/css'>" + css + "</style>");
             this.pageCssElement = this.pageCssElement.add(styleElement);
             styleElement.appendTo("head");
-        },
-
-        _onError: function (error) {
-            this.inprogress(false);
-            var errorFunction = window.jerror || (window.jGDError && window.jGDError[this.instanceId]);
-            if (errorFunction)
-                errorFunction(error.Reason || "The document couldn't be loaded...");
         },
 
         initPagesAfterDocumentLoad: function (response) {

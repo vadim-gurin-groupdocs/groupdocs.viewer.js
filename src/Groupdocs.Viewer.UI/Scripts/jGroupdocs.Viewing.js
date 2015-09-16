@@ -239,7 +239,7 @@
         
         _onError: function (error) {
             this.inprogress(false);
-            var errorFunction = window.jerror || (window.jGDError && window.jGDError[this.instanceId]);
+            var errorFunction = (window.jGDError && window.jGDError[this.instanceId]);
             if (errorFunction)
                 errorFunction(error.Reason || "The document couldn't be loaded...");
         },
@@ -345,8 +345,7 @@
             }
 
             this.triggerEvent('onScrollDocView', { pi: 1, direction: "up", position: 0 });
-            this.triggerEvent("onDocumentLoadComplete", [response, this._pdf2XmlWrapper]);
-            this.triggerEvent("documentLoadCompleted.groupdocs");
+            this.triggerEvent("documentLoadCompleted.groupdocs", [response, this._pdf2XmlWrapper]);
         },
 
         setContainerWidth: function (containerWidth) {
@@ -414,7 +413,6 @@
                 return;
             //var direction;
             var pageIndex = null;
-            var panelHeight = this.documentSpace.height();
             var st = $(e.target).scrollTop();
 
             this.triggerEvent('onBeforeScrollDocView', { position: st });

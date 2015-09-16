@@ -197,7 +197,7 @@
                     searchViewModel.documentPageSetHandler();
             });
 
-            docViewer.bind('onDocumentLoadComplete', function (e, data, pdf2XmlWrapper) {
+            docViewer.bind('documentLoadCompleted.groupdocs', function (e, data, pdf2XmlWrapper) {
                 if (docViewerPageFlipViewModel)
                     docViewerPageFlipViewModel._onDocumentLoaded(data, pdf2XmlWrapper);
 

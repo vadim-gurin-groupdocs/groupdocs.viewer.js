@@ -640,7 +640,7 @@
             }
 
             $("<style>" + styleForSettings + "</style>").appendTo("head");
-            docViewerJquery.bind('onDocumentLoadComplete', function (e, data) {
+            docViewerJquery.bind('documentLoadCompleted.groupdocs', function (e, data) {
                 self.documentLoadCompleteHandler(data, groupdocsViewerWrapper, viewerMainWrapper);
             });
 
