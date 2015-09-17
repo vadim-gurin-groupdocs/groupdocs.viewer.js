@@ -114,6 +114,10 @@
       <Link>Client\Images\sprites.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\GroupdocsViewer.all.min.js">
+      <Link>Client\Scripts\GroupdocsViewer.all.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\installableViewer.js">
       <Link>Client\Scripts\installableViewer.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

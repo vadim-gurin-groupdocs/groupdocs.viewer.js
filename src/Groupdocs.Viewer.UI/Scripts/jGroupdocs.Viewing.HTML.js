@@ -402,11 +402,12 @@
                 }
                 this.activeTab(0);
                 this.documentSpace.css("background-color", "white");
-                if (this.tabs().length > 0)
-                    this.documentSpace.addClass("doc_viewer_tabs");
-                else
-                    this.documentSpace.removeClass("doc_viewer_tabs");
             }
+
+            if (this.useTabsForPages() && this.tabs().length > 0)
+                this.documentSpace.addClass("doc_viewer_tabs");
+            else
+                this.documentSpace.removeClass("doc_viewer_tabs");
 
             var pageElement = htmlPageContents.children("div,table,img");
             var pageElementWidth;
