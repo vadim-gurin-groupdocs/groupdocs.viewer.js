@@ -142,6 +142,10 @@
       <Link>Client\Scripts\jGroupdocs.MVVMProvider.Angular.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.MVVMProvider.js">
+      <Link>Client\Scripts\jGroupdocs.MVVMProvider.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\Groupdocs.Viewer.UI\Scripts\jGroupdocs.MVVMProvider.Knockout.js">
       <Link>Client\Scripts\jGroupdocs.MVVMProvider.Knockout.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

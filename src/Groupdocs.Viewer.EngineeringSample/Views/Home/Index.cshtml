@@ -14,8 +14,8 @@
 	        //filePath: "Deutschland201207Arbeit.pdf",
 	        //filePath: "Налоговый кодекс Республики Беларусь - общая часть.doc" ,
 	        //filePath: "Excel\\excel.xls",
-	        //filePath: "Excel\\excel-examples.xls",
-	        filePath: "HTML\\HTML Version.htm",
+	        filePath: "Excel\\excel-examples.xls",
+	        //filePath: "HTML\\HTML Version.htm",
 	        showHeader: true,
 	        showFolderBrowser: true,
 	        showThumbnails: true,
@@ -24,7 +24,7 @@
             showSearch: true,
             showPaging: true,
             useInnerThumbnails: true,
-            useHtmlBasedEngine: false,
+            useHtmlBasedEngine: true,
             useHtmlThumbnails: false,
             supportTextSelection: true,
             useVirtualScrolling: false,
@@ -35,7 +35,8 @@
             //watermarkPosition: "TopCenter",
             //watermarkPosition: "BottomCenter",
             watermarkWidth: 50,
-	        enablePageFlipMode: false
+            enablePageFlipMode: false,
+            bindingProvider: "angularJS"
 	        //thumbnailsContainerWidth: 100
         });
 

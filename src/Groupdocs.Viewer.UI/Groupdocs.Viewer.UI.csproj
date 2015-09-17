@@ -84,6 +84,7 @@
     <Content Include="Images\mainbg.png" />
     <Content Include="Images\spinner.gif" />
     <Content Include="Images\sprites.png" />
+    <Content Include="Scripts\jGroupdocs.MVVMProvider.js" />
     <Content Include="Scripts\jGroupdocs.Viewing.PageFlip.js" />
     <Content Include="Scripts\jGroupdocs.Viewing.HTML.js" />
     <Content Include="Scripts\jGroupdocs.Viewing.Image.js" />
@@ -135,15 +136,13 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>-->
-  
   <Target Name="AfterBuild">
-  	<CallTarget Targets="CreateMinJS" />
+    <CallTarget Targets="CreateMinJS" />
   </Target>
-  
   <PropertyGroup>
     <TargetScriptsFolder>$(ProjectDir)Scripts\</TargetScriptsFolder>
     <TargetCssFolder>$(ProjectDir)CSS\</TargetCssFolder>
-    <TargetBinFolder>$(OutDir)</TargetBinFolder>    
+    <TargetBinFolder>$(OutDir)</TargetBinFolder>
   </PropertyGroup>
   <Target Name="CreateMinJS">
     <Message Text="CreateMinJS target" />
@@ -155,35 +154,31 @@
     <ItemGroup>
       <DocViewerJsFiles Include="$(TargetScriptsFolder)libs\JsInject.min.js" />
       <DocViewerJsFiles Include="$(TargetScriptsFolder)libs\rx.js" />
-
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)plugins\rx.jquery.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)plugins\scroll-startstop.events.jquery.js" />
-			
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.StringExtensions.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.WidgetFactory.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.ViewerServerExchange.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.ViewerEventBus.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)installableViewer.js" />
-			
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.InitJsInject.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.MVVMProvider.Knockout.js" />
-			
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)libs\date.format.min.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.FileOpenDialog.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.fileOpenDialogViewModel.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Explorer.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Navigation.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Thumbnails.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Zooming.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Search.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Geometry.js" />
-			
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.PdfToJavaScriptWrapper.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Selectable.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.HTML.js" />
-			<DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.Image.js" />
-			
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)plugins\rx.jquery.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)plugins\scroll-startstop.events.jquery.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.StringExtensions.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.WidgetFactory.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.ViewerServerExchange.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.ViewerEventBus.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)installableViewer.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.InitJsInject.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.MVVMProvider.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.MVVMProvider.Angular.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.MVVMProvider.Knockout.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)libs\date.format.min.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.FileOpenDialog.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.fileOpenDialogViewModel.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Explorer.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Navigation.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Thumbnails.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Zooming.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Search.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Geometry.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.PdfToJavaScriptWrapper.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Selectable.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.HTML.js" />
+      <DocViewerJsFiles Include="$(TargetScriptsFolder)jGroupdocs.Viewing.Image.js" />
     </ItemGroup>
     <ItemGroup>
       <DocViewerCssFiles Include="$(TargetCssFolder)DocumentViewer.css" />
@@ -192,7 +187,6 @@
     <ReadLinesFromFile File="%(DocViewerJsFiles.Identity)">
       <Output TaskParameter="Lines" ItemName="jsLines" />
     </ReadLinesFromFile>
-    
     <WriteLinesToFile File="Scripts\GroupdocsViewer.all.js" Lines="@(JsLines)" Overwrite="true" />
     <ReadLinesFromFile File="%(DocViewerCssFiles.Identity)">
       <Output TaskParameter="Lines" ItemName="cssLines" />
@@ -209,9 +203,7 @@
       <CSS Include="CSS\GroupdocsViewer.all.css" />
     </ItemGroup>
     <AjaxMin JsSourceFiles="@(JS)" JsSourceExtensionPattern="\.js$" JsTargetExtension=".min.js" CssSourceFiles="@(CSS)" CssSourceExtensionPattern="\.css$" CssTargetExtension=".min.css" />
-    <AjaxMin JsSourceFiles="Scripts\installableViewer.js" JsSourceExtensionPattern="\.js$" JsTargetExtension=".min.js" />
     <Delete Files="Scripts\GroupdocsViewer.all.js" />
     <Delete Files="CSS\GroupdocsViewer.all.css" />
   </Target>
-  
 </Project>

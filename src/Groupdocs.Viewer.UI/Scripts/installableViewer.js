@@ -19,7 +19,8 @@
             enablePageFlipMode: false,
             embedImagesIntoHtmlForWordFiles: false,
             instanceIdToken: null,
-            enableStandardErrorHandling: true
+            enableStandardErrorHandling: true,
+            bindingProvider: "knockoutJS"
         },
 
         _create: function () {
@@ -28,6 +29,7 @@
                 applicationPath: window.groupdocs.viewer.applicationPath,
                 widgetInstance: this
             });
+            window.groupdocs.bindingProvider.prototype.setCurrentProvider(this.options.bindingProvider);
             this.options.bindingProvider = new window.groupdocs.bindingProvider();
             this._viewModel = this.getViewModel();
         },

@@ -1,20 +1,19 @@
-﻿(function ($) {
+﻿(function($) {
     "use strict";
 
-    if (!window.groupdocs)
-        window.groupdocs = {};
-
-    window.groupdocs.bindingProvider = function () {
+    var angularJSProvider = function() {
         this.create();
     };
 
-    $.extend(window.groupdocs.bindingProvider.prototype, {
+    window.groupdocs.bindingProvider.prototype.registerProvider("angularJS", angularJSProvider);
+
+    $.extend(angularJSProvider.prototype, {
         scope: null,
         areDirectivesCreated: false,
 
         create: function () {
-            if (!window.groupdocs.bindingProvider.prototype.areDirectivesCreated) {
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsViewingScroll", function() {
+            if (!angularJSProvider.prototype.areDirectivesCreated) {
+                this.$compileProvider.directive("ngGroupdocsViewingScroll", function () {
                     return {
                         restrict: "A",
                         link: function(scope, elem, attributes, controller) {
@@ -32,7 +31,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsScroll", function () {
+                this.$compileProvider.directive("ngGroupdocsScroll", function () {
                     return {
                         restrict: "A",
                         link: function (scope, elem, attributes, controller) {
@@ -44,7 +43,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchInput", function() {
+                this.$compileProvider.directive("ngGroupdocsSearchInput", function() {
                     return {
                         restrict: "A",
                         link: function (scope, elem, attributes, controller) {
@@ -58,7 +57,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsHtml", function() {
+                this.$compileProvider.directive("ngGroupdocsHtml", function() {
                     return {
                         restrict: "A",
                         link: function (scope, elem, attributes, controller) {
@@ -76,7 +75,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsSearchText", function() {
+                this.$compileProvider.directive("ngGroupdocsSearchText", function() {
                     return {
                         restrict: "A",
                         link: function (scope, element, attributes, controller) {
@@ -95,7 +94,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsWatermarkTransform", function() {
+                this.$compileProvider.directive("ngGroupdocsWatermarkTransform", function() {
                     return {
                         restrict: "A",
                         compile: function compile(tElement, tAttrs, transclude) {
@@ -117,7 +116,7 @@
                     }
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive('ngGroupdocsViewBox', function() {
+                this.$compileProvider.directive('ngGroupdocsViewBox', function() {
                     return {
                         link: function (scope, element, attributes, controller) {
                             attributes.$observe('ngGroupdocsViewBox', function(value) {
@@ -127,7 +126,7 @@
                     };
                 });
 
-                window.groupdocs.bindingProvider.prototype.$compileProvider.directive("ngGroupdocsVisible", function () {
+                this.$compileProvider.directive("ngGroupdocsVisible", function () {
                     return {
                         restrict: "A",
                         link: function (scope, element, attributes, controller) {
@@ -142,8 +141,8 @@
                         }
                     }
                 });
-            
-                window.groupdocs.bindingProvider.prototype.areDirectivesCreated = true;
+
+                angularJSProvider.prototype.areDirectivesCreated = true;
             }
         },
 
@@ -213,10 +212,10 @@
 
         applyBindings: function (viewModel, element) {
             var self = this;
-            var scope = window.groupdocs.bindingProvider.prototype.$rootScope.$new(true);
+            var scope = this.$rootScope.$new(true);
             scope.viewModel = viewModel;
             self.scope = scope;
-            var compiled = window.groupdocs.bindingProvider.prototype.$compile(element);
+            var compiled = this.$compile(element);
             compiled(scope);
             scope.$digest();
         },
@@ -570,6 +569,12 @@
                 result.rootElement = root;
                 return result;
             }
+        },
+
+        initAngularMethods: function (compileProvider, rootScope, compile) {
+            angularJSProvider.prototype.$compileProvider = compileProvider;
+            angularJSProvider.prototype.$rootScope = rootScope;
+            angularJSProvider.prototype.$compile = compile;
         }
     });
 

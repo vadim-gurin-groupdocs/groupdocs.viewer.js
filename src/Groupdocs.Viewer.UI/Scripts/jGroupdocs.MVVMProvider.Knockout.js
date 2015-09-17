@@ -4,15 +4,17 @@
     if (!window.groupdocs)
         window.groupdocs = {};
 
-    window.groupdocs.bindingProvider = function () {
+    var knockoutJSProvider = function () {
         this.create();
     };
 
-    $.extend(window.groupdocs.bindingProvider.prototype, {
+    window.groupdocs.bindingProvider.prototype.registerProvider("knockoutJS", knockoutJSProvider);
+
+    $.extend(knockoutJSProvider.prototype, {
         areBindingsCreated: false,
 
         create: function () {
-            if (!window.groupdocs.bindingProvider.prototype.areBindingsCreated) {
+            if (!knockoutJSProvider.prototype.areBindingsCreated) {
                 ko.bindingHandlers.sortableArray = {
                     init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
                         var thumbnails = valueAccessor();
@@ -90,7 +92,7 @@
                     };
                 }
 
-                window.groupdocs.bindingProvider.prototype.areBindingsCreated = true;
+                knockoutJSProvider.prototype.areBindingsCreated = true;
             }
         },
 
