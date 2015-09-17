@@ -20,7 +20,7 @@
 
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/knockout-3.3.0.debug.js")"></script>
     
-    @*<script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/JsInject.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/JsInject.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/rx.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/plugins/rx.jquery.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/plugins/scroll-startstop.events.jquery.js")"></script>
@@ -52,10 +52,9 @@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.HTML.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.Image.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.PageFlip.js")"></script>*@
 
     @* Minified scripts *@
-    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/GroupdocsViewer.all.min.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/GroupdocsViewer.all.min.js")"></script>*@
 
     @* Angular JS code initialization *@
     <script type="text/javascript">
@@ -82,6 +81,7 @@
 
 
     @* Page flip mode support. This block can be removed if the page flip mode is not needed. *@
+    <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/jGroupdocs.Viewing.PageFlip.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/turn.min.js")"></script>
     @* Page flip mode support for IE8 (no CSS transforms).*@
     <script type="text/javascript" src="@Url.Content("~/Temp/Client/Scripts/libs/modernizr.2.6.2.Transform2d.min.js")"></script>

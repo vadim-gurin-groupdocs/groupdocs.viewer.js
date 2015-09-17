@@ -221,7 +221,83 @@
                     docViewerId: settings.docViewerId,
                     showThumbnails: settings.showThumbnails
                 }
-                this.bindingProvider.createHtml("initializationComponent", this.element, htmlOptions);
+
+                var controlHtml = '<div dir="ltr" class="groupdocs_viewer_wrapper grpdx ' + htmlOptions.classWithNumber + '">' +
+                    '<div class="viewer_header header_sidescroll" ' + htmlOptions.headerStyle + '>' +
+                    '   <div class="viewer_header_wrapper">' +
+                    '      <a class="btnOpen new_head_tools_btn h_t_i_browser" data-tooltip="Open File" data-localize-tooltip="OpenFile"></a>' +
+                    '      <div name="printAndDownloadToolbar" class="new_head_tools_wrapper left">' +
+                    '          <a class="new_head_tools_btn h_t_i_download btn_download" data-tooltip="Download" data-localize-tooltip="Download"></a>' +
+                    '          <a class="new_head_tools_btn h_t_i_print print_button" data-tooltip="Print" data-localize-tooltip="Print"></a>' +
+                    '      </div>' +
+                    '      <div class="navigation-bar left' + (htmlOptions.browserIsIE8 ? " ie8" : "") + '">' +
+                    '      </div>' +
+                    '      <div class="new_head_tools_wrapper zoom_wrappper">' +
+                    '      </div>' +
+                    '      <div class="new_head_tools_dropdown_wrapper viewTypeMenu">' +
+                    '		</div>' +
+
+                    '      <div name="search_wrapper" class="new_head_tools_wrapper">' +
+                    '      </div>' +
+
+                    (htmlOptions.supportPageRotation ?
+                    '<div class="new_head_tools_wrapper">' +
+                    '      <a name="rotateClockwise" class="h_t_i_rotatecl new_head_tools_btn" data-tooltip="Rotate Clockwise" data-localize-tooltip="RotateClockwise"></a>' +
+                    '      <a name="rotateCounterClockwise" class="h_t_i_rotatecon new_head_tools_btn" data-tooltip="Rotate Counter-Clockwise" data-localize-tooltip="RotateCounterClockwise"></a>' +
+                    '</div>'
+                    : "") +
+                    '   </div>' +
+                    '</div>' +
+                    '<div class="fileOpenDialogWrapper" style="display: none"></div>' +
+                    '<div class="viewer_mainwrapper ' + htmlOptions.browserDependentCssClass + '">' +
+                    '   <div id=' + htmlOptions.docViewerId + ' class="doc_viewer">' +
+                    '   </div>' +
+                    '   <div class="doc_viewer_wrapper_page_flip" style="overflow: auto; top: -50000px; position: absolute;height: 100%">' +
+                    '   </div>' +
+                    (htmlOptions.showThumbnails ? '   <a class="thumbs_btn" href="#"></a>' : '') +
+                    '</div>' +
+                    '<div name="jGDerror" class="modal_dialog_wrapper jerrorwrapper">' +
+                    '   <div class="modal_dialog_overlay">' +
+                    '       &nbsp;' +
+                    '   </div>' +
+                    '   <div class="modal_dialog_content_wrapper">' +
+                    '       <div class="modal_dialog_header">' +
+                    '          Error' +
+                    '       </div>' +
+                    '       <div class="modal_dialog_content">' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>' +
+
+                    '<div name="messageDialog" class="modal_dialog_content_wrapper modal_progressbar" style="display:none">' +
+                    '   <a name="minimizeButton" class="icon_minimize" href="#">&ndash;</a>' +
+                    '   <a name="maximizeButton" class="icon_maximize" href="#">+</a>' +
+                    '   <div class="modal_dialog_header">' +
+                    '      <span name="alwaysVisibleTitle">Printing </span>' +
+                    '      <span name="visibleWhenMinimizedTitle" class="percent">0%</span>' +
+                    '   </div>' +
+                    '   <div class="modal_dialog_content">' +
+                    '      <p name="message">Preparing page </p>' +
+                    '      <div class="progressbar">' +
+                    '      <div style="width: 50%" class="progress"></div></div>' +
+                    '   </div>' +
+                    '</div>' +
+
+                    '<div name="messageDialogPdf" class="modal_dialog_content_wrapper modal_progressbar" style="display:none">' +
+                    '   <a name="minimizeButtonPdf" class="icon_minimize" href="#">&ndash;</a>' +
+                    '   <a name="maximizeButtonPdf" class="icon_maximize" href="#">+</a>' +
+                    '   <div class="modal_dialog_header">' +
+                    '      <span name="alwaysVisibleTitlePdf">Printing </span>' +
+                    '   </div>' +
+                    '   <div class="modal_dialog_content">' +
+                    '      <p name="messagePdf">Preparing page </p>' +
+                    '   </div>' +
+                    '</div>' +
+                '</div>';
+
+                $(controlHtml).appendTo(container);
+                var viewTypeMenuElement = container.find(".groupdocs_viewer_wrapper .viewer_header_wrapper > .viewTypeMenu");
+                this.bindingProvider.createHtml("initializationComponent", viewTypeMenuElement, htmlOptions);
             }
 
             this.groupdocsViewerWrapper = groupdocsViewerWrapper = container.find(".groupdocs_viewer_wrapper");
