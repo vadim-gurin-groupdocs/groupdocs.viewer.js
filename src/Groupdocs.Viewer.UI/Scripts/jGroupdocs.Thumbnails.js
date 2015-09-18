@@ -124,6 +124,7 @@
             this.busy = this.bindingProvider.getObservable(true);
             this._thumbnailHeight = this.bindingProvider.getObservable(201);
             this.useInnerThumbnails = options.useInnerThumbnails;
+            this.useHtmlThumbnails = options.useInnerThumbnails;
             this.openThumbnails = this.bindingProvider.getObservable(options.openThumbnails);
             this.element = options.element;
             this.rootElement = options.rootElement;

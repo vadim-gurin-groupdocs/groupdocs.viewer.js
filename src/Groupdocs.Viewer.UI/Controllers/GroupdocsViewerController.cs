@@ -17,17 +17,8 @@ namespace Groupdocs.Viewer.UI.Controllers
         private readonly IApplicationPathFinder _applicationPathFinder;
         private readonly IPrintableHtmlCreator _printableHtmlCreator;
         private readonly IHelper _helper;
-        //private readonly IRootPathFinder _rootPathFinder;
+        private readonly IRootPathFinder _rootPathFinder;
         private readonly ICoreHandler _coreHandler;
-
-        public GroupdocsViewerController()
-        {
-            //_rootPathFinder = new RootPathFinder();
-            _applicationPathFinder = new ApplicationPathFinder();
-            _printableHtmlCreator = new PrintableHtmlCreator();
-            _helper = new Helper();
-            _coreHandler = new CoreHandler();
-        }
 
         public GroupdocsViewerController(IRootPathFinder rootPathFinder,
                                         IApplicationPathFinder applicationPathFinder,
@@ -35,7 +26,7 @@ namespace Groupdocs.Viewer.UI.Controllers
                                         IHelper helper,
                                         ICoreHandler coreHandler)
         {
-            //_rootPathFinder = rootPathFinder;
+            _rootPathFinder = rootPathFinder;
             _applicationPathFinder = applicationPathFinder;
             _printableHtmlCreator = printableHtmlCreator;
             _helper = helper;
@@ -88,9 +79,6 @@ namespace Groupdocs.Viewer.UI.Controllers
                                          string locale = null,
                                          string callback = null)
         {
-            //throw new ArgumentException("test exception");
-            //return CreateJsonOrJsonpResponse(new { success = false, Reason = "test Message test Message test Message" }, callback);
-
             object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
                                            path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
                                            count, width,
@@ -193,30 +181,7 @@ namespace Groupdocs.Viewer.UI.Controllers
             string css = _coreHandler.GetCss(name);
             return Content(css, "text/css");
         }
-
-        //public ActionResult GetEmbeddedImage(string name)
-        //{
-        //    ActionResult result = CheckIfCached();
-        //    if (result != null)
-        //        return result;
-
-        //    byte[] bytes;
-        //    string mimeType;
-        //    _baseHandler.GetEmbeddedImage(name, out bytes, out mimeType);
-        //    return File(bytes, mimeType);
-        //}
-
-        //public ActionResult GetFont(string name)
-        //{
-        //    ActionResult result = CheckIfCached();
-        //    if (result != null)
-        //        return result;
-
-        //    byte[] bytes;
-        //    string mimeType;
-        //    _baseHandler.GetFont(name, out bytes, out mimeType);
-        //    return File(bytes, mimeType);
-        //}
+        
 
         public ActionResult GetFile(string path, bool getPdf = false, string displayName = null,
                                       string watermarkText = null, int? watermarkColor = null,
@@ -287,10 +252,8 @@ namespace Groupdocs.Viewer.UI.Controllers
 
             if (!isSuccessful)
                 return new EmptyResult();
-            //string filename = Path.GetFileName(pdfPath);
             string contentDispositionString = new ContentDisposition { FileName = fileDisplayName, Inline = true }.ToString();
             Response.AddHeader("Content-Disposition", contentDispositionString);
-            //Response.AppendHeader("Content-Disposition", "inline; filename=" + bytesAndFileName.Item2);
             return File(bytes, "application/pdf");
         }
 
