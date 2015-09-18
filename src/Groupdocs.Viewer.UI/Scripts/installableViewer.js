@@ -178,6 +178,8 @@
             var container = this.element;
             this.viewerId = window.groupdocs.viewerId;
             var settings = $.extend({ hostUrl: this.applicationPath, docViewerId: "docViewer" + this.viewerId }, options);
+            if (!settings.useHtmlBasedEngine)
+                settings.useHtmlThumbnails = false;
             this.printImageElements = new Array();
             window.groupdocs.viewerId++;
             var browserIsIE9OrLess = false;

@@ -42,7 +42,6 @@
         }
     });
 
-    // Doc Viewer Model
     var searchModel = function (options) {
         $.extend(this, options);
         this._init();
@@ -53,7 +52,7 @@
         }
     });
 
-    // Doc Viewer View Model
+
     var searchViewModel = function (options) {
         $.extend(this, options);
         this._create(options);
@@ -203,6 +202,7 @@
             }
             else {
                 var areaElement;
+
                 this.highlightAreas.each(function (index) {
                     if (isCurrentHighlightAreaFound && (!self.useHtmlBasedEngine || self.hitsOnAllPagesAreFound)) {
                         if (this === self.currentHighlightArea.get(0)) {
@@ -241,8 +241,12 @@
 
                             closestAreaTopRelativeToBeginning = areaTopRelativeToBeginning;
 
-                            self.minAreaTopRelativeToBeginning = $(self.highlightAreas.get(0)).offset().top;
-                            self.maxAreaTopRelativeToBeginning = $(self.highlightAreas.get(self.highlightAreas.length - 1)).offset().top;
+                            var firstSearchHitOffset = $(self.highlightAreas.get(0)).offset();
+                            var lastSearchHitOffset = $(self.highlightAreas.get(self.highlightAreas.length - 1)).offset();
+                            self.minAreaTopRelativeToBeginning = firstSearchHitOffset.top - pagesContainerTop;
+                            self.maxAreaTopRelativeToBeginning = lastSearchHitOffset.top - pagesContainerTop;
+                            self.minAreaLeftRelativeToBeginning = firstSearchHitOffset.left - pagesContainerLeft;
+                            self.maxAreaLeftRelativeToBeginning = lastSearchHitOffset.left - pagesContainerLeft;
                             return false;
                         }
                         else
@@ -424,7 +428,6 @@
                 }
             }
             else {
-                // startPage = currentHitPageNumber;
                 if (searchForward) {
                     increment = 1;
                     startPage = currentPagesEnd;
@@ -469,7 +472,8 @@
                 return !this.searched || this.nextElementExists(false);
             } else {
                 // Image-based engine
-                var areaCheck = ((this.minAreaTopRelativeToBeginning != null) && (Math.floor(scrollTopWithHighlighted) > Math.ceil(this.minAreaTopRelativeToBeginning)
+                var areaCheck = ((this.minAreaTopRelativeToBeginning != null)
+                    && (Math.floor(scrollTopWithHighlighted) > Math.ceil(this.minAreaTopRelativeToBeginning)
                     || (Math.abs(scrollTopWithHighlighted - this.minAreaTopRelativeToBeginning) < 1 && this.newHighlightedAreaLeftRelative !== null && this.newHighlightedAreaLeftRelative > this.minAreaLeftRelativeToBeginning)));
                 return !this.searched || areaCheck;
             }
@@ -483,7 +487,6 @@
                 if (!this.hitsOnAllPagesAreFound)
                     return true;
 
-                // Get current highlited element index
                 return !this.searched || this.nextElementExists(true);
             } else {
                 // Not HTML engine
