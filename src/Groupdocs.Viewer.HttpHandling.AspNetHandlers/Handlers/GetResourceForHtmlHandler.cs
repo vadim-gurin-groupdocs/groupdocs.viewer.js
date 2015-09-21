@@ -1,9 +1,9 @@
-﻿using Groupdocs.Web.UI;
-using System;
+﻿using System;
 using System.Net;
 using System.Web;
+using Groupdocs.Web.UI;
 
-namespace Groupdocs.Viewer.UI.Handlers
+namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
     public class GetResourceForHtmlHandler : BaseAspNetHandler
     {

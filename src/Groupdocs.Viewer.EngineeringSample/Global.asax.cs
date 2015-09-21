@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers;
+using Groupdocs.Viewer.HttpHandling.AspNetMvc.Core;
+using Groupdocs.Viewer.HttpHandling.Core.Core;
 using Groupdocs.Viewer.UI;
 
 namespace GroupdocsViewer.EngineeringSample
@@ -51,7 +54,7 @@ namespace GroupdocsViewer.EngineeringSample
         protected override Type GetControllerType(RequestContext requestContext, string controllerName)
         {
             if (controllerName == "GroupdocsViewer")
-                return typeof (Groupdocs.Viewer.UI.Controllers.GroupdocsViewerController);
+                return typeof (GroupdocsViewerController);
             return base.GetControllerType(requestContext, controllerName);
         }
     }

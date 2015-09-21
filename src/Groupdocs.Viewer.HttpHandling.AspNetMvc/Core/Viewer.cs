@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Groupdocs.Viewer.UI.DependencyResolution;
+using Groupdocs.Viewer.HttpHandling.AspNetMvc.DependencyResolution;
 using StructureMap;
-using Groupdocs.Web.UI;
-using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Viewer.UI
+namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Core
 {
     /// <summary>
     /// Viewer global settings

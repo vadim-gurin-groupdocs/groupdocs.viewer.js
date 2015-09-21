@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Groupdocs.Viewer.UI
+namespace Groupdocs.Viewer.HttpHandling.Core.Core
 {
     internal class StringProvider
     {

@@ -1,15 +1,15 @@
-﻿using Groupdocs.Viewer.UI.ActionFilters;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
+using Groupdocs.Viewer.HttpHandling.AspNetMvc.ActionFilters;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 
-namespace Groupdocs.Viewer.UI.Controllers
+namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 {
     [AllowCrossDomain]
     public class GroupdocsViewerController : Controller, IUrlsCreator

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Text;
 using System.Web;
-using Groupdocs.Common;
-using Groupdocs.Viewer.UI;
 using Groupdocs.Web.UI;
 
-namespace Groupdocs.Viewer.UI.Handlers
+namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
     public class GetFileHandler : BaseAspNetHandler
     {

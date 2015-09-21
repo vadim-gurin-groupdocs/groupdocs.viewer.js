@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI;
 
-namespace Groupdocs.Viewer.UI.Handlers
+namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
     public class GetImageUrlsHandler : BaseAspNetHandler
     {

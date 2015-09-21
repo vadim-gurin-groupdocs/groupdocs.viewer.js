@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
-using System.Web.Routing;
-using Groupdocs.Web.UI;
 using Groupdocs.Common.InstallableViewer;
+using Groupdocs.Web.UI;
 
-namespace Groupdocs.Viewer.UI
+namespace Groupdocs.Viewer.HttpHandling.Core.Core
 {
     /// <summary>
     /// Viewer global settings
     /// </summary>
-    public static partial class Viewer
+    public static class Viewer
     {
         private static readonly IApplicationPathFinder _applicationPathFinder;
         private static readonly IRootPathFinder _rootPathFinder;
@@ -22,7 +21,7 @@ namespace Groupdocs.Viewer.UI
             _applicationPathFinder = new ApplicationPathFinder();
             _rootPathFinder = new RootPathFinder();
         }
-
+        
 
         /// <summary>
         /// Sets the path to a license file.

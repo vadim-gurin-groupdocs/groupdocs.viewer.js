@@ -1,7 +1,7 @@
-using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 using StructureMap;
-namespace Groupdocs.Viewer.UI.DependencyResolution
+
+namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.DependencyResolution
 {
     public static class IoC
     {

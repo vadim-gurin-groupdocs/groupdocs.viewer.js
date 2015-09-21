@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Web;
-using System.Web.Script.Serialization;
-using Groupdocs.Web.UI.Core;
-using Groupdocs.Common.InstallableViewer;
 using System.Web.Routing;
+using System.Web.Script.Serialization;
+using Groupdocs.Common.InstallableViewer;
+using Groupdocs.Web.UI.Core;
 
-namespace Groupdocs.Viewer.UI.Handlers
+namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
     public abstract class BaseAspNetHandler: CoreHandler, IHttpHandler, IRouteHandler
     {

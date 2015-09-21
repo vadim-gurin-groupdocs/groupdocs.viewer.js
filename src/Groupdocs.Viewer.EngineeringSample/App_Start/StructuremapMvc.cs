@@ -1,4 +1,5 @@
 using System.Web.Mvc;
+using Groupdocs.Viewer.HttpHandling.AspNetMvc.Core;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(Groupdocs.Viewer.UI.App_Start.StructuremapMvc), "Start")]
 

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Web;
 using System.Web.Routing;
-using Groupdocs.Viewer.UI.Handlers;
+using Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers;
 
-namespace Groupdocs.Viewer.UI
+namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Core
 {
     /// <summary>
     /// Viewer global settings

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
 
-namespace Groupdocs.Viewer.UI
+namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Core
 {
     public class LargeJsonResult : JsonResult
     {
-        const string JsonRequest_GetNotAllowed = "This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.";
+        const string JsonRequestGetNotAllowed = "This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.";
         public LargeJsonResult()
         {
             MaxJsonLength = CommonConstants.MaxJsonLength;
@@ -30,7 +27,7 @@ namespace Groupdocs.Viewer.UI
             if (JsonRequestBehavior == JsonRequestBehavior.DenyGet &&
                 String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidOperationException(JsonRequest_GetNotAllowed);
+                throw new InvalidOperationException(JsonRequestGetNotAllowed);
             }
 
             HttpResponseBase response = context.HttpContext.Response;
