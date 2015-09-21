@@ -3,20 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
-using Groupdocs.Viewer.UI.DependencyResolution;
-using StructureMap;
 using Groupdocs.Web.UI;
 using Groupdocs.Common.InstallableViewer;
-using Groupdocs.Viewer.UI.Handlers;
 
 namespace Groupdocs.Viewer.UI
 {
     /// <summary>
     /// Viewer global settings
     /// </summary>
-    public static class Viewer
+    public static partial class Viewer
     {
         private static readonly IApplicationPathFinder _applicationPathFinder;
         private static readonly IRootPathFinder _rootPathFinder;
@@ -27,106 +23,6 @@ namespace Groupdocs.Viewer.UI
             _rootPathFinder = new RootPathFinder();
         }
 
-
-        /// <summary>
-        /// Initializes the ASP.NET MVC routes used by Viewer.
-        /// </summary>
-        public static void InitRoutes()
-        {
-            RouteCollection routes = RouteTable.Routes;
-            if (routes == null)
-            {
-                throw new InvalidOperationException("Cannot obtain 'RouteTable.Routes' collection");
-            }
-
-            routes.MapRoute(
-              null,
-              "document-viewer/fonts/{name}",
-              new { controller = "GroupdocsViewer", action = "GetFont" }
-              );
-
-            routes.MapRoute(
-              null,
-              "document-viewer/images/{name}",
-              new { controller = "GroupdocsViewer", action = "GetEmbeddedImage" }
-              );
-
-            routes.MapRoute(
-               null,
-               "document-viewer/CSS/GetCss",
-               new { controller = "GroupdocsViewer", action = "GetCss" }
-               );
-
-            routes.MapRoute(
-               null,
-               "document-viewer/GetPdfWithPrintDialog",
-               new { controller = "GroupdocsViewer", action = "GetPdfWithPrintDialog" }
-               );
-
-            routes.MapRoute(
-               null,
-               "document-viewer/{action}",
-               new { controller = "GroupdocsViewer" }
-               );
-        }
-
-
-        /// <summary>
-        /// Initializes the ASP.NET handlers routes used by Viewer.
-        /// Requires setup: https://msdn.microsoft.com/en-us/library/cc668202%28v=VS.90%29.aspx
-        /// </summary>
-        public static void InitAspNetRoutes()
-        {
-            RouteCollection routes = RouteTable.Routes;
-            if (routes == null)
-            {
-                throw new InvalidOperationException("Cannot obtain 'RouteTable.Routes' collection");
-            }
-
-            routes.Add(null, new Route("document-viewer/ViewDocumentHandler",
-               new ViewDocumentHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetDocumentPageImageHandler",
-               new GetDocumentPageImageHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/LoadFileBrowserTreeDataHandler",
-               new LoadFileBrowserTreeDataHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetImageUrlsHandler",
-               new GetImageUrlsHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetFileHandler",
-               new GetFileHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetPdfWithPrintDialogHandler",
-               new GetPdfWithPrintDialogHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetPrintableHtmlHandler",
-               new GetPrintableHtmlHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetResourceForHtmlHandler",
-               new GetResourceForHtmlHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/GetDocumentPageHtmlHandler",
-               new GetDocumentPageHtmlHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/ReorderPageHandler",
-               new ReorderPageHandler()
-            ));
-
-            routes.Add(null, new Route("document-viewer/RotatePageHandler",
-               new RotatePageHandler()
-            ));
-        }
 
         /// <summary>
         /// Sets the path to a license file.
@@ -328,14 +224,7 @@ namespace Groupdocs.Viewer.UI
         {
             BaseUrl = url;
         }
-
-        public static void InitDependencyInjection()
-        {
-            IContainer container = IoC.Initialize();
-            DependencyResolver.SetResolver(new SmDependencyResolver(container));
-        }
-
-
+        
         /// <summary>
         /// 
         /// </summary>

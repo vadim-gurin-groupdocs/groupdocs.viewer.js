@@ -8,7 +8,7 @@ namespace Groupdocs.Viewer.UI.App_Start
     {
         public static void Start()
         {
-            Viewer.InitDependencyInjection();
+            ViewerMvc.InitDependencyInjection();
         }
     }
 }

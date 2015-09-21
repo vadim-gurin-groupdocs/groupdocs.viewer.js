@@ -52,28 +52,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionFilters\AllowCrossDomainAttribute.cs" />
-    <Compile Include="Controllers\GroupdocsViewerController.cs" />
-    <Compile Include="Core\AssemblyConstants.cs" />
-    <Compile Include="Core\LargeJsonResult.cs" />
-    <Compile Include="Core\StringProvider.cs" />
-    <Compile Include="Core\Viewer.cs" />
-    <Compile Include="DependencyResolution\IoC.cs" />
-    <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
-    <Compile Include="Handlers\BaseAspNetHandler.cs" />
-    <Compile Include="Handlers\CrossOriginHandler.cs" />
-    <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />
-    <Compile Include="Handlers\GetDocumentPageImageHandler.cs" />
-    <Compile Include="Handlers\GetFileHandler.cs" />
-    <Compile Include="Handlers\GetImageUrlsHandler.cs" />
-    <Compile Include="Handlers\GetPdfWithPrintDialogHandler.cs" />
-    <Compile Include="Handlers\GetPrintableHtmlHandler.cs" />
-    <Compile Include="Handlers\GetResourceForHtmlHandler.cs" />
-    <Compile Include="Handlers\LoadFileBrowserTreeDataHandler.cs" />
-    <Compile Include="Handlers\ReorderPageHandler.cs" />
-    <Compile Include="Handlers\RotatePageHandler.cs" />
-    <Compile Include="Handlers\ViewDocumentHandler.cs" />
-    <Compile Include="HttpModules\AllowCrossOriginModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

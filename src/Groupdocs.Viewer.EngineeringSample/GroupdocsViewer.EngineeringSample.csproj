@@ -360,6 +360,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.AspNetHandlers\Groupdocs.Viewer.HttpHandling.AspNetHandlers.csproj">
+      <Project>{44058e5c-c1f5-4ae8-af99-5ea9156a30c8}</Project>
+      <Name>Groupdocs.Viewer.HttpHandling.AspNetHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.AspNetMvc\Groupdocs.Viewer.HttpHandling.AspNetMvc.csproj">
+      <Project>{e795825b-463a-4c5d-adad-e76fae362f3a}</Project>
+      <Name>Groupdocs.Viewer.HttpHandling.AspNetMvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.Core\Groupdocs.Viewer.HttpHandling.Core.csproj">
+      <Project>{f8fa3ae2-58db-461c-81d0-7715b27f80c0}</Project>
+      <Name>Groupdocs.Viewer.HttpHandling.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Groupdocs.Viewer.UI\Groupdocs.Viewer.UI.csproj">
       <Project>{6610b9bb-e085-4521-858f-a534b9688655}</Project>
       <Name>Groupdocs.Viewer.UI</Name>
