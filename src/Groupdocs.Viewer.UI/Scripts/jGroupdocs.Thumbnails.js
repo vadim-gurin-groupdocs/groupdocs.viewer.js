@@ -70,7 +70,7 @@
                                     successHandler, errorHandler) {
             this._portalService.getImageUrlsAsync(documentPath,
                 thumbnailWidth, pageNumber, imageCount,
-                this.options.quality, false, null, null, null, null,
+                this.options.quality, this.options.supportTextSelection, null, null, null, null,
                 this.options.ignoreDocumentAbsence,
                 this.options.useHtmlBasedEngine, this.options.supportPageRotation,
                 this.options.instanceIdToken,
@@ -125,6 +125,8 @@
             this._thumbnailHeight = this.bindingProvider.getObservable(201);
             this.useInnerThumbnails = options.useInnerThumbnails;
             this.useHtmlThumbnails = options.useHtmlThumbnails;
+            this.quality = options.quality;
+            this.supportTextSelection = options.supportTextSelection;
             this.openThumbnails = this.bindingProvider.getObservable(options.openThumbnails);
             this.element = options.element;
             this.rootElement = options.rootElement;

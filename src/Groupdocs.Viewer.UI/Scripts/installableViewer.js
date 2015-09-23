@@ -453,13 +453,14 @@
             var thumbnailsOptions = {
                 createHtml: true,
                 thumbnailWidth: thumbnailImageWidth,
-                quality: 100,
+                quality: settings.quality,
                 useHtmlBasedEngine: settings.useHtmlBasedEngine,
                 useHtmlThumbnails: settings.useHtmlThumbnails,
                 useInnerThumbnails: settings.useInnerThumbnails,
                 supportPageReordering: settings.supportPageReordering,
                 ignoreDocumentAbsence: settings.ignoreDocumentAbsence,
                 supportPageRotation: settings.supportPageRotation,
+                supportTextSelection: settings.supportTextSelection,
                 openThumbnails: settings.openThumbnails,
                 instanceIdToken: settings.instanceIdToken,
                 locale: settings.locale
