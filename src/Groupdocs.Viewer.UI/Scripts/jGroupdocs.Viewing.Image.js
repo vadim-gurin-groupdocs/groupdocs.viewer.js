@@ -143,8 +143,8 @@
             
             var pageCountToShow = 1;
             var pageWidth;
-            if (this.shouldMinimumWidthBeUsed(this.pageImageWidth * this.initialZoom / 100, false))
-                pageWidth = this.minimumImageWidth;
+            if (this.shouldFullSizeImagesBeUsed())
+                pageWidth = null;
             else
                 pageWidth = Math.round(this.pageImageWidth * this.initialZoom / 100);
 
@@ -169,8 +169,8 @@
         retrieveImageUrls: function (imageCount) {
             var i;
             var pageDimension, pageWidth;
-            if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
-                pageWidth = this.minimumImageWidth;
+            if (this.shouldFullSizeImagesBeUsed())
+                pageWidth = null;
             else
                 pageWidth = this.pageWidth();
 
@@ -330,7 +330,7 @@
             }
             this.setPage(this.pageIndex());
 
-            if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
+            if (this.shouldFullSizeImagesBeUsed())
                 this.loadImagesForVisiblePages();
 
             if (this.options.showHyperlinks) {
@@ -343,7 +343,7 @@
             if (newWidth !== null) {
                 this.calculatePagePositions();
                 var pageCount = this.pageCount();
-                if (!this.shouldMinimumWidthBeUsed(newWidth, true))
+                if (!this.shouldFullSizeImagesBeUsed())
                     this.retrieveImageUrls(pageCount);
             }
         },
@@ -355,14 +355,8 @@
             }
         },
 
-        shouldMinimumWidthBeUsed: function (width, checkOriginalDocumentWidth) {
-            var originalDocumentWidth = null;
-            if (this.supportTextSelection && checkOriginalDocumentWidth) {
-                var pageSize = this._pdf2XmlWrapper.getPageSize();
-                originalDocumentWidth = pageSize.width;
-            }
-            return this.minimumImageWidth != null &&
-                (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
+        shouldFullSizeImagesBeUsed: function () {
+            return this.useFullSizeImages;
         },
 
         refreshPageContents: function (page) {

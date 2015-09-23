@@ -56,7 +56,7 @@
     <Compile Include="ActionFilters\AllowCrossDomainAttribute.cs" />
     <Compile Include="Controllers\GroupdocsViewerController.cs" />
     <Compile Include="Core\LargeJsonResult.cs" />
-    <Compile Include="Core\Viewer.cs" />
+    <Compile Include="Core\ViewerMvc.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -131,7 +131,7 @@
         documentName: null,
         pagingBarWidth: 30,
         turnPageWithoutEvent: false,
-        minimumImageWidth: null,
+        useFullSizeImages: false,
 
         _create: function (options) {
             this._model = new docViewerPageFlipModel(options);
@@ -163,7 +163,7 @@
             var i;
             var pageDimension, pageWidth;
             if (this.shouldMinimumWidthBeUsed(this.pageWidth(), true))
-                pageWidth = this.minimumImageWidth;
+                pageWidth = null;
             else
                 pageWidth = this.pageWidth();
 
@@ -534,8 +534,9 @@
                 var pageSize = this._pdf2XmlWrapper.getPageSize();
                 originalDocumentWidth = pageSize.width;
             }
-            return this.minimumImageWidth != null &&
-                (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
+            return this.useFullSizeImages;
+            //return this.minimumImageWidth != null &&
+            //    (width <= this.minimumImageWidth || (originalDocumentWidth !== null && originalDocumentWidth < this.minimumImageWidth));
         },
 
         resizeViewerElement: function (viewerLeft) {

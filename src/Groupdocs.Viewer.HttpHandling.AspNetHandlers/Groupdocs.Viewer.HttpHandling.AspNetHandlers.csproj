@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Viewer.cs" />
+    <Compile Include="Core\ViewerAspNet.cs" />
     <Compile Include="Handlers\BaseAspNetHandler.cs" />
     <Compile Include="Handlers\CrossOriginHandler.cs" />
     <Compile Include="Handlers\GetDocumentPageHtmlHandler.cs" />

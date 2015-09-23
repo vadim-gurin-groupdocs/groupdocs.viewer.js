@@ -11,33 +11,36 @@
 	    var containerElement = $("#test");
 	    $("#test").groupdocsViewer({
 	        //filePath: "candy.pdf",
+	        filePath: "0108.pdf",
 	        //filePath: "Deutschland201207Arbeit.pdf",
 	        //filePath: "Налоговый кодекс Республики Беларусь - общая часть.doc" ,
 	        //filePath: "Excel\\excel.xls",
-	        filePath: "Excel\\excel-examples.xls",
+	        //filePath: "Excel\\excel-examples.xls",
 	        //filePath: "HTML\\HTML Version.htm",
 	        showHeader: true,
 	        showFolderBrowser: true,
-	        showThumbnails: true,
+	        showThumbnails: false,
 	        openThumbnails: false,
             showZoom: true,
             showSearch: true,
             showPaging: true,
             useInnerThumbnails: true,
-            useHtmlBasedEngine: true,
-            useHtmlThumbnails: false,
+            useHtmlBasedEngine: false,
+            useHtmlThumbnails: true,
             supportTextSelection: true,
             useVirtualScrolling: false,
-            preloadPageCount: null,
+            preloadPagesCount: null,
+	        preloadPagesOnBrowserSide: true,
             supportPageRotation: true,
             //watermarkText: "John Fitzjerald",
             watermarkPosition: "Diagonal",
             //watermarkPosition: "TopCenter",
             //watermarkPosition: "BottomCenter",
             watermarkWidth: 50,
-            enablePageFlipMode: false,
-            bindingProvider: "angularJS"
+            //bindingProvider: "angularJS",
+            //enablePageFlipMode: true
 	        //thumbnailsContainerWidth: 100
+	        useFullSizeImages: true
         });
 
         //window.onresize = resize;

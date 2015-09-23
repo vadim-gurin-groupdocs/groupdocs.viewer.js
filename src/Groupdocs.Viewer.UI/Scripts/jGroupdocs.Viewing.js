@@ -114,7 +114,6 @@
         hashPagePrefix: "page",
         scrollbarWidth: null,
         password: null,
-        minimumImageWidth: null,
         fileDisplayName: null,
         hyperlinks: null,
         watermarkText: null,

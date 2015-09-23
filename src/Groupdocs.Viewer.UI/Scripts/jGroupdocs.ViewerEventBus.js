@@ -75,7 +75,7 @@
                     searchPartialWords: this.searchPartialWords,
                     variablePageSizeSupport: this.variablePageSizeSupport,
                     textSelectionSynchronousCalculation: this.textSelectionSynchronousCalculation,
-                    minimumImageWidth: this.minimumImageWidth,
+                    useFullSizeImages: this.useFullSizeImages,
                     fileDisplayName: this.fileDisplayName,
                     preventTouchEventsBubbling: this.preventTouchEventsBubbling,
                     watermarkText: this.watermarkText,
@@ -115,7 +115,7 @@
                     viewerWidth: this.viewerWidth,
                     viewerHeight: this.viewerHeight,
                     selectionContent: this.selectionContent,
-                    minimumImageWidth: this.minimumImageWidth
+                    useFullSizeImages: this.useFullSizeImages
                 });
                 docViewerPageFlipViewModel = this.docSpacePageFlip.groupdocsDocumentImageRenderingPageFlip('getViewModel');
             }

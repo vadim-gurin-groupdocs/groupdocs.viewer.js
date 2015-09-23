@@ -20,6 +20,8 @@
             embedImagesIntoHtmlForWordFiles: false,
             instanceIdToken: null,
             enableStandardErrorHandling: true,
+            quality: 90,
+            useFullSizeImages: false,
             bindingProvider: "knockoutJS"
         },
 
@@ -566,7 +568,7 @@
                     searchPartialWords: true,
                     variablePageSizeSupport: true,
                     textSelectionSynchronousCalculation: false,
-                    minimumImageWidth: settings.minimumImageWidth,
+                    useFullSizeImages: settings.useFullSizeImages,
                     fileDisplayName: settings.fileDisplayName,
                     pageContentType: settings.useHtmlBasedEngine ? "html" : "image",
                     useHtmlBasedEngine: settings.useHtmlBasedEngine,
