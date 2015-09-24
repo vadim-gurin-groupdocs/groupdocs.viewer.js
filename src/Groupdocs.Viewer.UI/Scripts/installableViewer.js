@@ -463,7 +463,8 @@
                 supportTextSelection: settings.supportTextSelection,
                 openThumbnails: settings.openThumbnails,
                 instanceIdToken: settings.instanceIdToken,
-                locale: settings.locale
+                locale: settings.locale,
+                useFullSizeImages: settings.useFullSizeImages
             };
 
             var thumbnails;

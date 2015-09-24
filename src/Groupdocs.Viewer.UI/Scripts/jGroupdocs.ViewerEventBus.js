@@ -172,9 +172,9 @@
             } .bind(this));
         
 
-            docViewer.bind('_onProcessPages', function (e, data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
+            docViewer.bind('_onProcessPages', function (e, data, viewerViewModel, loadDocumentPageImageCallback, getDocumentPageHtmlCallback, pages, pointToPixelRatio) {
                 if (thumbnails) {
-                    thumbnailsViewModel.onProcessPages(data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId);
+                    thumbnailsViewModel.onProcessPages(data, viewerViewModel, loadDocumentPageImageCallback, getDocumentPageHtmlCallback, pages, pointToPixelRatio);
                 }
             } .bind(this));
             docViewer.bind('onScrollDocView', function (e, data) {
@@ -219,7 +219,13 @@
                 if (search) {
                     searchViewModel.documentLoaded();
                 }
-            } .bind(this));
+            }.bind(this));
+
+            docViewer.bind("pageImageLoaded.groupdocs", function (pageNumber, domElement) {
+                if (thumbnails) {
+                    thumbnailsViewModel.pageImageLoadedHandler(pageNumber, domElement);
+                }
+            });
 
             if (docViewerPageFlip) {
                 docViewerPageFlip.bind('onPageTurned', function (e, pageIndex) {

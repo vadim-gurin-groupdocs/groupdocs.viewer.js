@@ -204,7 +204,7 @@
             this.heightWidthRatio = parseFloat(pageSize.height / pageSize.width);
             this.pageHeight(Math.round(this.pageImageWidth * this.heightWidthRatio * (this.initialZoom / 100)));
 
-            this.triggerEvent('_onProcessPages', response);
+            this.triggerEvent('_onProcessPages', [response, this, this.makePageVisible]);
 
             var pageCount = this.pageCount();
             var pagesNotObservable = [];
@@ -292,25 +292,20 @@
         },
 
         loadImageForPage: function (number, page, forceLoading) {
-            this.triggerImageLoadedEvent(number);
             if (this.supportPageRotation && forceLoading) {
                 this.addSuffixToImageUrl(page);
             }
         },
 
         makePageVisible: function (pageNumber, page) {
-            this.triggerImageLoadedEvent(pageNumber);
-            page.visible(true);
-        },
-
-        triggerImageLoadedEvent: function (pageIndex) {
-            if ($.browser.msie) {
-                if (!this.pages()[pageIndex].visible()) {
-                    $("img#img-" + pageIndex + 1).load(function () {
-                        this.triggerEvent("onPageImageLoaded");
-                    });
-                }
+            if (!page) {
+                var pages = this.pages();
+                if (pageNumber < pages.length)
+                    page = pages[pageNumber];
             }
+
+            if (page)
+                page.visible(true);
         },
 
         setZoom: function (value) {
@@ -381,6 +376,34 @@
             if (paramsIndex != -1)
                 prefixChar = "&";
             page.url(src + prefixChar + 'dummy=' + new Date().getTime());
+        },
+
+        firePageImageLoadedEvent: function (pageNumber, event) {
+            var domElement = event.target;
+            if (this.useFullSizeImages) {
+                var pages = this.pages();
+                var page = null;
+                if (pageNumber < pages.length)
+                    page = pages[pageNumber];
+
+                if (page)
+                    page.domElement = domElement;
+
+                this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
+            }
+        },
+
+        getPageDomElement: function (pageNumber) {
+            if (this.useFullSizeImages) {
+                var pages = this.pages();
+                var page = null;
+                if (pageNumber < pages.length)
+                    page = pages[pageNumber];
+
+                if (page)
+                    return page.domElement;
+            }
+            return null;
         }
     });
 })(jQuery);

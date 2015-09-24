@@ -132,6 +132,7 @@
             this.rootElement = options.rootElement;
             this.thumbnailPanelElement = options.thumbnailPanelElement;
             this.emptyImageUrl = options.emptyImageUrl;
+            this.useFullSizeImages = options.useFullSizeImages;
             if (this.useHtmlThumbnails)
                 this.scale = this.bindingProvider.getObservable(0);
         },
@@ -176,11 +177,10 @@
             }
         },
 
-        onProcessPages: function (data, pages, getDocumentPageHtmlCallback, viewerViewModel, pointToPixelRatio, docViewerId) {
+        onProcessPages: function (data, viewerViewModel, loadDocumentPageImageCallback, getDocumentPageHtmlCallback, pages, pointToPixelRatio) {
             this._documentPath = data.path ? data.path : data.guid;
             this.pageCount(data.pageCount);
 
-            var width = this._thumbnailWidth;
             var variablePageSizeSupport = false, pageDescriptions = null, maxPageHeight, widthForMaxHeight;
             var thumbnailWrapperHeight = null;
             var baseScale;
@@ -195,8 +195,11 @@
                 if (this.useHtmlThumbnails) {
                     this.getDocumentPageHtmlCallback = getDocumentPageHtmlCallback;
                     this.viewerViewModel = viewerViewModel;
-                    this.docViewerId = docViewerId;
                     var thumbnailContainerWidth = this.element.width();
+                }
+                else if (this.useFullSizeImages) {
+                    this.viewerViewModel = viewerViewModel;
+                    this.loadDocumentPageImageCallback = loadDocumentPageImageCallback;
                 }
             }
 
@@ -265,8 +268,10 @@
 
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
-
-            this.retrieveImageUrls(this.pageCount());
+            if (this.useFullSizeImages)
+                this.loadViewerPages();
+            else
+                this.retrieveImageUrls(this.pageCount());
         },
 
         retrieveImageUrls: function (imageCount) {
@@ -286,14 +291,38 @@
             );
         },
 
+        loadViewerPages: function () {
+            var visiblePages = this._getVisiblePages();
+            for (var i = visiblePages.start; i < visiblePages.end; i++) {
+                this.loadDocumentPageImageCallback.call(this.viewerViewModel, i);
+            }
+        },
+
+        pageImageLoadedHandler: function (pageNumber, domElement) {
+            if (!domElement)
+                return;
+            var dataUrl = null;
+
+            var thumbnails = this.thumbnails();
+            if (pageNumber < thumbnails.length) {
+                var thumbnail = this.thumbnails()[pageNumber];
+                var canvas = document.createElement("canvas");
+                canvas.width = thumbnail.width();
+                canvas.height = thumbnail.height();
+                var context = canvas.getContext("2d");
+                context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
+                dataUrl = canvas.toDataURL("image/jpeq", 0.9);
+                this.thumbnails()[pageNumber].url(dataUrl);
+            }
+        },
+
         makeThumbnailNotBusy: function (thumbnailIndex) {
             var currentThumbnail = this.thumbnails()[thumbnailIndex];
             currentThumbnail.busy(false);
         },
 
-        _onScrollThumbnailsPanel: function () {
+        _getVisiblePages: function () {
             var pageCount = this.pageCount();
-            var width = this._thumbnailWidth;
             var thumbContainer = this.element;
             var thumbnailHeight = thumbContainer.children("ul").children("li.thumb-page:first").outerHeight(false);
 
@@ -302,10 +331,18 @@
             var startIndex = Math.floor(scrollTop / thumbnailHeight);
             var endIndex = Math.floor((scrollTop + th) / thumbnailHeight) + 1;
             var end = (endIndex < pageCount - 2) ? endIndex + 2 : pageCount;
+            return { start: startIndex, end: end };
+        },
 
-            for (var i = startIndex; i < end; i++) {
+        _onScrollThumbnailsPanel: function () {
+            var visiblePages = this._getVisiblePages();
+            for (var i = visiblePages.start; i < visiblePages.end; i++) {
                 if (this.useHtmlThumbnails) {
                     this.getDocumentPageHtmlCallback.call(this.viewerViewModel, i);
+                }
+                else if (this.useFullSizeImages) {
+                    var domElement = this.viewerViewModel.getPageDomElement(i);
+                    this.pageImageLoadedHandler(i, domElement);
                 }
                 this.thumbnails()[i].visible(true);
             }
