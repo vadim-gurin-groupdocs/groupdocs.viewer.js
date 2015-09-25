@@ -306,7 +306,7 @@
             }
         },
 
-        pageImageLoadedHandler: function (pageNumber, domElement) {
+        pageImageLoadedHandler: function (pageNumber, domElement, isCalledFromScroll) {
             if (!domElement)
                 return;
             var dataUrl = null;
@@ -314,14 +314,21 @@
             var thumbnails = this.thumbnails();
             if (pageNumber < thumbnails.length) {
                 var thumbnail = this.thumbnails()[pageNumber];
-                var canvas = document.createElement("canvas");
-                canvas.width = thumbnail.width();
-                canvas.height = thumbnail.height();
-                var context = canvas.getContext("2d");
-                context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
-                dataUrl = canvas.toDataURL("image/jpeq", 0.9);
-                thumbnail.url(dataUrl);
-                thumbnail.visible(true);
+                if (!thumbnail.imageCopied) {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = thumbnail.width();
+                    canvas.height = thumbnail.height();
+                    var context = canvas.getContext("2d");
+                    context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
+                    dataUrl = canvas.toDataURL("image/jpeq", 0.9);
+                    if (isCalledFromScroll && dataUrl === thumbnail.url()) {
+                        thumbnail.imageCopied = true;
+                    }
+                    else {
+                        thumbnail.url(dataUrl);
+                    }
+                    thumbnail.visible(true);
+                }
             }
         },
 
@@ -351,7 +358,7 @@
                 }
                 else if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
                     var domElement = this.viewerViewModel.getPageDomElement(i);
-                    this.pageImageLoadedHandler(i, domElement);
+                    this.pageImageLoadedHandler(i, domElement, true);
                 }
                 this.thumbnails()[i].visible(true);
             }

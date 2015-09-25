@@ -386,10 +386,11 @@
                 if (pageNumber < pages.length)
                     page = pages[pageNumber];
 
-                if (page)
+                if (page) {
                     page.domElement = domElement;
-
-                this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
+                    if (page.url() !== this.emptyImageUrl)
+                        this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
+                }
             }
         },
 

@@ -211,7 +211,13 @@
             this.serverPages = [{ w: this.initialWidth, h: 100 }];
 
             var pageDescription;
-            pageDescription = { number: 1, visible: this.bindingProvider.getObservable(false), url: this.bindingProvider.getObservable(this.emptyImageUrl), htmlContent: this.bindingProvider.getObservable(""), searchText: this.bindingProvider.getObservable(null) };
+            pageDescription = {
+                number: 1,
+                visible: this.bindingProvider.getObservable(false),
+                url: this.bindingProvider.getObservable(this.emptyImageUrl),
+                htmlContent: this.bindingProvider.getObservable(""),
+                searchText: this.bindingProvider.getObservable(null)
+            };
             if (this.supportPageRotation)
                 pageDescription.rotation = this.bindingProvider.getObservable(0);
             pageDescription.prop = this.bindingProvider.getObservable(1);
@@ -772,21 +778,7 @@
                 a = ((num & 0xFF000000) >>> 24) / 255;
             return "rgba(" + [r, g, b, a].join(",") + ")";
         },
-
-        addSuffixToImageUrl: function (page) {
-            var src = page.url();
-            var prefixChar = "?";
-            var dummyIndex = src.indexOf('dummy=');
-            if (dummyIndex != -1) {
-                src = src.substring(0, dummyIndex - 1);
-            }
-
-            var paramsIndex = src.indexOf('?');
-            if (paramsIndex != -1)
-                prefixChar = "&";
-            page.url(src + prefixChar + 'dummy=' + new Date().getTime());
-        },
-
+        
         setLoadingState: function (set) {
             this.inprogress(set);
         },
