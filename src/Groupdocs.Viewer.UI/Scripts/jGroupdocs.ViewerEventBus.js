@@ -221,7 +221,7 @@
                 }
             }.bind(this));
 
-            docViewer.bind("pageImageLoaded.groupdocs", function (pageNumber, domElement) {
+            docViewer.bind("pageImageLoaded.groupdocs", function (e, pageNumber, domElement) {
                 if (thumbnails) {
                     thumbnailsViewModel.pageImageLoadedHandler(pageNumber, domElement);
                 }

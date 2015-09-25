@@ -124,6 +124,7 @@
             this.busy = this.bindingProvider.getObservable(true);
             this._thumbnailHeight = this.bindingProvider.getObservable(201);
             this.useInnerThumbnails = options.useInnerThumbnails;
+            this.useHtmlBasedEngine = options.useHtmlBasedEngine;
             this.useHtmlThumbnails = options.useHtmlThumbnails;
             this.quality = options.quality;
             this.supportTextSelection = options.supportTextSelection;
@@ -256,7 +257,7 @@
                 if (this.useHtmlThumbnails) {
                     thumbnailDescription.htmlContent = pages[i].htmlContent;
                 }
-
+                
                 notObservableThumbnails.push(thumbnailDescription);
             }
             this.thumbnails(notObservableThumbnails);
@@ -268,8 +269,15 @@
 
             this._countToShowOnThumbDiv = countToShow;
             this._thumbsCountToShow = Number(countToShow) + Math.ceil(Number(Number(countToShow) / 2)); // count thumbs for show
-            if (this.useFullSizeImages)
+            if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
+                var thumbnails = this.thumbnails();
+                for (var i = 0; i < thumbnails.length; i++) {
+                    var domElement = this.viewerViewModel.getPageDomElement(i);
+                    this.pageImageLoadedHandler(i, domElement);
+                }
+
                 this.loadViewerPages();
+            }
             else
                 this.retrieveImageUrls(this.pageCount());
         },
@@ -312,7 +320,8 @@
                 var context = canvas.getContext("2d");
                 context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
                 dataUrl = canvas.toDataURL("image/jpeq", 0.9);
-                this.thumbnails()[pageNumber].url(dataUrl);
+                thumbnail.url(dataUrl);
+                thumbnail.visible(true);
             }
         },
 
@@ -340,7 +349,7 @@
                 if (this.useHtmlThumbnails) {
                     this.getDocumentPageHtmlCallback.call(this.viewerViewModel, i);
                 }
-                else if (this.useFullSizeImages) {
+                else if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
                     var domElement = this.viewerViewModel.getPageDomElement(i);
                     this.pageImageLoadedHandler(i, domElement);
                 }

@@ -453,7 +453,7 @@
             var thumbnailsOptions = {
                 createHtml: true,
                 thumbnailWidth: thumbnailImageWidth,
-                quality: settings.quality,
+                quality: settings.useHtmlBasedEngine ? 20 : settings.quality,
                 useHtmlBasedEngine: settings.useHtmlBasedEngine,
                 useHtmlThumbnails: settings.useHtmlThumbnails,
                 useInnerThumbnails: settings.useInnerThumbnails,
