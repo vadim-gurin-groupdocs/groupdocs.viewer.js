@@ -314,7 +314,7 @@
             var thumbnails = this.thumbnails();
             if (pageNumber < thumbnails.length) {
                 var thumbnail = this.thumbnails()[pageNumber];
-                if (!thumbnail.imageCopied) {
+                if (typeof thumbnail.imageCopied == "undefined" || thumbnail.imageCopied < 3) {
                     var canvas = document.createElement("canvas");
                     canvas.width = thumbnail.width();
                     canvas.height = thumbnail.height();
@@ -322,7 +322,10 @@
                     context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
                     dataUrl = canvas.toDataURL("image/jpeq", 0.9);
                     if (isCalledFromScroll && dataUrl === thumbnail.url()) {
-                        thumbnail.imageCopied = true;
+                        if (typeof thumbnail.imageCopied == "undefined")
+                            thumbnail.imageCopied = 1;
+                        else
+                            thumbnail.imageCopied++;
                     }
                     else {
                         thumbnail.url(dataUrl);
