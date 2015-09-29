@@ -486,6 +486,7 @@
 
             if (isDocumentSinglePaged)
                 response.pageCount = 0; // for thumbnails after rotation
+            this.pages(pagesNotObservable);
             this.triggerEvent('_onProcessPages', [response, this, null, this.getDocumentPageHtml, pagesNotObservable, this.pointToPixelRatio]);
             return pagesNotObservable;
         },

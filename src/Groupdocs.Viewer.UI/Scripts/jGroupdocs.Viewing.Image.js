@@ -204,8 +204,6 @@
             this.heightWidthRatio = parseFloat(pageSize.height / pageSize.width);
             this.pageHeight(Math.round(this.pageImageWidth * this.heightWidthRatio * (this.initialZoom / 100)));
 
-            this.triggerEvent('_onProcessPages', [response, this, this.makePageVisible]);
-
             var pageCount = this.pageCount();
             var pagesNotObservable = [];
             var pageDescription;
@@ -246,6 +244,8 @@
 
                 pagesNotObservable.push(pageDescription);
             }
+            this.pages(pagesNotObservable);
+            this.triggerEvent('_onProcessPages', [response, this, this.makePageVisible]);
             return pagesNotObservable;
         },
 
@@ -387,9 +387,10 @@
                     page = pages[pageNumber];
 
                 if (page) {
-                    page.domElement = domElement;
-                    if (page.url() !== this.emptyImageUrl)
+                    if (page.visible()) {
+                        page.domElement = domElement;
                         this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
+                    }
                 }
             }
         },
@@ -401,7 +402,7 @@
                 if (pageNumber < pages.length)
                     page = pages[pageNumber];
 
-                if (page)
+                if (page && page.visible())
                     return page.domElement;
             }
             return null;

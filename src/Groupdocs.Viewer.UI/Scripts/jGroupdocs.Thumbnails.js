@@ -314,7 +314,7 @@
             var thumbnails = this.thumbnails();
             if (pageNumber < thumbnails.length) {
                 var thumbnail = this.thumbnails()[pageNumber];
-                if (typeof thumbnail.imageCopied == "undefined" || thumbnail.imageCopied < 3) {
+                if (!thumbnail.imageCopied) {
                     var canvas = document.createElement("canvas");
                     canvas.width = thumbnail.width();
                     canvas.height = thumbnail.height();
@@ -322,10 +322,7 @@
                     context.drawImage(domElement, 0, 0, thumbnail.width(), thumbnail.height());
                     dataUrl = canvas.toDataURL("image/jpeq", 0.9);
                     if (isCalledFromScroll && dataUrl === thumbnail.url()) {
-                        if (typeof thumbnail.imageCopied == "undefined")
-                            thumbnail.imageCopied = 1;
-                        else
-                            thumbnail.imageCopied++;
+                        thumbnail.imageCopied = true;
                     }
                     else {
                         thumbnail.url(dataUrl);
@@ -361,7 +358,10 @@
                 }
                 else if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
                     var domElement = this.viewerViewModel.getPageDomElement(i);
-                    this.pageImageLoadedHandler(i, domElement, true);
+                    if (domElement)
+                        this.pageImageLoadedHandler(i, domElement, true);
+                    else
+                        this.loadDocumentPageImageCallback.call(this.viewerViewModel, i);
                 }
                 this.thumbnails()[i].visible(true);
             }

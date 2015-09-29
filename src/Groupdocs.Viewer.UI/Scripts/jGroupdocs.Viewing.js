@@ -289,8 +289,7 @@
                 response.imageUrls = response.image_urls;
 
             this.triggerEvent('onDocumentLoaded', response);
-            var self = this;
-
+            
             this.pageCount(response.pageCount);
             this.documentName(response.name);
             this.docType(response.doc_type);
@@ -304,8 +303,7 @@
             if (this.supportListOfBookmarks)
                 this.bookmarks = this._pdf2XmlWrapper.getBookmarks();
 
-            var pagesNotObservable = this.initPagesAfterDocumentLoad(response);
-            this.pages(pagesNotObservable);
+            this.initPagesAfterDocumentLoad(response);
             this.calculatePagePositions();
             this.inprogress(false);
 
