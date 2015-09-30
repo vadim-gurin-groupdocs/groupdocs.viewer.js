@@ -142,6 +142,19 @@
                     }
                 });
 
+                this.$compileProvider.directive("ngGroupdocsImageLoad", function () {
+                    return {
+                        link: function (scope, element, attributes) {
+                            var attribute = attributes.ngGroupdocsImageLoad;
+                            var handler = scope.$eval(attribute);
+                            var index = scope.$index;
+                            element.bind("load", function (e) {
+                                handler.call(scope.viewModel, index, e);
+                            });
+                        }
+                    }
+                });
+
                 angularJSProvider.prototype.areDirectivesCreated = true;
             }
         },
@@ -311,7 +324,7 @@
     :
                 '<div class="highlight-pane"></div>' +
                 '<div class="search-pane"></div>' +
-                '<img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" ' +
+                '<img class="page-image" src="' + options.emptyImageUrl + '" data-ng-attr-id="{{\'' + options.docViewerId + '\' + \'-img-\' + ($index + 1)}}" data-ng-src="{{(page.visible() ? page.url() : viewModel.emptyImageUrl)}}" data-ng-style="{ width: viewModel.pageWidth() + \'px\', height: viewModel.pageWidth() * page.prop() + \'px\' }" data-ng-groupdocs-image-load="viewModel.firePageImageLoadedEvent" ' +
                     'style: { width: viewModel.pageWidth + \'px\', height: viewModel.pageWidth * page.prop + \'px\' }"/>'
     ) +
 
