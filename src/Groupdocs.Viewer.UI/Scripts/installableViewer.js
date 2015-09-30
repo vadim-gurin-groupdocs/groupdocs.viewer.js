@@ -185,9 +185,9 @@
             this.printImageElements = new Array();
             window.groupdocs.viewerId++;
             var browserIsIE9OrLess = false;
+            var browserIsIE8 = false;
             if (options.enableViewerInit) {
                 var style;
-                var browserIsIE8 = false;
                 if ($.browser.msie) {
                     this.browserIsInternetExplorer = true;
                     if ($.browser.version == 8 || $.browser.version == 9) {
@@ -199,7 +199,7 @@
                     style = ".grpdx input[type='text']::-ms-clear {display: none;}"; // disable X for clearing search text
                     $("<style>" + style + "</style>").appendTo("head");
                 }
-
+                
                 var classWithNumber = "grpdx" + settings.docViewerId;
 
                 var self = this;
@@ -464,9 +464,9 @@
                 openThumbnails: settings.openThumbnails,
                 instanceIdToken: settings.instanceIdToken,
                 locale: settings.locale,
-                useFullSizeImages: settings.useFullSizeImages
+                useFullSizeImages: !browserIsIE8 && settings.useFullSizeImages // IE8 does not support the canvas
             };
-
+            
             var thumbnails;
             if (settings.showThumbnails) {
                 thumbnails = viewerMainWrapper;
