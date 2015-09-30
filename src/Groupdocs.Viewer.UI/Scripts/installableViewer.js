@@ -773,7 +773,6 @@
                     messageHeaderElement.text("Error");
                     var dialogWidth, dialogHeight;
                     if (msg.substring(0, 1) == "<") {
-                        //jerrorElement.html(msg);
                         jerrorElementContent.html(msg);
                         var windowWidth = viewerMainwrapper.width();
                         var windowHeight = viewerMainwrapper.height();
@@ -844,9 +843,6 @@
 
             this.printImageElements.length = 0;
             var pageCount = data.pageCount;
-
-            if (!data.lic && pageCount > 3)
-                pageCount = 3;
 
             var imgElement;
             for (var pageNum = 0; pageNum < pageCount; pageNum++) {
@@ -1119,17 +1115,15 @@
         },
 
         _printDocument: function () {
+            var self = this;
             if (this.usePdfPrinting) {
                 var message = this._getLocalizedString("Printing", "Printing");
                 var title = this._getLocalizedString("Printing", "Printing");
                 this._showMessageDialogPdf(message, title);
-
-                var context = this;
-
                 var printWindow = window.open(this.pdfPrintUrl);
 
                 printWindow.onload = function () {
-                    context._hideMessageDialogPdf();
+                    self._hideMessageDialogPdf();
                 }
             }
             else {
@@ -1142,8 +1136,6 @@
                 if (this.fileDisplayName)
                     fileDisplayName = this.fileDisplayName;
 
-                var self = this;
-                
                 var useHtmlContentBasedPrinting = this.useHtmlBasedEngine && !this.useImageBasedPrinting;
                 //var printFrame = this.groupdocsViewerWrapper.find("iframe[name=groupdocsPrintFrame]");
                 //var printFrame = this.groupdocsViewerWrapper.find("div.groupdocsPrintFrame");
@@ -1183,50 +1175,76 @@
                     var title = this._getLocalizedString("Printing", "Printing");
 
                     this._showMessageDialog(message, title, 0);
-                    this._model.getPrintableHtml(this.documentPath, useHtmlContentBasedPrinting, fileDisplayName,
-                        watermarkText, watermarkColor,
-                        watermarkPosition, watermarkWidth,
-                        this.ignoreDocumentAbsence,
-                        this.instanceIdToken,
-                        function (responseData) {
+                    var pageNum;
+                    var pagesLoaded;
+                    var imageElement;
+                    var pageImageUrl;
+                    var pageCount;
+                    var prepMessage = this._getLocalizedString("Preparing the pages", "PreparingPages");
+                    var pageImageLoadHandler = function () {
+                        pagesLoaded++;
+                        self._updateMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, pagesLoaded / pageCount * 100.);
+                        if (pagesLoaded >= pageCount) {
                             self._hideMessageDialog();
-                            var pageImageUrl;
-                            var pageCount = responseData.length;
-                            var prepMessage = self._getLocalizedString("Preparing the pages", "PreparingPages");
-                            prepMessage += ": ";
-                            var pagesLoaded = 0;
-                            self._showMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, 0);
-                            var pageNum;
-                            var numberOfPagesInScreenDocument = self.printImageElements.length;
-                            for (pageNum = numberOfPagesInScreenDocument; pageNum < pageCount; pageNum++) {
-                                var imageElementWithoutUrl;
-                                imageElementWithoutUrl = $("<img/>").appendTo(printFrame);
-                                self.printImageElements.push(imageElementWithoutUrl);
+                            window.print();
+                            self.printFrameLoaded = true;
+                        }
+                    }
+
+                    if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
+                        pagesLoaded = 0;
+                        var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
+                        pageCount = this.printImageElements.length;
+                        for (pageNum = 0; pageNum < this.printImageElements.length; pageNum++) {
+                            var pageImageDomElement = viewerViewModel.getPageDomElement(pageNum);
+                            if (pageImageDomElement) {
+                                var canvas = document.createElement("canvas");
+                                var pageImageWidth = pageImageDomElement.naturalWidth;
+                                var pageImageHeight = pageImageDomElement.naturalWidth;
+                                canvas.width = pageImageWidth;
+                                canvas.height = pageImageHeight;
+                                var context = canvas.getContext("2d");
+                                context.drawImage(pageImageDomElement, 0, 0, pageImageWidth, pageImageHeight);
+                                pageImageUrl = canvas.toDataURL("image/jpeq", 0.9);
+                                imageElement = this.printImageElements[pageNum];
+                                imageElement.load(pageImageLoadHandler).attr("src", pageImageUrl);
                             }
-
-                            for (pageNum = 0; pageNum < self.printImageElements.length; pageNum++) {
-                                var imageElement;
-
-                                var pageImageLoadHandler = function () {
-                                    pagesLoaded++;
-                                    self._updateMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, pagesLoaded / pageCount * 100.);
-                                    if (pagesLoaded >= pageCount) {
-                                        self._hideMessageDialog();
-                                        window.print();
-                                        self.printFrameLoaded = true;
-                                    }
+                            else {
+                                viewerViewModel.makePageVisible(pageNum);
+                            }
+                        }
+                    }
+                    else {
+                        this._model.getPrintableHtml(this.documentPath, useHtmlContentBasedPrinting, fileDisplayName,
+                            watermarkText, watermarkColor,
+                            watermarkPosition, watermarkWidth,
+                            this.ignoreDocumentAbsence,
+                            this.instanceIdToken,
+                            function(responseData) {
+                                self._hideMessageDialog();
+                                pageCount = responseData.length;
+                                prepMessage += ": ";
+                                pagesLoaded = 0;
+                                self._showMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, 0);
+                                var numberOfPagesInScreenDocument = self.printImageElements.length;
+                                for (pageNum = numberOfPagesInScreenDocument; pageNum < pageCount; pageNum++) {
+                                    var imageElementWithoutUrl;
+                                    imageElementWithoutUrl = $("<img/>").appendTo(printFrame);
+                                    self.printImageElements.push(imageElementWithoutUrl);
                                 }
 
-                                pageImageUrl = responseData[pageNum];
-                                imageElement = self.printImageElements[pageNum];
-                                imageElement.load(pageImageLoadHandler).attr("src", pageImageUrl); //.appendTo(printFrame);
-                            }
+                                for (pageNum = 0; pageNum < self.printImageElements.length; pageNum++) {
+                                    pageImageUrl = responseData[pageNum];
+                                    imageElement = self.printImageElements[pageNum];
+                                    imageElement.load(pageImageLoadHandler).attr("src", pageImageUrl);
+                                }
 
-                        },
-                        function (error) {
-                            self._hideMessageDialog();
-                        },
-                        this.locale);
+                            },
+                            function(error) {
+                                self._hideMessageDialog();
+                            },
+                            this.locale);
+                    }
                 }
             }
             return false;
