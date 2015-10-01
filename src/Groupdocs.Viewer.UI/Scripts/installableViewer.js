@@ -1191,7 +1191,7 @@
                         }
                     }
 
-                    if (!this.useHtmlBasedEngine && this.useFullSizeImages && !this.browserIsIE8) {
+                    if (!this.useHtmlBasedEngine && this.useFullSizeImages && !this.browserIsInternetExplorer) {
                         pagesLoaded = 0;
                         var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
                         pageCount = this.printImageElements.length;
@@ -1338,14 +1338,18 @@
         },
 
         putPageCopyToPrintableImage: function (pageNumber, pageImageDomElement) {
-            var canvas = document.createElement("canvas");
+            if (!this.canvas) {
+                this.canvas = document.createElement("canvas");
+                this.context = this.canvas.getContext("2d");
+            }
+            var canvas = this.canvas;
             var pageImageWidth = pageImageDomElement.naturalWidth;
             var pageImageHeight = pageImageDomElement.naturalHeight;
             canvas.width = pageImageWidth;
             canvas.height = pageImageHeight;
-            var context = canvas.getContext("2d");
-            context.drawImage(pageImageDomElement, 0, 0, pageImageWidth, pageImageHeight);
-            var pageImageDataUrl = canvas.toDataURL("image/jpeq", 0.9);
+            var context = this.context;
+            context.drawImage(pageImageDomElement, 0, 0);
+            var pageImageDataUrl = canvas.toDataURL("image/png");
             var imageElement = this.printImageElements[pageNumber];
             imageElement.load(this.printedPageImageLoadHandler).attr("src", pageImageDataUrl);
         },
