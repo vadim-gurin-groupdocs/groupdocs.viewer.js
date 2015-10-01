@@ -169,6 +169,7 @@
         viewMode: null,
         licElement: null,
         printImageElements: null,
+        isPrinting: false,
 
         _create: function (options) {
             this._model = new groupdocsViewerModel(options);
@@ -185,7 +186,7 @@
             this.printImageElements = new Array();
             window.groupdocs.viewerId++;
             var browserIsIE9OrLess = false;
-            var browserIsIE8 = false;
+            this.browserIsIE8 = false;
             if (options.enableViewerInit) {
                 var style;
                 if ($.browser.msie) {
@@ -193,7 +194,7 @@
                     if ($.browser.version == 8 || $.browser.version == 9) {
                         browserIsIE9OrLess = true;
                         if ($.browser.version == 8)
-                            browserIsIE8 = true;
+                            this.browserIsIE8 = true;
                     }
 
                     style = ".grpdx input[type='text']::-ms-clear {display: none;}"; // disable X for clearing search text
@@ -206,7 +207,7 @@
                 var browserDependentCssClass = "";
                 if (self.browserIsInternetExplorer && settings.useHtmlBasedEngine) {
                     browserDependentCssClass = " ie";
-                    if (browserIsIE8) {
+                    if (this.browserIsIE8) {
                         browserDependentCssClass += " ie8";
                     }
                 }
@@ -219,7 +220,7 @@
                 var htmlOptions = {
                     classWithNumber: classWithNumber,
                     headerStyle: headerStyle,
-                    browserIsIE8: browserIsIE8,
+                    browserIsIE8: this.browserIsIE8,
                     supportPageRotation: settings.supportPageRotation,
                     browserDependentCssClass: browserDependentCssClass,
                     docViewerId: settings.docViewerId,
@@ -464,7 +465,7 @@
                 openThumbnails: settings.openThumbnails,
                 instanceIdToken: settings.instanceIdToken,
                 locale: settings.locale,
-                useFullSizeImages: !browserIsIE8 && settings.useFullSizeImages // IE8 does not support the canvas
+                useFullSizeImages: !this.browserIsIE8 && settings.useFullSizeImages // IE8 does not support the canvas
             };
             
             var thumbnails;
@@ -734,6 +735,10 @@
 
             docViewerJquery.bind('isDocumentSinglePaged.groupdocs', function (e, data) {
                 self.documentSinglePagedHandler(data, navigationWrapper);
+            });
+
+            docViewerJquery.bind('pageImageLoaded.groupdocs', function (e, pageNumber, pageImageDomElement) {
+                self.pageImageLoadedHandler(pageNumber, pageImageDomElement);
             });
 
             if (settings.viewerStyle == this.viewModes.BookMode) {
@@ -1137,8 +1142,6 @@
                     fileDisplayName = this.fileDisplayName;
 
                 var useHtmlContentBasedPrinting = this.useHtmlBasedEngine && !this.useImageBasedPrinting;
-                //var printFrame = this.groupdocsViewerWrapper.find("iframe[name=groupdocsPrintFrame]");
-                //var printFrame = this.groupdocsViewerWrapper.find("div.groupdocsPrintFrame");
                 var bodyElement = $("body");
                 var printFrameName = "printFrame" + this.viewerId;
                 var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
@@ -1157,12 +1160,8 @@
                 }
 
                 if (printFrame.length == 0) {
-                    //var frameWidth = 500, frameHeight = 500;
-                    //printFrame = $("<iframe name='groupdocsPrintFrame' src='about:blank' style='width:" + frameWidth +
-                    //               "px;height:" + frameHeight + "px'></iframe>");
                     printFrame = $("<div class='groupdocsPrintFrame'></div>");
                     printFrame.attr("name", printFrameName);
-                    //printFrame.appendTo(this.groupdocsViewerWrapper);
                     printFrame.appendTo(bodyElement);
                 }
 
@@ -1176,40 +1175,33 @@
 
                     this._showMessageDialog(message, title, 0);
                     var pageNum;
-                    var pagesLoaded;
                     var imageElement;
                     var pageImageUrl;
+                    var pagesLoaded;
                     var pageCount;
                     var prepMessage = this._getLocalizedString("Preparing the pages", "PreparingPages");
-                    var pageImageLoadHandler = function () {
+                    var pageImageLoadHandler = this.printedPageImageLoadHandler = function () {
                         pagesLoaded++;
                         self._updateMessageDialog(prepMessage + pagesLoaded + "/" + pageCount, title, pagesLoaded / pageCount * 100.);
                         if (pagesLoaded >= pageCount) {
                             self._hideMessageDialog();
+                            self.isPrinting = false;
                             window.print();
                             self.printFrameLoaded = true;
                         }
                     }
 
-                    if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
+                    if (!this.useHtmlBasedEngine && this.useFullSizeImages && !this.browserIsIE8) {
                         pagesLoaded = 0;
                         var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
                         pageCount = this.printImageElements.length;
                         for (pageNum = 0; pageNum < this.printImageElements.length; pageNum++) {
                             var pageImageDomElement = viewerViewModel.getPageDomElement(pageNum);
                             if (pageImageDomElement) {
-                                var canvas = document.createElement("canvas");
-                                var pageImageWidth = pageImageDomElement.naturalWidth;
-                                var pageImageHeight = pageImageDomElement.naturalHeight;
-                                canvas.width = pageImageWidth;
-                                canvas.height = pageImageHeight;
-                                var context = canvas.getContext("2d");
-                                context.drawImage(pageImageDomElement, 0, 0, pageImageWidth, pageImageHeight);
-                                pageImageUrl = canvas.toDataURL("image/jpeq", 0.9);
-                                imageElement = this.printImageElements[pageNum];
-                                imageElement.load(pageImageLoadHandler).attr("src", pageImageUrl);
+                                this.putPageCopyToPrintableImage(pageNum, pageImageDomElement);
                             }
                             else {
+                                this.isPrinting = true;
                                 viewerViewModel.makePageVisible(pageNum);
                             }
                         }
@@ -1338,6 +1330,26 @@
                 this.viewerAdapter.zoomViewModel.setFitHeightZoom(fitHeightZoom);
             }
         },
+
+        pageImageLoadedHandler: function (pageNumber, pageImageDomElement) {
+            if (this.isPrinting) {
+                this.putPageCopyToPrintableImage(pageNumber, pageImageDomElement);
+            }
+        },
+
+        putPageCopyToPrintableImage: function (pageNumber, pageImageDomElement) {
+            var canvas = document.createElement("canvas");
+            var pageImageWidth = pageImageDomElement.naturalWidth;
+            var pageImageHeight = pageImageDomElement.naturalHeight;
+            canvas.width = pageImageWidth;
+            canvas.height = pageImageHeight;
+            var context = canvas.getContext("2d");
+            context.drawImage(pageImageDomElement, 0, 0, pageImageWidth, pageImageHeight);
+            var pageImageDataUrl = canvas.toDataURL("image/jpeq", 0.9);
+            var imageElement = this.printImageElements[pageNumber];
+            imageElement.load(this.printedPageImageLoadHandler).attr("src", pageImageDataUrl);
+        },
+
 
         openNextPage: function () {
             this.viewerAdapter.navigationViewModel.down();
