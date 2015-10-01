@@ -1200,7 +1200,7 @@
                             if (pageImageDomElement) {
                                 var canvas = document.createElement("canvas");
                                 var pageImageWidth = pageImageDomElement.naturalWidth;
-                                var pageImageHeight = pageImageDomElement.naturalWidth;
+                                var pageImageHeight = pageImageDomElement.naturalHeight;
                                 canvas.width = pageImageWidth;
                                 canvas.height = pageImageHeight;
                                 var context = canvas.getContext("2d");
