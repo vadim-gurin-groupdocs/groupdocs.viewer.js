@@ -1350,6 +1350,7 @@
             var context = this.context;
             context.drawImage(pageImageDomElement, 0, 0);
             var pageImageDataUrl = canvas.toDataURL("image/png");
+            context.clearRect(0, 0, pageImageWidth, pageImageHeight);
             var imageElement = this.printImageElements[pageNumber];
             imageElement.load(this.printedPageImageLoadHandler).attr("src", pageImageDataUrl);
         },

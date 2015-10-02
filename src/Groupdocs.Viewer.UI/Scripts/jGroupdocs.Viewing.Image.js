@@ -304,7 +304,7 @@
                     page = pages[pageNumber];
             }
 
-            if (page)
+            if (page && !page.visible())
                 page.visible(true);
         },
 
