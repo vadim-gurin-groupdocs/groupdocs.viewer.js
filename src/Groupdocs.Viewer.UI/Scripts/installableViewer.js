@@ -841,7 +841,7 @@
             if (printFrame.length == 0) {
                 printFrame = $("<div class='groupdocsPrintFrameDeactivated'></div>");
                 printFrame.attr("name", printFrameName);
-                printFrame.appendTo(bodyElement);
+                //printFrame.appendTo(bodyElement);
             }
             else
                 printFrame.empty();
@@ -1162,7 +1162,7 @@
                 if (printFrame.length == 0) {
                     printFrame = $("<div class='groupdocsPrintFrame'></div>");
                     printFrame.attr("name", printFrameName);
-                    printFrame.appendTo(bodyElement);
+                    //printFrame.appendTo(bodyElement);
                 }
 
                 if (this.printFrameLoaded) {
@@ -1191,14 +1191,15 @@
                         }
                     }
 
-                    if (!this.useHtmlBasedEngine && this.useFullSizeImages && !this.browserIsInternetExplorer) {
+                    if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
                         pagesLoaded = 0;
                         var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
                         pageCount = this.printImageElements.length;
                         for (pageNum = 0; pageNum < this.printImageElements.length; pageNum++) {
                             var pageImageDomElement = viewerViewModel.getPageDomElement(pageNum);
                             if (pageImageDomElement) {
-                                this.putPageCopyToPrintableImage(pageNum, pageImageDomElement);
+                                this.printedPageImageLoadHandler();
+                                //this.putPageCopyToPrintableImage(pageNum, pageImageDomElement);
                             }
                             else {
                                 this.isPrinting = true;
@@ -1333,7 +1334,8 @@
 
         pageImageLoadedHandler: function (pageNumber, pageImageDomElement) {
             if (this.isPrinting) {
-                this.putPageCopyToPrintableImage(pageNumber, pageImageDomElement);
+                //this.putPageCopyToPrintableImage(pageNumber, pageImageDomElement);
+                this.printedPageImageLoadHandler();
             }
         },
 

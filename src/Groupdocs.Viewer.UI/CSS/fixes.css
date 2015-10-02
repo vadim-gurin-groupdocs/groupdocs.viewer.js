@@ -357,6 +357,7 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
 
 
 @media print {
+/* all print */
     * { 
         margin: 0 !important; padding: 0 !important; 
     }
@@ -371,6 +372,7 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
     
     body * {
         display: none !important;
+        /*visibility: hidden !important;*/
     }
     
     /*body .grpdx div.groupdocsPrintFrame {
@@ -381,22 +383,43 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
     
     /*body .grpdx div.groupdocsPrintFrame, body .grpdx div.groupdocsPrintFrame img {*/
     body div.groupdocsPrintFrame{
-        height: 100%;
+        width: auto !important;
+        height: 100% !important;
+        overflow-y: visible !important;
+        /*position: fixed;
+        left:0;
+        top:0;*/
     }
     
-    body div.groupdocsPrintFrame, body div.groupdocsPrintFrame img {
+    body div.groupdocsPrintFrame, body div.doc-page, body div.groupdocsPrintFrame img {
         display:block !important;
         /*visibility: visible !important;*/
+        /*overflow: visible !important;*/
     }
     
+    body div#test, body div.grpdx, body div.viewer_mainwrapper, body div.doc_viewer {
+        display:block !important;
+        /*visibility: visible !important;*/
+        width: auto !important;
+        height: 100% !important;
+        overflow: visible !important;
+    }
+
+    body div.viewer_mainwrapper {
+        position: static;
+    }
+
     /*body :not(.groupdocsPrintFrame) {
         display: none !important;
     }*/
     
     /*.grpdx div.groupdocsPrintFrame img {*/
-    div.groupdocsPrintFrame img {
-        max-width: 100%;
-        max-height: 100%;
+    div.groupdocsPrintFrame img, div.groupdocsPrintFrame .doc-page {
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+    div.groupdocsPrintFrame .doc-page {
         page-break-after: always;
     }
 }
