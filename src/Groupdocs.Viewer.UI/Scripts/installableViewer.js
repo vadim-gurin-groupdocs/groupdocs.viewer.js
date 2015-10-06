@@ -432,6 +432,10 @@
                 self._localizeElements();
             }
 
+            if (settings.useFullSizeImages) {
+                this.groupdocsViewerWrapper.parents(":not(body,html)").addClass("groupdocsPrintableContainer");
+            }
+
             docViewerJquery.bind("onHtmlCreated", localizeElements);
             navigationWrapper.bind("onHtmlCreated", localizeElements);
             zoomingWrapper.bind("onHtmlCreated", localizeElements);
@@ -1195,7 +1199,8 @@
                         pagesLoaded = 0;
                         var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
                         pageCount = this.printImageElements.length;
-                        for (pageNum = 0; pageNum < this.printImageElements.length; pageNum++) {
+                        this.notLoadedPages = new Array();
+                        for (pageNum = 0; pageNum < pageCount; pageNum++) {
                             var pageImageDomElement = viewerViewModel.getPageDomElement(pageNum);
                             if (pageImageDomElement) {
                                 this.printedPageImageLoadHandler();
@@ -1203,8 +1208,14 @@
                             }
                             else {
                                 this.isPrinting = true;
-                                viewerViewModel.makePageVisible(pageNum);
+                                //viewerViewModel.makePageVisible(pageNum);
+                                this.notLoadedPages.push(pageNum);
                             }
+                        }
+
+                        if (this.notLoadedPages.length > 0) {
+                            pageNum = this.notLoadedPages.shift();
+                            viewerViewModel.makePageVisible(pageNum);
                         }
                     }
                     else {
@@ -1336,6 +1347,23 @@
             if (this.isPrinting) {
                 //this.putPageCopyToPrintableImage(pageNumber, pageImageDomElement);
                 this.printedPageImageLoadHandler();
+                var pageNum;
+                var pagesInBatch = 10;
+                if (this.pagesToLoadInQueue)
+                    this.pagesToLoadInQueue--;
+                else if (typeof this.pagesToLoadInQueue == "undefined")
+                    this.pagesToLoadInQueue = 0;
+
+                if (this.pagesToLoadInQueue == 0) {
+                    var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
+                    for (var i = 0; i < pagesInBatch; i++) {
+                        if (this.notLoadedPages.length > 0) {
+                            pageNum = this.notLoadedPages.shift();
+                            this.pagesToLoadInQueue++;
+                            viewerViewModel.makePageVisible(pageNum);
+                        }
+                    }
+                }
             }
         },
 

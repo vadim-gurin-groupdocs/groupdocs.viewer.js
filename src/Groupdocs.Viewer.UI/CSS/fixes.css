@@ -375,29 +375,12 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
         /*visibility: hidden !important;*/
     }
     
-    /*body .grpdx div.groupdocsPrintFrame {
-        position: absolute;
-        left:0;
-        top:0;
-    }*/
     
-    /*body .grpdx div.groupdocsPrintFrame, body .grpdx div.groupdocsPrintFrame img {*/
-    body div.groupdocsPrintFrame{
-        width: auto !important;
-        height: 100% !important;
-        overflow-y: visible !important;
-        /*position: fixed;
-        left:0;
-        top:0;*/
-    }
-    
-    body div.groupdocsPrintFrame, body div.doc-page, body div.groupdocsPrintFrame img {
-        display:block !important;
-        /*visibility: visible !important;*/
-        /*overflow: visible !important;*/
-    }
-    
-    body div#test, body div.grpdx, body div.viewer_mainwrapper, body div.doc_viewer {
+    body .groupdocsPrintableContainer,
+    body div.grpdx,
+    body div.grpdx div.viewer_mainwrapper,
+    body div.doc_viewer,
+    body div.pages_container {
         display:block !important;
         /*visibility: visible !important;*/
         width: auto !important;
@@ -405,21 +388,20 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
         overflow: visible !important;
     }
 
-    body div.viewer_mainwrapper {
+    body div.grpdx div.viewer_mainwrapper {
         position: static;
     }
-
-    /*body :not(.groupdocsPrintFrame) {
-        display: none !important;
-    }*/
     
-    /*.grpdx div.groupdocsPrintFrame img {*/
-    div.groupdocsPrintFrame img, div.groupdocsPrintFrame .doc-page {
+    div.pages_container .doc-page, div.pages_container img {
+        display:block !important;
+        /*visibility: visible !important;*/
+        width: auto !important;
+        height: auto !important;
         max-width: 100% !important;
         max-height: 100% !important;
     }
 
-    div.groupdocsPrintFrame .doc-page {
+    div.pages_container .doc-page {
         page-break-after: always;
     }
 }

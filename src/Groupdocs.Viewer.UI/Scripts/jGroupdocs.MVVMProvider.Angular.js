@@ -303,7 +303,7 @@
                     '</div>' + htmlBasedWatermarkMarkup;
 
                 var useHtmlBasedEngine = (options.pageContentType == "html");
-                var pagesContainerElementHtml = 'name="printFrame1" class="groupdocsPrintFrame pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-class="{chrome: viewModel.browserIsChrome()}", data-ng-style="viewModel.pagesContainerStyle()" ';
+                var pagesContainerElementHtml = 'class="pages_container ' + (useHtmlBasedEngine ? 'html_pages_container' : '') + '" data-ng-class="{chrome: viewModel.browserIsChrome()}", data-ng-style="viewModel.pagesContainerStyle()" ';
 
                 var viewerHtml =
 
