@@ -170,6 +170,7 @@
         licElement: null,
         printImageElements: null,
         isPrinting: false,
+        pageCount: null,
 
         _create: function (options) {
             this._model = new groupdocsViewerModel(options);
@@ -413,7 +414,6 @@
             }
 
             if (settings.currentSearchHighlightColor) {
-                //style += "#" + settings.docViewerId + " .current_search_highlight {background-color:" + settings.currentSearchHighlightColor + " !important}";
                 style += ".grpdx." + classWithNumber + " .current_search_highlight {" +
                          "background-color:" + settings.currentSearchHighlightColor +
                          "; fill:" + settings.currentSearchHighlightColor +
@@ -433,7 +433,9 @@
             }
 
             if (settings.useFullSizeImages) {
-                this.groupdocsViewerWrapper.parents(":not(body,html)").addClass("groupdocsPrintableContainer");
+                var groupdocsPrintableContainerClass = "groupdocsPrintableContainer";
+                this.groupdocsViewerWrapper.addClass(groupdocsPrintableContainerClass);
+                this.groupdocsViewerWrapper.parents(":not(body,html)").addClass(groupdocsPrintableContainerClass);
             }
 
             docViewerJquery.bind("onHtmlCreated", localizeElements);
@@ -759,7 +761,6 @@
             jerrorElement.removeClass("jerrorwrapper");
 
             var viewerMainwrapper = groupdocsViewerWrapper.find(".viewer_mainwrapper");
-            var initialized = false;
             if (!window.jGDError)
                 window.jGDError = new Array();
             window.jGDError[this.viewerId] = function (msg) {
@@ -838,25 +839,30 @@
         },
 
         documentLoadedHandler: function (data, groupdocsViewerWrapper, viewerMainWrapper) {
-            this.printFrameLoaded = false;
-            var bodyElement = $("body");
-            var printFrameName = "printFrame" + this.viewerId;
-            var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
-            if (printFrame.length == 0) {
-                printFrame = $("<div class='groupdocsPrintFrameDeactivated'></div>");
-                printFrame.attr("name", printFrameName);
-                //printFrame.appendTo(bodyElement);
-            }
-            else
-                printFrame.empty();
-
-            this.printImageElements.length = 0;
             var pageCount = data.pageCount;
+            this.printFrameLoaded = false;
+            if (this.useFullSizeImages && !this.useHtmlBasedEngine) {
+                this.pageCount = pageCount;
+            }
+            else {
+                var bodyElement = $("body");
+                var printFrameName = "printFrame" + this.viewerId;
+                var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
+                if (printFrame.length == 0) {
+                    printFrame = $("<div class='groupdocsPrintFrameDeactivated'></div>");
+                    printFrame.attr("name", printFrameName);
+                    printFrame.appendTo(bodyElement);
+                }
+                else
+                    printFrame.empty();
 
-            var imgElement;
-            for (var pageNum = 0; pageNum < pageCount; pageNum++) {
-                imgElement = $("<img/>").appendTo(printFrame);
-                this.printImageElements.push(imgElement);
+                this.printImageElements.length = 0;
+
+                var imgElement;
+                for (var pageNum = 0; pageNum < pageCount; pageNum++) {
+                    imgElement = $("<img/>").appendTo(printFrame);
+                    this.printImageElements.push(imgElement);
+                }
             }
         },
 
@@ -1146,14 +1152,23 @@
                     fileDisplayName = this.fileDisplayName;
 
                 var useHtmlContentBasedPrinting = this.useHtmlBasedEngine && !this.useImageBasedPrinting;
-                var bodyElement = $("body");
-                var printFrameName = "printFrame" + this.viewerId;
-                var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
-                var otherPrintFrames = bodyElement.children("div.groupdocsPrintFrame,div.groupdocsPrintFrameDeactivated").not(printFrame);
-                otherPrintFrames.removeClass("groupdocsPrintFrame");
-                otherPrintFrames.addClass("groupdocsPrintFrameDeactivated");
-                printFrame.removeClass("groupdocsPrintFrameDeactivated");
-                printFrame.addClass("groupdocsPrintFrame");
+
+                if (!this.useFullSizeImages && !this.useHtmlBasedEngine) {
+                    var bodyElement = $("body");
+                    var printFrameName = "printFrame" + this.viewerId;
+                    var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
+                    var otherPrintFrames = bodyElement.children("div.groupdocsPrintFrame,div.groupdocsPrintFrameDeactivated").not(printFrame);
+                    otherPrintFrames.removeClass("groupdocsPrintFrame");
+                    otherPrintFrames.addClass("groupdocsPrintFrameDeactivated");
+                    printFrame.removeClass("groupdocsPrintFrameDeactivated");
+                    printFrame.addClass("groupdocsPrintFrame");
+
+                    if (printFrame.length == 0) {
+                        printFrame = $("<div class='groupdocsPrintFrame'></div>");
+                        printFrame.attr("name", printFrameName);
+                        printFrame.appendTo(bodyElement);
+                    }
+                }
 
                 var watermarkText = null, watermarkColor = null;
                 var watermarkPosition = this.watermarkPosition, watermarkWidth = null;
@@ -1161,12 +1176,6 @@
                     watermarkText = this.watermarkText;
                     watermarkColor = this.watermarkColor;
                     watermarkWidth = this.watermarkWidth;
-                }
-
-                if (printFrame.length == 0) {
-                    printFrame = $("<div class='groupdocsPrintFrame'></div>");
-                    printFrame.attr("name", printFrameName);
-                    //printFrame.appendTo(bodyElement);
                 }
 
                 if (this.printFrameLoaded) {
@@ -1198,17 +1207,15 @@
                     if (!this.useHtmlBasedEngine && this.useFullSizeImages) {
                         pagesLoaded = 0;
                         var viewerViewModel = this.viewerAdapter.documentComponentViewModel;
-                        pageCount = this.printImageElements.length;
+                        pageCount = this.pageCount;
                         this.notLoadedPages = new Array();
                         for (pageNum = 0; pageNum < pageCount; pageNum++) {
                             var pageImageDomElement = viewerViewModel.getPageDomElement(pageNum);
                             if (pageImageDomElement) {
                                 this.printedPageImageLoadHandler();
-                                //this.putPageCopyToPrintableImage(pageNum, pageImageDomElement);
                             }
                             else {
                                 this.isPrinting = true;
-                                //viewerViewModel.makePageVisible(pageNum);
                                 this.notLoadedPages.push(pageNum);
                             }
                         }
@@ -1345,7 +1352,6 @@
 
         pageImageLoadedHandler: function (pageNumber, pageImageDomElement) {
             if (this.isPrinting) {
-                //this.putPageCopyToPrintableImage(pageNumber, pageImageDomElement);
                 this.printedPageImageLoadHandler();
                 var pageNum;
                 var pagesInBatch = 10;

@@ -357,8 +357,7 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
 
 
 @media print {
-/* all print */
-    * { 
+    * {
         margin: 0 !important; padding: 0 !important; 
     }
     
@@ -372,37 +371,52 @@ body > div.groupdocsPrintFrame, body > div.groupdocsPrintFrameDeactivated {
     
     body * {
         display: none !important;
-        /*visibility: hidden !important;*/
     }
     
-    
+    /* full size images - direct printing from screen page images */
     body .groupdocsPrintableContainer,
-    body div.grpdx,
-    body div.grpdx div.viewer_mainwrapper,
-    body div.doc_viewer,
-    body div.pages_container {
+    body div.grpdx.groupdocsPrintableContainer,
+    body div.grpdx.groupdocsPrintableContainer > div.viewer_mainwrapper,
+    body div.grpdx.groupdocsPrintableContainer div.doc_viewer,
+    body div.grpdx.groupdocsPrintableContainer div.pages_container {
         display:block !important;
-        /*visibility: visible !important;*/
         width: auto !important;
         height: 100% !important;
         overflow: visible !important;
     }
 
-    body div.grpdx div.viewer_mainwrapper {
+    body div.grpdx.groupdocsPrintableContainer > div.viewer_mainwrapper {
         position: static;
     }
     
-    div.pages_container .doc-page, div.pages_container img {
+    div.grpdx.groupdocsPrintableContainer div.pages_container > .doc-page,
+    div.grpdx.groupdocsPrintableContainer div.pages_container img {
         display:block !important;
-        /*visibility: visible !important;*/
         width: auto !important;
         height: auto !important;
         max-width: 100% !important;
         max-height: 100% !important;
     }
 
-    div.pages_container .doc-page {
+    div.grpdx.groupdocsPrintableContainer div.pages_container > .doc-page {
         page-break-after: always;
     }
+    /* end of full size images - direct printing from screen page images */
+
+    /* printing from a separate div */
+    body div.groupdocsPrintFrame{
+        height: 100%;
+    }
+    
+    body div.groupdocsPrintFrame, body div.groupdocsPrintFrame img {
+        display:block !important;
+    }
+    
+    div.groupdocsPrintFrame img {
+        max-width: 100%;
+        max-height: 100%;
+        page-break-after: always;
+    }
+    /* end of printing from a separate div */
 }
 
