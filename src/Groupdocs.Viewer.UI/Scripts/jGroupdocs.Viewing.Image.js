@@ -379,7 +379,16 @@
         },
 
         firePageImageLoadedEvent: function (pageNumber, event) {
+            this.firePageImageEvent(pageNumber, event, false);
+        },
+
+        firePageImageLoadErrorEvent: function (pageNumber, event) {
+            this.firePageImageEvent(pageNumber, event, true);
+        },
+
+        firePageImageEvent: function (pageNumber, event, isErrorEvent) {
             var domElement = event.target;
+
             if (this.useFullSizeImages) {
                 var pages = this.pages();
                 var page = null;
@@ -389,7 +398,12 @@
                 if (page) {
                     if (page.visible()) {
                         page.domElement = domElement;
-                        this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
+                        if (isErrorEvent) {
+                            this.triggerEvent("pageImageLoadError.groupdocs", [pageNumber, domElement]);
+                            this._onError({ Reason: "The page " + pageNumber + " can't be loaded" });
+                        }
+                        else
+                            this.triggerEvent("pageImageLoaded.groupdocs", [pageNumber, domElement]);
                     }
                 }
             }

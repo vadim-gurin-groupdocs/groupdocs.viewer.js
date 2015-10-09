@@ -216,7 +216,7 @@
     :
     '           <div class="highlight-pane"></div>' +
     '           <div class="search-pane"></div>' +
-    '           <img class="page-image" src="' + options.emptyImageUrl + '" data-bind="event: {load: function(item, e){$root.firePageImageLoadedEvent($index(), e);}}, attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (visible() ? url : $root.emptyImageUrl) }, ' +
+    '           <img class="page-image" src="' + options.emptyImageUrl + '" data-bind="event: {load: function(item, e){$root.firePageImageLoadedEvent($index(), e);}, error: function(item, e){$root.firePageImageLoadErrorEvent($index(), e);} }, attr: { id: \'' + options.docViewerId + '\' + \'-img-\' + ($index() + 1), src: (visible() ? url : $root.emptyImageUrl) }, ' +
     '           style: { width: $parent.pageWidth() + \'px\', height: $parent.pageWidth() * $data.prop() + \'px\' }"/>'
     ) +
 

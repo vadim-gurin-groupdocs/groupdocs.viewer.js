@@ -747,6 +747,10 @@
                 self.pageImageLoadedHandler(pageNumber, pageImageDomElement);
             });
 
+            docViewerJquery.bind('pageImageLoadError.groupdocs', function (e, pageNumber, pageImageDomElement) {
+                self.pageImageLoadErrorHandler(pageNumber, pageImageDomElement);
+            });
+
             if (settings.viewerStyle == this.viewModes.BookMode) {
                 viewTypeViewModel.openDoublePageFlipView();
             }
@@ -1370,6 +1374,13 @@
                         }
                     }
                 }
+            }
+        },
+
+        pageImageLoadErrorHandler: function (pageNumber, pageImageDomElement) {
+            if (this.isPrinting) {
+                this._hideMessageDialog();
+                this.isPrinting = false;
             }
         },
 

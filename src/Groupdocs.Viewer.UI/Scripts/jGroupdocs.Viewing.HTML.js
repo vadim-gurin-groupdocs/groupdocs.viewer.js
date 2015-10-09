@@ -828,7 +828,6 @@
             screenHeight += reserveHeight;
             page.prop(screenHeight / screenWidth);
             this.autoHeight(false);
-            //console.log("_calculatePageSizeFromDOM");
         },
 
         reflowPagesInChrome: function (async) {
@@ -1023,7 +1022,6 @@
             if (!page.rotation || vertical == diagonal)
                 return returnValue;
 
-            //var screenCenterMinusFontHeight = screenCenter - 10;
             var firstShift = 0, secondShift = 0, secondHorizontalShift = 0;
             var rotationCenterX, rotationCenterY = 0;
             if (horizontal == center) {
@@ -1279,8 +1277,6 @@
                 if (maxBottom === null || innerElementTop + innerElementHeight > maxBottom)
                     maxBottom = innerElementTop + innerElementHeight;
             });
-            //var containerOffsetLeft = self.pagesContainerElement.offset().left;
-            //var containerOffsetTop = self.pagesContainerElement.offset().top;
 
             var containerOffsetLeft = spaceToSearchIn.offset().left;
             var containerOffsetTop = spaceToSearchIn.offset().top;
