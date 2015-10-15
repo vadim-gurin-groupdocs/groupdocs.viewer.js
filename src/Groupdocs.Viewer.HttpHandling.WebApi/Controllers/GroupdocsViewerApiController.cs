@@ -58,7 +58,6 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        [Route("document-viewer/ViewDocument")]
         public HttpResponseMessage ViewDocument(ViewDocumentViewModel viewModel)
         {
             object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
@@ -113,12 +112,19 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return response;
         }
 
-
-        public HttpResponseMessage GetDocumentPageHtml(string path, int pageIndex, bool usePngImages,
-                                                bool embedImagesIntoHtmlForWordFiles, string instanceIdToken = null, string locale = null)
+        [HttpPost]
+        public HttpResponseMessage GetDocumentPageHtml(GetDocumentPageHtmlViewModel viewModel)
         {
             string pageHtml, pageCss;
-            _coreHandler.GetDocumentPageHtml(this, path, pageIndex, usePngImages, embedImagesIntoHtmlForWordFiles, out pageHtml, out pageCss, instanceIdToken, locale);
+            _coreHandler.GetDocumentPageHtml(this, 
+                viewModel.path,
+                viewModel.pageIndex,
+                viewModel.usePngImages,
+                viewModel.embedImagesIntoHtmlForWordFiles,
+                out pageHtml, 
+                out pageCss,
+                viewModel.instanceIdToken,
+                viewModel.locale);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }

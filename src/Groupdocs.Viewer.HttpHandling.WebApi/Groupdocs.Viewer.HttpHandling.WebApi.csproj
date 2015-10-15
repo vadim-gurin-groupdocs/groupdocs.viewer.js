@@ -106,11 +106,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\GroupdocsViewerController.cs" />
+    <Compile Include="Controllers\GroupdocsViewerApiController.cs" />
     <Compile Include="Core\ViewerWebApi.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\GetDocumentPageHtmlViewModel.cs" />
     <Compile Include="ViewModels\GetDocumentPageImageViewModel.cs" />
     <Compile Include="ViewModels\GetImageUrlsViewModel.cs" />
     <Compile Include="ViewModels\LoadFileBrowserTreeDataViewModel.cs" />
