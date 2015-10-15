@@ -37,10 +37,6 @@ namespace GroupdocsViewer.EngineeringSample
         {
             AreaRegistration.RegisterAllAreas();
             ViewerMvc.InitRoutes();
-            Viewer.SetBaseUrl("/");
-            string rootStoragePath = @"d:\temp\";
-            Viewer.SetRootStoragePath(rootStoragePath);
-            Viewer.SetLicensePath(@"d:\temp\TestLicensesWithNewKey\GroupDocs Viewer2015-05-29.lic");
             //ViewerAspNet.InitAspNetRoutes(); // must be after SetRootStoragePath() because handlers are created immediately
 
             RegisterGlobalFilters(GlobalFilters.Filters);

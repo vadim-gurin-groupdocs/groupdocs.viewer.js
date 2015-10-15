@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,12 +9,13 @@ using System.Text;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.Script.Serialization;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 
 namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
 {
-    public class GroupdocsViewerController : ApiController, IUrlsCreator
+    public class GroupdocsViewerApiController : ApiController, IUrlsCreator
     {
         private readonly IApplicationPathFinder _applicationPathFinder;
         private readonly IPrintableHtmlCreator _printableHtmlCreator;
@@ -21,7 +23,16 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         private readonly IRootPathFinder _rootPathFinder;
         private readonly ICoreHandler _coreHandler;
 
-        public GroupdocsViewerController(IRootPathFinder rootPathFinder,
+        public GroupdocsViewerApiController()
+        {
+            _rootPathFinder = new RootPathFinder();
+            _applicationPathFinder = new ApplicationPathFinder();
+            _printableHtmlCreator = new PrintableHtmlCreator();
+            _helper = new Helper();
+            _coreHandler = new CoreHandler();
+        }
+
+        public GroupdocsViewerApiController(IRootPathFinder rootPathFinder,
                                         IApplicationPathFinder applicationPathFinder,
                                         IPrintableHtmlCreator printableHtmlCreator,
                                         IHelper helper,
@@ -33,99 +44,69 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             _helper = helper;
             _coreHandler = coreHandler;
         }
-
+        
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null,
-                                                    bool orderAsc = true, string filter = null, string fileTypes = null,
-                                                    bool extended = false, string callback = null, string instanceIdToken = null)
+        public HttpResponseMessage LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel )
         {
-            object data = _coreHandler.LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
-                                                              fileTypes, extended, instanceIdToken);
+            object data = _coreHandler.LoadFileBrowserTreeData(viewModel.path, viewModel.pageIndex, viewModel.pageSize, viewModel.orderBy, viewModel.orderAsc, viewModel.filter,
+                                                              viewModel.fileTypes, viewModel.extended, viewModel.instanceIdToken);
             if (data == null)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
-
+        
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage ViewDocument(string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
-                                         int? count = null, int? width = null,
-                                         int? quality = null, bool usePdf = true,
-                                         int? preloadPagesCount = null, bool convertWordDocumentsCompletely = false,
-                                         string fileDisplayName = null,
-                                         string watermarkText = null, int? watermarkColor = null,
-                                         WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
-                                         bool ignoreDocumentAbsence = false,
-                                         bool supportPageRotation = false,
-                                         bool supportListOfContentControls = false,
-                                         bool supportListOfBookmarks = false,
-                                         bool embedImagesIntoHtmlForWordFiles = false,
-                                         string instanceIdToken = null,
-                                         string locale = null,
-                                         string callback = null)
+        [Route("document-viewer/ViewDocument")]
+        public HttpResponseMessage ViewDocument(ViewDocumentViewModel viewModel)
         {
             object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
-                                           path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
-                                           count, width,
-                                           quality, usePdf,
-                                           preloadPagesCount, convertWordDocumentsCompletely,
-                                           fileDisplayName,
-                                           watermarkText, watermarkColor,
-                                           watermarkPosition, watermarkWidth,
-                                           ignoreDocumentAbsence,
-                                           supportPageRotation,
-                                           supportListOfContentControls,
-                                           supportListOfBookmarks,
-                                           embedImagesIntoHtmlForWordFiles,
-                                           instanceIdToken,
-                                           locale);
-            return CreateJsonOrJsonpResponse(data, callback);
+                viewModel.path, viewModel.useHtmlBasedEngine, viewModel.usePngImagesForHtmlBasedEngine,
+                viewModel.count, viewModel.width,
+                viewModel.quality, viewModel.usePdf,
+                viewModel.preloadPagesCount, viewModel.convertWordDocumentsCompletely,
+                viewModel.fileDisplayName,
+                viewModel.watermarkText, viewModel.watermarkColor,
+                viewModel.watermarkPosition, viewModel.watermarkWidth,
+                viewModel.ignoreDocumentAbsence,
+                viewModel.supportPageRotation,
+                viewModel.supportListOfContentControls,
+                viewModel.supportListOfBookmarks,
+                viewModel.embedImagesIntoHtmlForWordFiles,
+                viewModel.instanceIdToken,
+                viewModel.locale);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage GetImageUrls(string path, int width, int firstPage = 0, int pageCount = 0,
-                                         int? quality = null, bool usePdf = true,
-                                         string watermarkText = null, int? watermarkColor = null,
-                                         WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
-                                         bool ignoreDocumentAbsence = false,
-                                         bool useHtmlBasedEngine = false,
-                                         bool supportPageRotation = false,
-                                         string callback = null,
-                                         string instanceIdToken = null, string locale = null)
+        public HttpResponseMessage GetImageUrls(GetImageUrlsViewModel viewModel)
         {
             object data = _coreHandler.GetImageUrls(this,
-                                                   path, width, firstPage, pageCount,
-                                                   quality, usePdf,
-                                                   watermarkText, watermarkColor,
-                                                   watermarkPosition, watermarkWidth,
-                                                   ignoreDocumentAbsence,
-                                                   useHtmlBasedEngine,
-                                                   supportPageRotation,
-                                                   instanceIdToken, locale);
+                                                   viewModel.path, viewModel.width, viewModel.firstPage, viewModel.pageCount,
+                                                   viewModel.quality, viewModel.usePdf,
+                                                   viewModel.watermarkText, viewModel.watermarkColor,
+                                                   viewModel.watermarkPosition, viewModel.watermarkWidth,
+                                                   viewModel.ignoreDocumentAbsence,
+                                                   viewModel.useHtmlBasedEngine,
+                                                   viewModel.supportPageRotation,
+                                                   viewModel.instanceIdToken, viewModel.locale);
 
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
-
-        public HttpResponseMessage GetDocumentPageImage(string path, int pageIndex, int? width, int? quality, bool usePdf = true,
-                                                 string watermarkText = null, int? watermarkColor = null,
-                                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
-                                                 float watermarkWidth = 0,
-                                                 bool ignoreDocumentAbsence = false,
-                                                 bool useHtmlBasedEngine = false,
-                                                 bool rotate = false,
-                                                 string instanceIdToken = null, string locale = null)
+        [HttpGet]
+        public HttpResponseMessage GetDocumentPageImage([FromUri]GetDocumentPageImageViewModel viewModel)
         {
-            byte[] imageBytes = _coreHandler.GetDocumentPageImage(path, pageIndex, width, quality, usePdf,
-                                                               watermarkText, watermarkColor,
-                                                               watermarkPosition,
-                                                               watermarkWidth,
-                                                               ignoreDocumentAbsence,
-                                                               useHtmlBasedEngine,
-                                                               rotate,
-                                                               instanceIdToken,
-                                                               locale);
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel.path, viewModel.pageIndex, viewModel.width, viewModel.quality, viewModel.usePdf,
+                                                               viewModel.watermarkText, viewModel.watermarkColor,
+                                                               viewModel.watermarkPosition,
+                                                               viewModel.watermarkWidth,
+                                                               viewModel.ignoreDocumentAbsence,
+                                                               viewModel.useHtmlBasedEngine,
+                                                               viewModel.rotate,
+                                                               viewModel.instanceIdToken,
+                                                               viewModel.locale);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new ByteArrayContent(imageBytes);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
@@ -157,9 +138,9 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             else
             {
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-                SetLastModified(response, fileModificationDateTime);
                 response.Content = new ByteArrayContent(resourceBytes);
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(resourcePath));
+                SetLastModified(response, fileModificationDateTime);
                 return response;
             }
         }
@@ -248,7 +229,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
                                              float watermarkWidth = 0,
                                              bool ignoreDocumentAbsence = false,
                                              string callback = null,
-                                             string instanceIdToken = null, 
+                                             string instanceIdToken = null,
                                              string locale = null)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
@@ -266,7 +247,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
                                                               watermarkPosition,
                                                               watermarkWidth,
                                                               ignoreDocumentAbsence,
-                                                              instanceIdToken, 
+                                                              instanceIdToken,
                                                               locale);
             return CreateJsonOrJsonpResponse(pageArray, callback);
         }
@@ -289,6 +270,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
 
         #region IUrlsCreator implementation
 
+        [NonAction]
         public string[] GetImageUrlsInternal(string path, int startingPageNumber, int pageCount, int? pageWidth, int? quality, bool usePdf = true,
                                               string watermarkText = null, int? watermarkColor = null,
                                               WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal, float? watermarkWidth = 0,
@@ -310,6 +292,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             if (_helper.GetStorageProvider() == SupportedStorageProvider.Local)
             {
                 Dictionary<string, object> routeValueDictionary = new Dictionary<string, object>(){
+                                                                    {"action", "GetDocumentPageImage"},
                                                                     {"path", path},
                                                                     {"width", pageWidth},
                                                                     {"quality", quality},
@@ -340,7 +323,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
                 {
                     routeValueDictionary["pageIndex"] = startingPageNumber + i;
                     pageUrls[i] = string.Format("{0}{1}", applicationHost,
-                                                url.Route("GetDocumentPageImage", routeValueDictionary));
+                                                url.Route("genericRoute", routeValueDictionary));
                 }
             }
             else
@@ -351,6 +334,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return pageUrls;
         }
 
+        [NonAction]
         public string GetFileUrl(string path, bool getPdf, bool isPrintable, string fileDisplayName = null,
                                  string watermarkText = null, int? watermarkColor = null,
                                  WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
@@ -361,9 +345,10 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         {
             //string displayNameEncoded = HttpUtility.UrlEncode(fileDisplayName);
             string instanceIdToken = instanceId;
-            string fileUrl = ConvertUrlToAbsolute(Url.Route(isPrintable ? "GetPdfWithPrintDialog" : "GetFile",
+            string fileUrl = ConvertUrlToAbsolute(Url.Route("genericRoute",
                                                   new
                                                   {
+                                                      action = isPrintable ? "GetPdfWithPrintDialog" : "GetFile",
                                                       path,
                                                       displayName = fileDisplayName,
                                                       getPdf,
@@ -380,11 +365,12 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return fileUrl;
         }
 
+        [NonAction]
         public string GetResourceForHtmlUrl(string documentPath, string resourcePath,
                                             bool relativeToOriginal = false, string instanceId = null)
         {
             string instanceIdToken = instanceId;
-            string urlForResourcesInHtml = ConvertUrlToAbsolute(Url.Route("GetResourceForHtml", new { documentPath, relativeToOriginal, resourcePath, instanceIdToken }));
+            string urlForResourcesInHtml = ConvertUrlToAbsolute(Url.Route("genericRoute", new { action = "GetResourceForHtml", documentPath, relativeToOriginal, resourcePath, instanceIdToken }));
             return urlForResourcesInHtml;
         }
         #endregion
@@ -438,8 +424,8 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
 
         private DateTime? GetClientModifiedSince()
         {
-            string stringClientModifiedSince = Request.Headers.IfModifiedSince.ToString();
-            DateTime? clientModifiedSince = _helper.GetDateTimeFromClientHeader(stringClientModifiedSince);
+            var headerValue = Request.Headers.IfModifiedSince;
+            DateTime? clientModifiedSince = headerValue.HasValue ? headerValue.Value.DateTime : (DateTime?)null;
             return clientModifiedSince;
         }
         
