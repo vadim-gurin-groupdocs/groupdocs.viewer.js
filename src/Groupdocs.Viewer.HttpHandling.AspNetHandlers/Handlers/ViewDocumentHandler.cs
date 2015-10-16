@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -48,28 +48,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     MaxJsonLength = CommonConstants.MaxJsonLength
                 };
 
-                string path = null;
-                bool useHtmlBasedEngine = false;
-                bool usePngImagesForHtmlBasedEngine = false;
-                int? count = null;
-                int? width = null;
-                int? quality = null;
-                bool usePdf = true;
-                int? preloadPagesCount = null;
-                bool convertWordDocumentsCompletely = false;
-                string fileDisplayName = null;
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal;
-                float? watermarkWidth = 0;
-                bool ignoreDocumentAbsence = false;
-                bool supportPageRotation = false;
-                bool supportListOfContentControls = false;
-                bool supportListOfBookmarks = false;
-                bool embedImagesIntoHtmlForWordFiles = false;
-                string instanceId = null;
-                string locale = null;
-
                 string json;
                 bool isJsonP = context.Request.HttpMethod == "GET";
 
@@ -82,47 +60,9 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                         json = streamReader.ReadToEnd();
                     }
                 }
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetParameter(inputParameters, "path", ref path);
-                GetParameter(inputParameters, "useHtmlBasedEngine", ref useHtmlBasedEngine);
-                GetParameter(inputParameters, "usePngImagesForHtmlBasedEngine", ref usePngImagesForHtmlBasedEngine);
-                GetParameter(inputParameters, "convertWordDocumentsCompletely", ref convertWordDocumentsCompletely);
-                GetParameter(inputParameters, "count", ref count);
-                GetParameter(inputParameters, "preloadPagesCount", ref preloadPagesCount);
-                GetParameter(inputParameters, "width", ref width);
-                GetParameter(inputParameters, "locale", ref locale);
-                GetParameter(inputParameters, "quality", ref quality);
-                GetParameter(inputParameters, "usePdf", ref usePdf);
+                ViewDocumentViewModel viewModel = serializer.Deserialize<ViewDocumentViewModel>(json);
 
-                GetParameter(inputParameters, "fileDisplayName", ref fileDisplayName);
-                GetParameter(inputParameters, "ignoreDocumentAbsence", ref ignoreDocumentAbsence);
-                GetParameter(inputParameters, "supportPageRotation", ref supportPageRotation);
-                GetParameter(inputParameters, "supportListOfContentControls", ref supportListOfContentControls);
-                GetParameter(inputParameters, "supportListOfBookmarks", ref supportListOfBookmarks);
-                GetParameter(inputParameters, "embedImagesIntoHtmlForWordFiles", ref embedImagesIntoHtmlForWordFiles);
-
-                GetParameter(inputParameters, "watermarkText", ref watermarkText);
-                GetParameter(inputParameters, "watermarkColor", ref watermarkColor);
-                GetParameter(inputParameters, "watermarkPosition", ref watermarkPosition);
-                GetParameter(inputParameters, "watermarkWidth", ref watermarkWidth);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-
-                object data = ViewDocument(_urlsCreator, _printableHtmlCreator,
-                                           path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
-                                           count, width,
-                                           quality, usePdf,
-                                           preloadPagesCount, convertWordDocumentsCompletely,
-                                           fileDisplayName,
-                                           watermarkText, watermarkColor,
-                                           watermarkPosition ?? WatermarkPosition.Diagonal, watermarkWidth ?? 0,
-                                           ignoreDocumentAbsence,
-                                           supportPageRotation,
-                                           supportListOfContentControls,
-                                           supportListOfBookmarks,
-                                           embedImagesIntoHtmlForWordFiles,
-                                           instanceId,
-                                           locale);
-
+                object data = ViewDocument(_urlsCreator, _printableHtmlCreator, viewModel);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

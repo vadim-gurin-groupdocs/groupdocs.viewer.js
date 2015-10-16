@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
 using Groupdocs.Viewer.HttpHandling.AspNetMvc.ActionFilters;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 
@@ -63,38 +64,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult ViewDocument(string path, bool useHtmlBasedEngine = false, bool usePngImagesForHtmlBasedEngine = false,
-                                         int? count = null, int? width = null,
-                                         int? quality = null, bool usePdf = true,
-                                         int? preloadPagesCount = null, bool convertWordDocumentsCompletely = false,
-                                         string fileDisplayName = null,
-                                         string watermarkText = null, int? watermarkColor = null,
-                                         WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
-                                         bool ignoreDocumentAbsence = false,
-                                         bool supportPageRotation = false,
-                                         bool supportListOfContentControls = false,
-                                         bool supportListOfBookmarks = false,
-                                         bool embedImagesIntoHtmlForWordFiles = false,
-                                         string instanceIdToken = null,
-                                         string locale = null,
-                                         string callback = null)
+        public ActionResult ViewDocument(ViewDocumentViewModel viewModel)
         {
-            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
-                                           path, useHtmlBasedEngine, usePngImagesForHtmlBasedEngine,
-                                           count, width,
-                                           quality, usePdf,
-                                           preloadPagesCount, convertWordDocumentsCompletely,
-                                           fileDisplayName,
-                                           watermarkText, watermarkColor,
-                                           watermarkPosition, watermarkWidth,
-                                           ignoreDocumentAbsence,
-                                           supportPageRotation,
-                                           supportListOfContentControls,
-                                           supportListOfBookmarks,
-                                           embedImagesIntoHtmlForWordFiles,
-                                           instanceIdToken,
-                                           locale);
-            return CreateJsonOrJsonpResponse(data, callback);
+            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
@@ -370,7 +343,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 
         public string GetFileUrl(string path, bool getPdf, bool isPrintable, string fileDisplayName = null,
                                  string watermarkText = null, int? watermarkColor = null,
-                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
+                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float? watermarkWidth = 0,
                                  bool ignoreDocumentAbsence = false,
                                  bool useHtmlBasedEngine = false,
                                  bool supportPageRotation = false,

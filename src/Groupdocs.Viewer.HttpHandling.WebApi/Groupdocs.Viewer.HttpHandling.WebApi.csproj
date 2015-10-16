@@ -115,7 +115,6 @@
     <Compile Include="ViewModels\GetDocumentPageImageViewModel.cs" />
     <Compile Include="ViewModels\GetImageUrlsViewModel.cs" />
     <Compile Include="ViewModels\LoadFileBrowserTreeDataViewModel.cs" />
-    <Compile Include="ViewModels\ViewDocumentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.Core\Groupdocs.Viewer.HttpHandling.Core.csproj">

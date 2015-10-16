@@ -60,21 +60,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public HttpResponseMessage ViewDocument(ViewDocumentViewModel viewModel)
         {
-            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator,
-                viewModel.path, viewModel.useHtmlBasedEngine, viewModel.usePngImagesForHtmlBasedEngine,
-                viewModel.count, viewModel.width,
-                viewModel.quality, viewModel.usePdf,
-                viewModel.preloadPagesCount, viewModel.convertWordDocumentsCompletely,
-                viewModel.fileDisplayName,
-                viewModel.watermarkText, viewModel.watermarkColor,
-                viewModel.watermarkPosition, viewModel.watermarkWidth,
-                viewModel.ignoreDocumentAbsence,
-                viewModel.supportPageRotation,
-                viewModel.supportListOfContentControls,
-                viewModel.supportListOfBookmarks,
-                viewModel.embedImagesIntoHtmlForWordFiles,
-                viewModel.instanceIdToken,
-                viewModel.locale);
+            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
             return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
@@ -343,7 +329,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         [NonAction]
         public string GetFileUrl(string path, bool getPdf, bool isPrintable, string fileDisplayName = null,
                                  string watermarkText = null, int? watermarkColor = null,
-                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
+                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float? watermarkWidth = 0,
                                  bool ignoreDocumentAbsence = false,
                                  bool useHtmlBasedEngine = false,
                                  bool supportPageRotation = false,
