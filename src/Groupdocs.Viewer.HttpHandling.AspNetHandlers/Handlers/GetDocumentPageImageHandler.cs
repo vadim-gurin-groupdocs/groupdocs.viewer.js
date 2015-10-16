@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Web;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -74,19 +75,29 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 
                 useHtmlBasedEngine = Boolean.Parse(context.Request.Params["useHtmlBasedEngine"]);
                 rotate = Boolean.Parse(context.Request.Params["rotate"]);
-                string instanceId = context.Request.Params[Constants.InstanceIdRequestKey];
+                string instanceIdToken = context.Request.Params[Constants.InstanceIdRequestKey];
 
                 var locale = !string.IsNullOrEmpty(_context.Request.Params["locale"]) ? _context.Request.Params["locale"] : null;
 
-                byte[] imageBytes = GetDocumentPageImage(path, pageIndex, width, quality, usePdf,
-                                                               watermarkText, watermarkColor,
-                                                               watermarkPosition,
-                                                               watermarkWidth,
-                                                               ignoreDocumentAbsence,
-                                                               useHtmlBasedEngine,
-                                                               rotate,
-                                                               instanceId,
-                                                               locale);
+                GetDocumentPageImageViewModel viewModel = new GetDocumentPageImageViewModel()
+                {
+                    path = path,
+                    pageIndex = pageIndex,
+                    width = width,
+                    quality = quality,
+                    usePdf = usePdf,
+                    watermarkText = watermarkText,
+                    watermarkColor = watermarkColor,
+                    watermarkPosition = watermarkPosition,
+                    watermarkWidth = watermarkWidth,
+                    ignoreDocumentAbsence = ignoreDocumentAbsence,
+                    useHtmlBasedEngine = useHtmlBasedEngine,
+                    rotate = rotate,
+                    instanceIdToken = instanceIdToken,
+                    locale = locale
+                };
+
+                byte[] imageBytes = GetDocumentPageImage(viewModel);
                 context.Response.ContentType = "image/jpeg";
                 context.Response.BinaryWrite(imageBytes);
             }

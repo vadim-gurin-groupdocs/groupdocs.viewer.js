@@ -95,24 +95,9 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
 
-        public ActionResult GetDocumentPageImage(string path, int pageIndex, int? width, int? quality, bool usePdf = true,
-                                                 string watermarkText = null, int? watermarkColor = null,
-                                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
-                                                 float watermarkWidth = 0,
-                                                 bool ignoreDocumentAbsence = false,
-                                                 bool useHtmlBasedEngine = false,
-                                                 bool rotate = false,
-                                                 string instanceIdToken = null, string locale = null)
+        public ActionResult GetDocumentPageImage(GetDocumentPageImageViewModel viewModel)
         {
-            byte[] imageBytes = _coreHandler.GetDocumentPageImage(path, pageIndex, width, quality, usePdf,
-                                                               watermarkText, watermarkColor,
-                                                               watermarkPosition,
-                                                               watermarkWidth,
-                                                               ignoreDocumentAbsence,
-                                                               useHtmlBasedEngine,
-                                                               rotate,
-                                                               instanceIdToken,
-                                                               locale);
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel);
             return File(imageBytes, "image/jpeg");
         }
 

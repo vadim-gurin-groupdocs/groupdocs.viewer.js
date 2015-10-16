@@ -83,15 +83,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         [HttpGet]
         public HttpResponseMessage GetDocumentPageImage([FromUri]GetDocumentPageImageViewModel viewModel)
         {
-            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel.path, viewModel.pageIndex, viewModel.width, viewModel.quality, viewModel.usePdf,
-                                                               viewModel.watermarkText, viewModel.watermarkColor,
-                                                               viewModel.watermarkPosition,
-                                                               viewModel.watermarkWidth,
-                                                               viewModel.ignoreDocumentAbsence,
-                                                               viewModel.useHtmlBasedEngine,
-                                                               viewModel.rotate,
-                                                               viewModel.instanceIdToken,
-                                                               viewModel.locale);
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new ByteArrayContent(imageBytes);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
