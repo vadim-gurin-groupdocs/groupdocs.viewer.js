@@ -94,12 +94,12 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             return CreateJsonOrJsonpResponse(data, null);
         }
 
-        public ActionResult GetResourceForHtml(string documentPath, string resourcePath, bool relativeToOriginal = false, string instanceIdToken = null)
+        public ActionResult GetResourceForHtml(GetResourceForHtmlViewModel viewModel)
         {
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
             DateTime? fileModificationDateTime;
-            byte[] resourceBytes = _coreHandler.GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal, instanceIdToken);
+            byte[] resourceBytes = _coreHandler.GetResourceForHtml(viewModel, clientModifiedSince, out isModified, out fileModificationDateTime);
             if (!isModified)
                 return new HttpStatusCodeResult(304, "Not Modified");
 
@@ -108,7 +108,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             if (resourceBytes == null)
                 return new HttpStatusCodeResult((int)HttpStatusCode.Gone);
             else
-                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(resourcePath));
+                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(viewModel.resourcePath));
         }
 
         public ActionResult GetScript(string name)

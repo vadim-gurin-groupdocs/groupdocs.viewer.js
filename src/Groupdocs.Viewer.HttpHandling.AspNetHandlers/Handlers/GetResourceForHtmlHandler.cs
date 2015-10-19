@@ -2,6 +2,7 @@
 using System.Net;
 using System.Web;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -25,17 +26,12 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
         {
             try
             {
-                string documentPath;
-                string resourcePath;
-                bool relativeToOriginal = false;
-                //bool fileNameOnly = false;
-                documentPath = (string) context.Request.Params["documentPath"];
-                resourcePath = context.Request.Params["resourcePath"];
-                string relativeToOriginalString = context.Request.Params["relativeToOriginal"];
-                string instanceId = context.Request.Params[Constants.InstanceIdRequestKey];
-
-                if (relativeToOriginalString != null)
-                    relativeToOriginal = Boolean.Parse(relativeToOriginalString);
+                GetResourceForHtmlViewModel viewModel = new GetResourceForHtmlViewModel();
+                var parameters = context.Request.Params;
+                viewModel.documentPath = base.GetParameter<string>(parameters, "documentPath", null);
+                viewModel.resourcePath = base.GetParameter<string>(parameters, "resourcePath", null);
+                viewModel.relativeToOriginal = base.GetParameter<bool>(parameters, "relativeToOriginal", false);
+                viewModel.instanceIdToken = base.GetParameter<string>(parameters, Constants.InstanceIdRequestKey, null);
 
                 string detailsMessage = String.Format("GetResourceForHtml\r\nRoot Storage Path:{0}\r\n" +
                                                       "Processing Folder Path:{1}\r\n" +
@@ -43,15 +39,15 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                                                       "Resource Path:{3}\r\n",
                                                       _rootPathFinder.GetRootStoragePath(),
                                                       _rootPathFinder.GetCachePath(),
-                                                      documentPath, resourcePath);
+                                                      viewModel.documentPath, viewModel.resourcePath);
                 _logger.LogMessage(detailsMessage);
 
                 DateTime? clientModifiedSince = GetClientModifiedSince(context);
                 bool isModified;
                 DateTime? fileModificationDateTime;
 
-                byte[] resourceBytes = GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal, instanceId); 
-                string mimeType = _helper.GetImageMimeTypeFromFilename(resourcePath);
+                byte[] resourceBytes = GetResourceForHtml(viewModel, clientModifiedSince, out isModified, out fileModificationDateTime);
+                string mimeType = _helper.GetImageMimeTypeFromFilename(viewModel.resourcePath);
                 context.Response.ContentType = mimeType;
                 if (context.Request.RequestType == "HEAD") // IE SVG
                     context.Response.AddHeader("Content-Length", resourceBytes.Length.ToString());

@@ -94,15 +94,14 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return CreateJsonOrJsonpResponse(data, null);
         }
 
-        public HttpResponseMessage GetResourceForHtml(string documentPath, string resourcePath, bool relativeToOriginal = false, string instanceIdToken = null)
+        public HttpResponseMessage GetResourceForHtml(GetResourceForHtmlViewModel viewModel)
         {
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
             DateTime? fileModificationDateTime;
-            byte[] resourceBytes = _coreHandler.GetResourceForHtml(documentPath, resourcePath, clientModifiedSince, out isModified, out fileModificationDateTime, relativeToOriginal, instanceIdToken);
+            byte[] resourceBytes = _coreHandler.GetResourceForHtml(viewModel, clientModifiedSince, out isModified, out fileModificationDateTime);
             if (!isModified)
                 return new HttpResponseMessage(HttpStatusCode.NotModified); ;
-
 
             if (resourceBytes == null)
                 return new HttpResponseMessage(HttpStatusCode.Gone);
@@ -110,7 +109,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             {
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(resourceBytes);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(resourcePath));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(viewModel.resourcePath));
                 SetLastModified(response, fileModificationDateTime);
                 return response;
             }

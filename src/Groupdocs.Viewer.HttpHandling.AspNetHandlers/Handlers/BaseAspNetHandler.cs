@@ -125,6 +125,40 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
             }
         }
 
+        protected T GetParameter<T>(System.Collections.Specialized.NameValueCollection inputParameters, string key, T defaultValue)
+        {
+            if (inputParameters == null) { throw new ArgumentNullException("inputParameters"); }
+            string stringValue = inputParameters[key];
+            if (stringValue == null)
+            {
+                return defaultValue;
+            }
+            Type resultType = typeof(T);
+            if (resultType == typeof(string))
+            {
+                return (T)(object)stringValue;
+            }
+            if (resultType == typeof(int))
+            {
+                return (T)(object)int.Parse(stringValue);
+            }
+            if (resultType == typeof(bool))
+            {
+                return (T)(object)bool.Parse(stringValue);
+            }
+            if (resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                Type underlyingResultType = Nullable.GetUnderlyingType(resultType);
+                resultType = underlyingResultType;
+            }
+            T result;
+            if (resultType.IsEnum)
+                result = (T)Enum.Parse(resultType, stringValue);
+            else
+                result = (T)Convert.ChangeType(stringValue, resultType, CultureInfo.InvariantCulture);
+            return result;
+        }
+
         protected DateTime? GetClientModifiedSince(HttpContext context)
         {
             string stringClientModifiedSince = context.Request.Headers["If-Modified-Since"];
