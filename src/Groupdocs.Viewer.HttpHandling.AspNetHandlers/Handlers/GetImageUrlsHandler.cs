@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -41,23 +42,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
             try
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-                string path = null;
-                int width;
-                string token = null;
-                int firstPage = 0;
-                int pageCount = 0;
-                int? quality = null;
-                bool usePdf = true;
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal;
-                float? watermarkWidth = 0;
-                bool ignoreDocumentAbsence = false;
-                bool useHtmlBasedEngine = false;
-                bool supportPageRotation = false;
-                string instanceId = null;
-                string locale = null;
-
                 string json;
                 bool isJsonP = context.Request.HttpMethod == "GET";
 
@@ -65,36 +49,9 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetMandatoryParameter(inputParameters, "path", out path);
-                GetMandatoryParameter(inputParameters, "width", out width);
-                GetParameter(inputParameters, "firstPage", ref firstPage);
-                GetParameter(inputParameters, "pageCount", ref pageCount);
-                GetParameter(inputParameters, "quality", ref quality);
-                GetParameter(inputParameters, "usePdf", ref usePdf);
-                GetParameter(inputParameters, "useHtmlBasedEngine", ref useHtmlBasedEngine);
-                GetParameter(inputParameters, "supportPageRotation", ref supportPageRotation);
 
-                GetParameter(inputParameters, "watermarkText", ref watermarkText);
-                GetParameter(inputParameters, "watermarkColor", ref watermarkColor);
-                GetParameter(inputParameters, "watermarkPosition", ref watermarkPosition);
-                GetParameter(inputParameters, "watermarkWidth", ref watermarkWidth);
-
-                GetParameter(inputParameters, "ignoreDocumentAbsence", ref ignoreDocumentAbsence);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-                GetParameter(inputParameters, "locale", ref locale);
-
-                object data = GetImageUrls(_urlsCreator,
-                                                       path, width, firstPage, pageCount,
-                                                       quality, usePdf,
-                                                       watermarkText, watermarkColor,
-                                                       watermarkPosition ?? WatermarkPosition.Diagonal, watermarkWidth ?? 0,
-                                                       ignoreDocumentAbsence,
-                                                       useHtmlBasedEngine,
-                                                       supportPageRotation,
-                                                       instanceId,
-                                                       locale);
-
+                GetImageUrlsViewModel viewModel = serializer.Deserialize<GetImageUrlsViewModel>(json);
+                object data = GetImageUrls(_urlsCreator, viewModel);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

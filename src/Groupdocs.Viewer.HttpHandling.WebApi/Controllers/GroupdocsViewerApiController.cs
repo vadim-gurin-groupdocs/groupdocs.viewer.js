@@ -67,16 +67,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public HttpResponseMessage GetImageUrls(GetImageUrlsViewModel viewModel)
         {
-            object data = _coreHandler.GetImageUrls(this,
-                                                   viewModel.path, viewModel.width, viewModel.firstPage, viewModel.pageCount,
-                                                   viewModel.quality, viewModel.usePdf,
-                                                   viewModel.watermarkText, viewModel.watermarkColor,
-                                                   viewModel.watermarkPosition, viewModel.watermarkWidth,
-                                                   viewModel.ignoreDocumentAbsence,
-                                                   viewModel.useHtmlBasedEngine,
-                                                   viewModel.supportPageRotation,
-                                                   viewModel.instanceIdToken, viewModel.locale);
-
+            object data = _coreHandler.GetImageUrls(this, viewModel);
             return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 

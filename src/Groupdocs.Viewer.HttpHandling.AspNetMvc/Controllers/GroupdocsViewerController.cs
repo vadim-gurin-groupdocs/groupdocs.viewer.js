@@ -71,27 +71,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetImageUrls(string path, int width, int firstPage = 0, int pageCount = 0,
-                                         int? quality = null, bool usePdf = true,
-                                         string watermarkText = null, int? watermarkColor = null,
-                                         WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float watermarkWidth = 0,
-                                         bool ignoreDocumentAbsence = false,
-                                         bool useHtmlBasedEngine = false,
-                                         bool supportPageRotation = false,
-                                         string callback = null,
-                                         string instanceIdToken = null, string locale = null)
+        public ActionResult GetImageUrls(GetImageUrlsViewModel viewModel)
         {
-            object data = _coreHandler.GetImageUrls(this,
-                                                   path, width, firstPage, pageCount,
-                                                   quality, usePdf,
-                                                   watermarkText, watermarkColor,
-                                                   watermarkPosition, watermarkWidth,
-                                                   ignoreDocumentAbsence,
-                                                   useHtmlBasedEngine,
-                                                   supportPageRotation,
-                                                   instanceIdToken, locale);
-
-            return CreateJsonOrJsonpResponse(data, callback);
+            object data = _coreHandler.GetImageUrls(this, viewModel);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
 
