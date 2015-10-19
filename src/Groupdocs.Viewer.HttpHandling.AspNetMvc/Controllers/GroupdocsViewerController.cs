@@ -9,6 +9,7 @@ using Groupdocs.Viewer.HttpHandling.AspNetMvc.ActionFilters;
 using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 {
@@ -237,11 +238,11 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult RotatePage(string path, int pageNumber, int rotationAmount, string callback = null, string instanceIdToken = null)
+        public ActionResult RotatePage(RotatePageViewModel viewModel)
         {
-            int resultAngle = _coreHandler.RotatePage(path, pageNumber, rotationAmount, instanceIdToken);
+            int resultAngle = _coreHandler.RotatePage(viewModel);
             var data = new { resultAngle, success = true };
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.callback);
         }
 
         #region IUrlsCreator implementation

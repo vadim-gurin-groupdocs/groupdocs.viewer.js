@@ -4,6 +4,7 @@ using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -32,10 +33,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     return;
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-                string path;
-                int pageNumber, rotationAmount;
-                string instanceId = null;
                 string json;
                 bool isJsonP = (context.Request.HttpMethod == "GET");
 
@@ -43,20 +40,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                path = inputParameters["path"];
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    throw new ArgumentException("Document name is invalid");
-                }
-                GetMandatoryParameter(inputParameters, "pageNumber", out pageNumber);
-                GetMandatoryParameter(inputParameters, "rotationAmount", out rotationAmount);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-
-                int resultAngle = RotatePage(path, pageNumber, rotationAmount, instanceId);
+                RotatePageViewModel viewModel = serializer.Deserialize<RotatePageViewModel>(json);
+                int resultAngle = RotatePage(viewModel);
                 var data = new {resultAngle, success = true};
                 string serializedData = serializer.Serialize(data);
-
                 CreateJsonOrJsonpResponse(context, serializedData);
             }
             catch (Exception exception)
