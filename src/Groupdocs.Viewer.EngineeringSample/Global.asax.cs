@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -37,11 +38,16 @@ namespace GroupdocsViewer.EngineeringSample
         {
             AreaRegistration.RegisterAllAreas();
             ViewerMvc.InitRoutes();
+            Viewer.SetBaseUrl("/");
             //ViewerAspNet.InitAspNetRoutes(); // must be after SetRootStoragePath() because handlers are created immediately
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             ControllerBuilder.Current.SetControllerFactory(new ViewerSelectiveControlerFactory());
+
+            Viewer.SetLicensePath(@"d:\temp\TestLicensesWithNewKey\GroupDocs Viewer2015-05-29.lic");
+            string rootStoragePath = @"d:\temp\";
+            Viewer.SetRootStoragePath(rootStoragePath);
         }
     }
 

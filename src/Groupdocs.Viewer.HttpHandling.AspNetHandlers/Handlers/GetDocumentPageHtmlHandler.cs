@@ -4,6 +4,7 @@ using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -55,16 +56,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetMandatoryParameter(inputParameters, "path", out path);
-                GetMandatoryParameter(inputParameters, "pageIndex", out pageIndex);
-                GetMandatoryParameter(inputParameters, "usePngImages", out usePngImages);
-                GetMandatoryParameter(inputParameters, "embedImagesIntoHtmlForWordFiles", out embedImagesIntoHtmlForWordFiles);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-                GetParameter(inputParameters, "locale", ref locale);
-
+                
+                GetDocumentPageHtmlViewModel viewModel = serializer.Deserialize<GetDocumentPageHtmlViewModel>(json);
                 string pageHtml, pageCss;
-                GetDocumentPageHtml(_urlsCreator, path, pageIndex, usePngImages, embedImagesIntoHtmlForWordFiles, out pageHtml, out pageCss, instanceId, locale);
+                GetDocumentPageHtml(_urlsCreator, viewModel, out pageHtml, out pageCss);
                 var data = new { pageHtml, pageCss };
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);

@@ -102,11 +102,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
 
-        public ActionResult GetDocumentPageHtml(string path, int pageIndex, bool usePngImages,
-                                                bool embedImagesIntoHtmlForWordFiles, string instanceIdToken = null, string locale = null)
+        public ActionResult GetDocumentPageHtml(GetDocumentPageHtmlViewModel viewModel)
         {
             string pageHtml, pageCss;
-            _coreHandler.GetDocumentPageHtml(this, path, pageIndex, usePngImages, embedImagesIntoHtmlForWordFiles, out pageHtml, out pageCss, instanceIdToken, locale);
+            _coreHandler.GetDocumentPageHtml(this, viewModel, out pageHtml, out pageCss);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }

@@ -94,15 +94,10 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         public HttpResponseMessage GetDocumentPageHtml(GetDocumentPageHtmlViewModel viewModel)
         {
             string pageHtml, pageCss;
-            _coreHandler.GetDocumentPageHtml(this, 
-                viewModel.path,
-                viewModel.pageIndex,
-                viewModel.usePngImages,
-                viewModel.embedImagesIntoHtmlForWordFiles,
-                out pageHtml, 
-                out pageCss,
-                viewModel.instanceIdToken,
-                viewModel.locale);
+            _coreHandler.GetDocumentPageHtml(this,
+                viewModel,
+                out pageHtml,
+                out pageCss);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }
