@@ -47,14 +47,13 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
         
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel )
+        public HttpResponseMessage LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel)
         {
-            object data = _coreHandler.LoadFileBrowserTreeData(viewModel.path, viewModel.pageIndex, viewModel.pageSize, viewModel.orderBy, viewModel.orderAsc, viewModel.filter,
-                                                              viewModel.fileTypes, viewModel.extended, viewModel.instanceIdToken);
+            object data = _coreHandler.LoadFileBrowserTreeData(viewModel);
             if (data == null)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
         
 

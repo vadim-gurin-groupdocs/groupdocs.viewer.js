@@ -51,16 +51,13 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult LoadFileBrowserTreeData(string path, int pageIndex = 0, int pageSize = -1, string orderBy = null,
-                                                    bool orderAsc = true, string filter = null, string fileTypes = null,
-                                                    bool extended = false, string callback = null, string instanceIdToken = null)
+        public ActionResult LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel)
         {
-            object data = _coreHandler.LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
-                                                              fileTypes, extended, instanceIdToken);
+            object data = _coreHandler.LoadFileBrowserTreeData(viewModel);
             if (data == null)
                 return new EmptyResult();
 
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
 

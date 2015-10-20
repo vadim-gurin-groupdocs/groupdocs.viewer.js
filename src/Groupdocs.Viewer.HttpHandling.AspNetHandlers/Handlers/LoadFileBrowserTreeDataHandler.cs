@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
+using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -35,16 +36,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     return;
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-                string path = null;
-                int pageIndex = 0;
-                int pageSize = -1;
-                string orderBy = null;
-                bool orderAsc = true;
-                string filter = null;
-                string fileTypes = null;
-                bool extended = false;
-                string instanceId = null;
-                
                 string json;
                 bool isJsonP = context.Request.HttpMethod == "GET";
 
@@ -52,19 +43,9 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetParameter(inputParameters, "path", ref path);
-                GetParameter(inputParameters, "pageIndex", ref pageIndex);
-                GetParameter(inputParameters, "pageSize", ref pageSize);
-                GetParameter(inputParameters, "orderBy", ref orderBy);
-                GetParameter(inputParameters, "orderAsc", ref orderAsc);
-                GetParameter(inputParameters, "filter", ref filter);
-                GetParameter(inputParameters, "fileTypes", ref fileTypes);
-                GetParameter(inputParameters, "extended", ref extended);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
                 
-                object data = LoadFileBrowserTreeData(path, pageIndex, pageSize, orderBy, orderAsc, filter,
-                                                              fileTypes, extended, instanceId);
+                LoadFileBrowserTreeDataViewModel viewModel = serializer.Deserialize<LoadFileBrowserTreeDataViewModel>(json);
+                object data = LoadFileBrowserTreeData(viewModel);
                 if (data == null)
                     return;
 
