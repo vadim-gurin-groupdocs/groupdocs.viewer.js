@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -27,53 +29,28 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                     return;
 
-                string path = (string) context.Request.Params["path"];
-
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal;
-                float watermarkWidth = 0;
-
-                bool useHtmlBasedEngine = false;
-                bool supportPageRotation = false;
-
-                watermarkText = context.Request.Params["watermarkText"];
-                watermarkColor = ExtractIntParameter(context, "watermarkColor");
-
-                string stringValue = context.Request.Params["watermarkPosition"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkPosition = (WatermarkPosition?)Enum.Parse(watermarkPosition.GetType(), stringValue) ?? WatermarkPosition.Diagonal;
-
-                stringValue = context.Request.Params["watermarkWidth"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkWidth = float.Parse(stringValue);
-
-                stringValue = context.Request.Params["useHtmlBasedEngine"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    useHtmlBasedEngine = Boolean.Parse(stringValue);
-
-                stringValue = context.Request.Params["supportPageRotation"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    supportPageRotation = Boolean.Parse(stringValue);
-
-                string instanceId = context.Request.Params[Constants.InstanceIdRequestKey];
-
-                //string pdfPath = _viewingService.GetPdfWithPrintDialog(path);
+                GetFileViewModel viewModel = new GetFileViewModel();
+                NameValueCollection parameters = context.Request.Params;
+                viewModel.Path = GetParameter<string>(parameters, "path");
+                viewModel.GetPdf = true;
+                viewModel.IsPrintable = true;
+                viewModel.WatermarkText = GetParameter<string>(parameters, "watermarkText");
+                viewModel.WatermarkColor = GetParameter<int?>(parameters, "watermarkColor");
+                viewModel.WatermarkPosition = GetParameter<WatermarkPosition>(parameters, "watermarkPosition");
+                viewModel.WatermarkWidth = GetParameter<float>(parameters, "watermarkWidth");
+                viewModel.IgnoreDocumentAbsence = false;
+                viewModel.UseHtmlBasedEngine = GetParameter<bool>(parameters, "useHtmlBasedEngine");
+                viewModel.SupportPageRotation = GetParameter<bool>(parameters, "supportPageRotation");
+                viewModel.InstanceIdToken = GetParameter<string>(parameters, Constants.InstanceIdRequestKey);
 
                 byte[] bytes;
                 string fileDisplayName;
-                bool isSuccessful = GetFile(path, true, true,
-                                    out bytes, out fileDisplayName,
-                                    null,
-                                    watermarkText, watermarkColor,
-                                    watermarkPosition, watermarkWidth,
-                                    false,
-                                    useHtmlBasedEngine, supportPageRotation, instanceId);
+                bool isSuccessful = GetFile(viewModel,
+                                         out bytes, out fileDisplayName);
                 if (!isSuccessful || bytes == null)
                     return;
 
                 context.Response.ContentType = "application/pdf";
-                //context.Response.AddHeader("Content-Disposition", String.Format("attachment;filename={0}", Path.GetFileName(pdfPath)));
                 context.Response.BinaryWrite(bytes);
             }
             catch (Exception exception)

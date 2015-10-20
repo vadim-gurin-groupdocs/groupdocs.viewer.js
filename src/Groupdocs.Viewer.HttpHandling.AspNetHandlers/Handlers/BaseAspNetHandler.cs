@@ -125,37 +125,24 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
             }
         }
 
-        protected T GetParameter<T>(System.Collections.Specialized.NameValueCollection inputParameters, string key, T defaultValue)
+        protected T GetParameter<T>(System.Collections.Specialized.NameValueCollection inputParameters, string name, T defaultValue = default(T))
         {
-            if (inputParameters == null) { throw new ArgumentNullException("inputParameters"); }
-            string stringValue = inputParameters[key];
-            if (stringValue == null)
+            T result = defaultValue;
+            string parameterValueString = inputParameters[name];
+            if (!String.IsNullOrEmpty(parameterValueString))
             {
-                return defaultValue;
+                Type resultType = typeof(T);
+                if (resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    Type underlyingResultType = Nullable.GetUnderlyingType(resultType);
+                    resultType = underlyingResultType;
+                }
+
+                if (resultType.IsEnum)
+                    result = (T)Enum.Parse(resultType, parameterValueString);
+                else
+                    result = (T)Convert.ChangeType(parameterValueString, resultType, CultureInfo.InvariantCulture);
             }
-            Type resultType = typeof(T);
-            if (resultType == typeof(string))
-            {
-                return (T)(object)stringValue;
-            }
-            if (resultType == typeof(int))
-            {
-                return (T)(object)int.Parse(stringValue);
-            }
-            if (resultType == typeof(bool))
-            {
-                return (T)(object)bool.Parse(stringValue);
-            }
-            if (resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                Type underlyingResultType = Nullable.GetUnderlyingType(resultType);
-                resultType = underlyingResultType;
-            }
-            T result;
-            if (resultType.IsEnum)
-                result = (T)Enum.Parse(resultType, stringValue);
-            else
-                result = (T)Convert.ChangeType(stringValue, resultType, CultureInfo.InvariantCulture);
             return result;
         }
 

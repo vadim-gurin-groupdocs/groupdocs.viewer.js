@@ -115,25 +115,12 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
 
 
-        public HttpResponseMessage GetFile(string path, bool getPdf = false, string displayName = null,
-                                      string watermarkText = null, int? watermarkColor = null,
-                                      WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
-                                      float watermarkWidth = 0,
-                                      bool ignoreDocumentAbsence = false,
-                                      bool useHtmlBasedEngine = false,
-                                      bool supportPageRotation = false,
-                                      string instanceIdToken = null)
+        public HttpResponseMessage GetFile(GetFileViewModel viewModel)
         {
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(path, getPdf, false,
-                                                    out bytes, out fileDisplayName,
-                                                    displayName,
-                                                    watermarkText, watermarkColor,
-                                                    watermarkPosition, watermarkWidth,
-                                                    ignoreDocumentAbsence,
-                                                    useHtmlBasedEngine, supportPageRotation,
-                                                    instanceIdToken);
+            bool isSuccessful = _coreHandler.GetFile(viewModel,
+                                    out bytes, out fileDisplayName);
             if (!isSuccessful)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
@@ -151,28 +138,15 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return response;
         }
 
-        public HttpResponseMessage GetPdfWithPrintDialog(string path, string displayName = null,
-                                      string watermarkText = null, int? watermarkColor = null,
-                                      WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal,
-                                      float watermarkWidth = 0,
-                                      bool useHtmlBasedEngine = false,
-                                      bool supportPageRotation = false,
-                                      string instanceIdToken = null)
+        public HttpResponseMessage GetPdfWithPrintDialog(GetFileViewModel viewModel)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(path, true, true,
-                                    out bytes, out fileDisplayName,
-                                    displayName,
-                                    watermarkText, watermarkColor,
-                                    watermarkPosition, watermarkWidth,
-                                    false,
-                                    useHtmlBasedEngine, supportPageRotation,
-                                    instanceIdToken);
-
+            bool isSuccessful = _coreHandler.GetFile(viewModel,
+                                    out bytes, out fileDisplayName);
             if (!isSuccessful)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 

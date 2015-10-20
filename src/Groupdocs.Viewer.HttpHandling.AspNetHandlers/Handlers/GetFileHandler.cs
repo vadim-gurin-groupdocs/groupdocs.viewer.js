@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -24,60 +26,24 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
         {
             try
             {
-                string path;
-                string displayName = null;
-                path = (string) context.Request.Params["path"];
-                displayName = context.Request.Params["displayName"];
-                bool getPdf = false;
-                string getPdfString = context.Request.Params["getPdf"];
-                if (getPdfString != null)
-                    getPdf = Boolean.Parse(getPdfString);
-
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal;
-                float watermarkWidth = 0;
-
-                bool ignoreDocumentAbsence = false;
-                bool useHtmlBasedEngine = false;
-                bool supportPageRotation = false;
-                
-                watermarkText = context.Request.Params["watermarkText"];
-                watermarkColor = ExtractIntParameter(context, "watermarkColor");
-
-                string stringValue;
-                stringValue = context.Request.Params["watermarkPosition"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkPosition = (WatermarkPosition?)Enum.Parse(watermarkPosition.GetType(), stringValue) ?? WatermarkPosition.Diagonal;
-
-                stringValue = context.Request.Params["watermarkWidth"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkWidth = float.Parse(stringValue);
-
-                stringValue = context.Request.Params["useHtmlBasedEngine"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    useHtmlBasedEngine = Boolean.Parse(stringValue);
-
-                stringValue = context.Request.Params["ignoreDocumentAbsence"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    ignoreDocumentAbsence = Boolean.Parse(stringValue);
-
-                stringValue = context.Request.Params["supportPageRotation"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    supportPageRotation = Boolean.Parse(stringValue);
+                GetFileViewModel viewModel = new GetFileViewModel();
+                NameValueCollection parameters = context.Request.Params;
+                viewModel.Path = GetParameter<string>(parameters, "path");
+                viewModel.DisplayName = GetParameter<string>(parameters, "displayName");
+                viewModel.GetPdf = GetParameter<bool>(parameters, "getPdf");
+                viewModel.WatermarkText = GetParameter<string>(parameters, "watermarkText");
+                viewModel.WatermarkColor = GetParameter<int?>(parameters, "watermarkColor");
+                viewModel.WatermarkPosition = GetParameter<WatermarkPosition>(parameters, "watermarkPosition");
+                viewModel.WatermarkWidth = GetParameter<float>(parameters, "watermarkWidth");
+                viewModel.IgnoreDocumentAbsence = GetParameter<bool>(parameters, "ignoreDocumentAbsence");
+                viewModel.UseHtmlBasedEngine = GetParameter<bool>(parameters, "useHtmlBasedEngine");
+                viewModel.SupportPageRotation = GetParameter<bool>(parameters, "supportPageRotation");
+                viewModel.InstanceIdToken = GetParameter<string>(parameters, Constants.InstanceIdRequestKey);
 
                 context.Response.ContentType = "application/octet-stream";
-                string instanceId = context.Request.Params[Constants.InstanceIdRequestKey];
-
                 byte[] bytes;
                 string fileDisplayName;
-                bool isSuccessful = GetFile(path, getPdf, false,
-                                    out bytes, out fileDisplayName,
-                                    displayName,
-                                    watermarkText, watermarkColor,
-                                    watermarkPosition, watermarkWidth,
-                                    ignoreDocumentAbsence,
-                                    useHtmlBasedEngine, supportPageRotation, instanceId);
+                bool isSuccessful = GetFile(viewModel, out bytes, out fileDisplayName);
                 if (!isSuccessful || bytes == null)
                     return;
 
@@ -87,7 +53,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 HttpCookie jqueryFileDownloadCookie = new HttpCookie(Constants.JqueryFileDownloadCookieName);
                 jqueryFileDownloadCookie.Path = "/";
                 jqueryFileDownloadCookie.Value = "true";
-                //aCookie.Expires = DateTime.Now.AddDays(1);
                 context.Response.Cookies.Add(jqueryFileDownloadCookie);
                 context.Response.BinaryWrite(bytes);
             }
