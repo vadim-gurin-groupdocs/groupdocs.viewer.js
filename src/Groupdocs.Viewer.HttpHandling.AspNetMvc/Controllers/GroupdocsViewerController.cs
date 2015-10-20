@@ -68,14 +68,14 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         public ActionResult ViewDocument(ViewDocumentViewModel viewModel)
         {
             object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult GetImageUrls(GetImageUrlsViewModel viewModel)
         {
             object data = _coreHandler.GetImageUrls(this, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
 
@@ -108,7 +108,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             if (resourceBytes == null)
                 return new HttpStatusCodeResult((int)HttpStatusCode.Gone);
             else
-                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(viewModel.resourcePath));
+                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(viewModel.ResourcePath));
         }
 
         public ActionResult GetScript(string name)
@@ -242,7 +242,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         {
             int resultAngle = _coreHandler.RotatePage(viewModel);
             var data = new { resultAngle, success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         #region IUrlsCreator implementation

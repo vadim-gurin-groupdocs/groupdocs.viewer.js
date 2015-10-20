@@ -81,20 +81,20 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 
                 GetDocumentPageImageViewModel viewModel = new GetDocumentPageImageViewModel()
                 {
-                    path = path,
-                    pageIndex = pageIndex,
-                    width = width,
-                    quality = quality,
-                    usePdf = usePdf,
-                    watermarkText = watermarkText,
-                    watermarkColor = watermarkColor,
-                    watermarkPosition = watermarkPosition,
-                    watermarkWidth = watermarkWidth,
-                    ignoreDocumentAbsence = ignoreDocumentAbsence,
-                    useHtmlBasedEngine = useHtmlBasedEngine,
-                    rotate = rotate,
-                    instanceIdToken = instanceIdToken,
-                    locale = locale
+                    Path = path,
+                    PageIndex = pageIndex,
+                    Width = width,
+                    Quality = quality,
+                    UsePdf = usePdf,
+                    WatermarkText = watermarkText,
+                    WatermarkColor = watermarkColor,
+                    WatermarkPosition = watermarkPosition,
+                    WatermarkWidth = watermarkWidth,
+                    IgnoreDocumentAbsence = ignoreDocumentAbsence,
+                    UseHtmlBasedEngine = useHtmlBasedEngine,
+                    Rotate = rotate,
+                    InstanceIdToken = instanceIdToken,
+                    Locale = locale
                 };
 
                 byte[] imageBytes = GetDocumentPageImage(viewModel);

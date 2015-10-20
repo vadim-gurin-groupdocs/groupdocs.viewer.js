@@ -62,14 +62,14 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         public HttpResponseMessage ViewDocument(ViewDocumentViewModel viewModel)
         {
             object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public HttpResponseMessage GetImageUrls(GetImageUrlsViewModel viewModel)
         {
             object data = _coreHandler.GetImageUrls(this, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         [HttpGet]
@@ -109,7 +109,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             {
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(resourceBytes);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(viewModel.resourcePath));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(viewModel.ResourcePath));
                 SetLastModified(response, fileModificationDateTime);
                 return response;
             }
@@ -235,7 +235,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         {
             int resultAngle = _coreHandler.RotatePage(viewModel);
             var data = new { resultAngle, success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         #region IUrlsCreator implementation
