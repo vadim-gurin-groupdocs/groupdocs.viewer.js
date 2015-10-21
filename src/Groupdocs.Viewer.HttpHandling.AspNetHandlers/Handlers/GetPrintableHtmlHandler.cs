@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -41,16 +42,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                string path = null;
-                string displayName = null;
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal;
-                float? watermarkWidth = 0;
-                bool ignoreDocumentAbsence = false;
-                string instanceId = null;
-                string locale = null;
-
                 string json;
                 bool isJsonP = (context.Request.HttpMethod == "GET");
 
@@ -58,26 +49,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                path = inputParameters["path"];
-                GetParameter<string>(inputParameters, "displayName", ref displayName);
-                GetParameter<string>(inputParameters, "watermarkText", ref watermarkText);
-                GetParameter<int?>(inputParameters, "watermarkColor", ref watermarkColor);
-                GetParameter<WatermarkPosition?>(inputParameters, "watermarkPosition", ref watermarkPosition);
-                GetParameter<float?>(inputParameters, "watermarkWidth", ref watermarkWidth);
-                GetParameter<bool>(inputParameters, "ignoreDocumentAbsence", ref ignoreDocumentAbsence);
-                GetParameter<string>(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-                GetParameter<string>(inputParameters, "locale", ref locale);
-
-                string[] pageArray = GetPrintableHtml(_urlsCreator,
-                                                              path, false,
-                                                              displayName,
-                                                              watermarkText, watermarkColor,
-                                                              watermarkPosition,
-                                                              watermarkWidth ?? 0,
-                                                              ignoreDocumentAbsence,
-                                                              instanceId,
-                                                              locale);
+                GetPrintableHtmlViewModel viewModel = serializer.Deserialize<GetPrintableHtmlViewModel>(json);
+                string[] pageArray = GetPrintableHtml(_urlsCreator, viewModel);
 
                 context.Response.ContentType = "application/json";
                 context.Response.ContentEncoding = Encoding.UTF8;

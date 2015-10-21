@@ -170,34 +170,18 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetPrintableHtml(string path, bool useHtmlBasedEngine = false,
-                                             string displayName = null,
-                                             string watermarkText = null, int? watermarkColor = null,
-                                             WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal,
-                                             float watermarkWidth = 0,
-                                             bool ignoreDocumentAbsence = false,
-                                             string callback = null,
-                                             string instanceIdToken = null, 
-                                             string locale = null)
+        public ActionResult GetPrintableHtml(GetPrintableHtmlViewModel viewModel)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new EmptyResult();
 
-            if (path == null)
+            if (viewModel.Path == null)
             {
                 return new HttpStatusCodeResult(400);
             }
 
-            string[] pageArray = _coreHandler.GetPrintableHtml(this,
-                                                              path, useHtmlBasedEngine,
-                                                              displayName,
-                                                              watermarkText, watermarkColor,
-                                                              watermarkPosition,
-                                                              watermarkWidth,
-                                                              ignoreDocumentAbsence,
-                                                              instanceIdToken, 
-                                                              locale);
-            return CreateJsonOrJsonpResponse(pageArray, callback);
+            string[] pageArray = _coreHandler.GetPrintableHtml(this, viewModel);
+            return CreateJsonOrJsonpResponse(pageArray, viewModel.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
