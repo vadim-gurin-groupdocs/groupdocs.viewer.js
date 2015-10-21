@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
-using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
+using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
@@ -35,67 +36,22 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
         {
             try
             {
-                string path;
-                int pageIndex;
-                int? width = null;
-                int? quality = null;
-                bool usePdf;
-                string watermarkText = null;
-                int? watermarkColor = null;
-                WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal;
-                float watermarkWidth = 0;
-                bool ignoreDocumentAbsence = false;
-                bool useHtmlBasedEngine = false;
-                bool rotate = false;
-
-                _context = context;
-                path = (string)context.Request.Params["path"];
-                pageIndex = Int32.Parse(context.Request.Params["pageIndex"]);
-
-                string stringValue;
-                stringValue = _context.Request.Params["width"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    width = Int32.Parse(stringValue);
-                quality = ExtractIntParameter(context, "quality");
-                usePdf = Boolean.Parse(context.Request.Params["usePdf"]);
-                watermarkText = context.Request.Params["watermarkText"];
-                watermarkColor = ExtractIntParameter(context, "watermarkColor");
-
-                stringValue = _context.Request.Params["watermarkPosition"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkPosition = (WatermarkPosition?)Enum.Parse(watermarkPosition.GetType(), stringValue) ?? WatermarkPosition.Diagonal;
-
-                stringValue = _context.Request.Params["watermarkWidth"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    watermarkWidth = float.Parse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture);
-
-                stringValue = _context.Request.Params["ignoreDocumentAbsence"];
-                if (!String.IsNullOrEmpty(stringValue))
-                    ignoreDocumentAbsence = Boolean.Parse(stringValue);
-
-                useHtmlBasedEngine = Boolean.Parse(context.Request.Params["useHtmlBasedEngine"]);
-                rotate = Boolean.Parse(context.Request.Params["rotate"]);
-                string instanceIdToken = context.Request.Params[Constants.InstanceIdRequestKey];
-
-                var locale = !string.IsNullOrEmpty(_context.Request.Params["locale"]) ? _context.Request.Params["locale"] : null;
-
-                GetDocumentPageImageViewModel viewModel = new GetDocumentPageImageViewModel()
-                {
-                    Path = path,
-                    PageIndex = pageIndex,
-                    Width = width,
-                    Quality = quality,
-                    UsePdf = usePdf,
-                    WatermarkText = watermarkText,
-                    WatermarkColor = watermarkColor,
-                    WatermarkPosition = watermarkPosition,
-                    WatermarkWidth = watermarkWidth,
-                    IgnoreDocumentAbsence = ignoreDocumentAbsence,
-                    UseHtmlBasedEngine = useHtmlBasedEngine,
-                    Rotate = rotate,
-                    InstanceIdToken = instanceIdToken,
-                    Locale = locale
-                };
+                GetDocumentPageImageViewModel viewModel = new GetDocumentPageImageViewModel();
+                NameValueCollection parameters = context.Request.Params;
+                viewModel.Path = GetParameter<string>(parameters, "path");
+                viewModel.PageIndex = GetParameter<int>(parameters, "pageIndex");
+                viewModel.Width = GetParameter<int?>(parameters, "width");
+                viewModel.Quality = GetParameter<int?>(parameters, "quality");
+                viewModel.UsePdf = GetParameter<bool>(parameters, "usePdf");
+                viewModel.WatermarkText = GetParameter<string>(parameters, "watermarkText");
+                viewModel.WatermarkColor = GetParameter<int?>(parameters, "watermarkColor");
+                viewModel.WatermarkPosition = GetParameter<WatermarkPosition>(parameters, "watermarkPosition");
+                viewModel.WatermarkWidth = GetParameter<float>(parameters, "watermarkWidth");
+                viewModel.IgnoreDocumentAbsence = GetParameter<bool>(parameters, "ignoreDocumentAbsence");
+                viewModel.UseHtmlBasedEngine = GetParameter<bool>(parameters, "useHtmlBasedEngine");
+                viewModel.Rotate = GetParameter<bool>(parameters, "rotate");
+                viewModel.InstanceIdToken = GetParameter<string>(parameters, Constants.InstanceIdRequestKey);
+                viewModel.Locale = GetParameter<string>(parameters, "locale");
 
                 byte[] imageBytes = GetDocumentPageImage(viewModel);
                 context.Response.ContentType = "image/jpeg";

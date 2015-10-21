@@ -3,7 +3,7 @@ using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
-using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
+using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers

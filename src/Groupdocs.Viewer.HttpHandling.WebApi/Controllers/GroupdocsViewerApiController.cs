@@ -9,7 +9,6 @@ using System.Text;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.Script.Serialization;
-using Groupdocs.Viewer.HttpHandling.WebApi.ViewModels;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 using Groupdocs.Web.UI.ViewModels;
@@ -264,7 +263,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         [NonAction]
         public string GetFileUrl(string path, bool getPdf, bool isPrintable, string fileDisplayName = null,
                                  string watermarkText = null, int? watermarkColor = null,
-                                 WatermarkPosition watermarkPosition = WatermarkPosition.Diagonal, float? watermarkWidth = 0,
+                                 WatermarkPosition? watermarkPosition = WatermarkPosition.Diagonal, float? watermarkWidth = 0,
                                  bool ignoreDocumentAbsence = false,
                                  bool useHtmlBasedEngine = false,
                                  bool supportPageRotation = false,
