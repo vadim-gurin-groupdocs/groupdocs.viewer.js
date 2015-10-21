@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -32,12 +33,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsReorderPageRequestHandlingIsEnabled))
                     return;
 
-                //string path = (string)context.Request.Params["path"];
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-                string path = null;
-                int oldPosition, newPosition;
-                string instanceId = null;
                 string json;
                 bool isJsonP = (context.Request.HttpMethod == "GET");
 
@@ -45,22 +41,14 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                Dictionary<string, string> inputParameters = serializer.Deserialize<Dictionary<string, string>>(json);
-                GetMandatoryParameter(inputParameters, "path", out path);
-                GetMandatoryParameter(inputParameters, "oldPosition", out oldPosition);
-                GetMandatoryParameter(inputParameters, "newPosition", out newPosition);
-                GetParameter(inputParameters, Constants.InstanceIdRequestKey, ref instanceId);
-
-                ReorderPage(path, oldPosition, newPosition, instanceId);
+                ReorderPageViewModel viewModel = serializer.Deserialize<ReorderPageViewModel>(json);
+                ReorderPage(viewModel);
                 var data = new {succes = true};
 
                 context.Response.ContentType = "application/json";
                 context.Response.ContentEncoding = Encoding.UTF8;
                 string serializedData = serializer.Serialize(data);
-                if (isJsonP)
-                    context.Response.Write(String.Format("{0}({1})", context.Request.Params["callback"], serializedData));
-                else
-                    context.Response.Write(serializedData);
+                CreateJsonOrJsonpResponse(context, serializedData);
             }
             catch (Exception exception)
             {

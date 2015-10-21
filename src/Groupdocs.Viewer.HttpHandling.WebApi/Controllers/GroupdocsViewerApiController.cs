@@ -180,11 +180,11 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceIdToken = null)
+        public HttpResponseMessage ReorderPage(ReorderPageViewModel viewModel)
         {
-            _coreHandler.ReorderPage(path, oldPosition, newPosition, instanceIdToken);
+            _coreHandler.ReorderPage(viewModel);
             var data = new { success = true };
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]

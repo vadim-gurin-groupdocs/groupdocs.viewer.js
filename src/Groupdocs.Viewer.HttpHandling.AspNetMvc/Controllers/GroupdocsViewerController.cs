@@ -108,19 +108,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
                 return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(viewModel.ResourcePath));
         }
 
-        public ActionResult GetScript(string name)
-        {
-            string script = _coreHandler.GetScript(name);
-            return new JavaScriptResult() { Script = script };
-        }
-
-        public ActionResult GetCss(string name)
-        {
-            string css = _coreHandler.GetCss(name);
-            return Content(css, "text/css");
-        }
-        
-
         public ActionResult GetFile(GetFileViewModel viewModel)
         {
             byte[] bytes;
@@ -185,11 +172,11 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult ReorderPage(string path, int oldPosition, int newPosition, string callback = null, string instanceIdToken = null)
+        public ActionResult ReorderPage(ReorderPageViewModel viewModel)
         {
-            _coreHandler.ReorderPage(path, oldPosition, newPosition, instanceIdToken);
+            _coreHandler.ReorderPage(viewModel);
             var data = new { success = true };
-            return CreateJsonOrJsonpResponse(data, callback);
+            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
