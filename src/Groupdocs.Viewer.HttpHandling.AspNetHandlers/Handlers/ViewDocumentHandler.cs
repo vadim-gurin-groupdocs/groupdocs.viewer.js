@@ -60,9 +60,9 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                         json = streamReader.ReadToEnd();
                     }
                 }
-                ViewDocumentViewModel viewModel = serializer.Deserialize<ViewDocumentViewModel>(json);
+                ViewDocumentParameters parameters = serializer.Deserialize<ViewDocumentParameters>(json);
 
-                object data = ViewDocument(_urlsCreator, _printableHtmlCreator, viewModel);
+                ViewDocumentResponse data = ViewDocument(_urlsCreator,  parameters);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

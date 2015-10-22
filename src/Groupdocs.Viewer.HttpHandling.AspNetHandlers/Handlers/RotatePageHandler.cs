@@ -40,8 +40,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                RotatePageViewModel viewModel = serializer.Deserialize<RotatePageViewModel>(json);
-                int resultAngle = RotatePage(viewModel);
+                RotatePageParameters parameters = serializer.Deserialize<RotatePageParameters>(json);
+                int resultAngle = RotatePage(parameters);
                 var data = new {resultAngle, success = true};
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);

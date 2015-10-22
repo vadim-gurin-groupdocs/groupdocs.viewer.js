@@ -41,8 +41,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                ReorderPageViewModel viewModel = serializer.Deserialize<ReorderPageViewModel>(json);
-                ReorderPage(viewModel);
+                ReorderPageParameters parameters = serializer.Deserialize<ReorderPageParameters>(json);
+                ReorderPage(parameters);
                 var data = new {succes = true};
 
                 context.Response.ContentType = "application/json";

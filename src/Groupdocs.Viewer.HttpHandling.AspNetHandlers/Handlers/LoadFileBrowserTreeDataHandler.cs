@@ -44,8 +44,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
                 
-                LoadFileBrowserTreeDataViewModel viewModel = serializer.Deserialize<LoadFileBrowserTreeDataViewModel>(json);
-                object data = LoadFileBrowserTreeData(viewModel);
+                LoadFileBrowserTreeDataParameters parameters = serializer.Deserialize<LoadFileBrowserTreeDataParameters>(json);
+                object data = LoadFileBrowserTreeData(parameters);
                 if (data == null)
                     return;
 

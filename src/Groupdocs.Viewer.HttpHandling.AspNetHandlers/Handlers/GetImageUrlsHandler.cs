@@ -50,8 +50,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
 
-                GetImageUrlsViewModel viewModel = serializer.Deserialize<GetImageUrlsViewModel>(json);
-                object data = GetImageUrls(_urlsCreator, viewModel);
+                GetImageUrlsParameters parameters = serializer.Deserialize<GetImageUrlsParameters>(json);
+                object data = GetImageUrls(_urlsCreator, parameters);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

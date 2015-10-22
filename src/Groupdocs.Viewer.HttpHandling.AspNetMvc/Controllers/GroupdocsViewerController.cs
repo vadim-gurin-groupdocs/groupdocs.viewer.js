@@ -51,52 +51,52 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel)
+        public ActionResult LoadFileBrowserTreeData(LoadFileBrowserTreeDataParameters parameters)
         {
-            object data = _coreHandler.LoadFileBrowserTreeData(viewModel);
+            object data = _coreHandler.LoadFileBrowserTreeData(parameters);
             if (data == null)
                 return new EmptyResult();
 
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult ViewDocument(ViewDocumentViewModel viewModel)
+        public ActionResult ViewDocument(ViewDocumentParameters parameters)
         {
-            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            ViewDocumentResponse data = _coreHandler.ViewDocument(this, parameters);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetImageUrls(GetImageUrlsViewModel viewModel)
+        public ActionResult GetImageUrls(GetImageUrlsParameters parameters)
         {
-            object data = _coreHandler.GetImageUrls(this, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            object data = _coreHandler.GetImageUrls(this, parameters);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
 
-        public ActionResult GetDocumentPageImage(GetDocumentPageImageViewModel viewModel)
+        public ActionResult GetDocumentPageImage(GetDocumentPageImageParameters parameters)
         {
-            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel);
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(parameters);
             return File(imageBytes, "image/jpeg");
         }
 
 
-        public ActionResult GetDocumentPageHtml(GetDocumentPageHtmlViewModel viewModel)
+        public ActionResult GetDocumentPageHtml(GetDocumentPageHtmlParameters parameters)
         {
             string pageHtml, pageCss;
-            _coreHandler.GetDocumentPageHtml(this, viewModel, out pageHtml, out pageCss);
+            _coreHandler.GetDocumentPageHtml(this, parameters, out pageHtml, out pageCss);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }
 
-        public ActionResult GetResourceForHtml(GetResourceForHtmlViewModel viewModel)
+        public ActionResult GetResourceForHtml(GetResourceForHtmlParameters parameters)
         {
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
             DateTime? fileModificationDateTime;
-            byte[] resourceBytes = _coreHandler.GetResourceForHtml(viewModel, clientModifiedSince, out isModified, out fileModificationDateTime);
+            byte[] resourceBytes = _coreHandler.GetResourceForHtml(parameters, clientModifiedSince, out isModified, out fileModificationDateTime);
             if (!isModified)
                 return new HttpStatusCodeResult(304, "Not Modified");
 
@@ -105,14 +105,14 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             if (resourceBytes == null)
                 return new HttpStatusCodeResult((int)HttpStatusCode.Gone);
             else
-                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(viewModel.ResourcePath));
+                return File(resourceBytes, _helper.GetImageMimeTypeFromFilename(parameters.ResourcePath));
         }
 
-        public ActionResult GetFile(GetFileViewModel viewModel)
+        public ActionResult GetFile(GetFileParameters parameters)
         {
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(viewModel,
+            bool isSuccessful = _coreHandler.GetFile(parameters,
                                                     out bytes, out fileDisplayName);
             if (!isSuccessful)
             {
@@ -140,14 +140,14 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             return File(bytes, "application/octet-stream", fileDisplayName);
         }
 
-        public ActionResult GetPdfWithPrintDialog(GetFileViewModel viewModel)
+        public ActionResult GetPdfWithPrintDialog(GetFileParameters parameters)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new EmptyResult();
 
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(viewModel,
+            bool isSuccessful = _coreHandler.GetFile(parameters,
                                     out bytes, out fileDisplayName);
             if (!isSuccessful)
                 return new EmptyResult();
@@ -157,34 +157,34 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetPrintableHtml(GetPrintableHtmlViewModel viewModel)
+        public ActionResult GetPrintableHtml(GetPrintableHtmlParameters parameters)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new EmptyResult();
 
-            if (viewModel.Path == null)
+            if (parameters.Path == null)
             {
                 return new HttpStatusCodeResult(400);
             }
 
-            string[] pageArray = _coreHandler.GetPrintableHtml(this, viewModel);
-            return CreateJsonOrJsonpResponse(pageArray, viewModel.Callback);
+            string[] pageArray = _coreHandler.GetPrintableHtml(this, parameters);
+            return CreateJsonOrJsonpResponse(pageArray, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult ReorderPage(ReorderPageViewModel viewModel)
+        public ActionResult ReorderPage(ReorderPageParameters parameters)
         {
-            _coreHandler.ReorderPage(viewModel);
+            _coreHandler.ReorderPage(parameters);
             var data = new { success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult RotatePage(RotatePageViewModel viewModel)
+        public ActionResult RotatePage(RotatePageParameters parameters)
         {
-            int resultAngle = _coreHandler.RotatePage(viewModel);
+            int resultAngle = _coreHandler.RotatePage(parameters);
             var data = new { resultAngle, success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         #region IUrlsCreator implementation

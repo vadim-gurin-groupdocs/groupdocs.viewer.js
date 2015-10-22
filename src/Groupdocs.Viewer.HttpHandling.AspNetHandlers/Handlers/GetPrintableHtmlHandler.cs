@@ -49,8 +49,8 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                GetPrintableHtmlViewModel viewModel = serializer.Deserialize<GetPrintableHtmlViewModel>(json);
-                string[] pageArray = GetPrintableHtml(_urlsCreator, viewModel);
+                GetPrintableHtmlParameters parameters = serializer.Deserialize<GetPrintableHtmlParameters>(json);
+                string[] pageArray = GetPrintableHtml(_urlsCreator, parameters);
 
                 context.Response.ContentType = "application/json";
                 context.Response.ContentEncoding = Encoding.UTF8;

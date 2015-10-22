@@ -46,34 +46,34 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
         
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage LoadFileBrowserTreeData(LoadFileBrowserTreeDataViewModel viewModel)
+        public HttpResponseMessage LoadFileBrowserTreeData(LoadFileBrowserTreeDataParameters parameters)
         {
-            object data = _coreHandler.LoadFileBrowserTreeData(viewModel);
+            object data = _coreHandler.LoadFileBrowserTreeData(parameters);
             if (data == null)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
         
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage ViewDocument(ViewDocumentViewModel viewModel)
+        public HttpResponseMessage ViewDocument(ViewDocumentParameters parameters)
         {
-            object data = _coreHandler.ViewDocument(this, _printableHtmlCreator, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            ViewDocumentResponse data = _coreHandler.ViewDocument(this, parameters);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage GetImageUrls(GetImageUrlsViewModel viewModel)
+        public HttpResponseMessage GetImageUrls(GetImageUrlsParameters parameters)
         {
-            object data = _coreHandler.GetImageUrls(this, viewModel);
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            object data = _coreHandler.GetImageUrls(this, parameters);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [HttpGet]
-        public HttpResponseMessage GetDocumentPageImage([FromUri]GetDocumentPageImageViewModel viewModel)
+        public HttpResponseMessage GetDocumentPageImage([FromUri]GetDocumentPageImageParameters parameters)
         {
-            byte[] imageBytes = _coreHandler.GetDocumentPageImage(viewModel);
+            byte[] imageBytes = _coreHandler.GetDocumentPageImage(parameters);
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new ByteArrayContent(imageBytes);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
@@ -81,23 +81,23 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage GetDocumentPageHtml(GetDocumentPageHtmlViewModel viewModel)
+        public HttpResponseMessage GetDocumentPageHtml(GetDocumentPageHtmlParameters parameters)
         {
             string pageHtml, pageCss;
             _coreHandler.GetDocumentPageHtml(this,
-                viewModel,
+                parameters,
                 out pageHtml,
                 out pageCss);
             var data = new { pageHtml, pageCss };
             return CreateJsonOrJsonpResponse(data, null);
         }
 
-        public HttpResponseMessage GetResourceForHtml(GetResourceForHtmlViewModel viewModel)
+        public HttpResponseMessage GetResourceForHtml(GetResourceForHtmlParameters parameters)
         {
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
             DateTime? fileModificationDateTime;
-            byte[] resourceBytes = _coreHandler.GetResourceForHtml(viewModel, clientModifiedSince, out isModified, out fileModificationDateTime);
+            byte[] resourceBytes = _coreHandler.GetResourceForHtml(parameters, clientModifiedSince, out isModified, out fileModificationDateTime);
             if (!isModified)
                 return new HttpResponseMessage(HttpStatusCode.NotModified); ;
 
@@ -107,18 +107,18 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             {
                 HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
                 response.Content = new ByteArrayContent(resourceBytes);
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(viewModel.ResourcePath));
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue(_helper.GetImageMimeTypeFromFilename(parameters.ResourcePath));
                 SetLastModified(response, fileModificationDateTime);
                 return response;
             }
         }
 
 
-        public HttpResponseMessage GetFile(GetFileViewModel viewModel)
+        public HttpResponseMessage GetFile(GetFileParameters parameters)
         {
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(viewModel,
+            bool isSuccessful = _coreHandler.GetFile(parameters,
                                     out bytes, out fileDisplayName);
             if (!isSuccessful)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
@@ -137,14 +137,14 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return response;
         }
 
-        public HttpResponseMessage GetPdfWithPrintDialog(GetFileViewModel viewModel)
+        public HttpResponseMessage GetPdfWithPrintDialog(GetFileParameters parameters)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
             byte[] bytes;
             string fileDisplayName;
-            bool isSuccessful = _coreHandler.GetFile(viewModel,
+            bool isSuccessful = _coreHandler.GetFile(parameters,
                                     out bytes, out fileDisplayName);
             if (!isSuccessful)
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
@@ -164,34 +164,34 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage GetPrintableHtml(GetPrintableHtmlViewModel viewModel)
+        public HttpResponseMessage GetPrintableHtml(GetPrintableHtmlParameters parameters)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
 
-            if (viewModel.Path == null)
+            if (parameters.Path == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
 
-            string[] pageArray = _coreHandler.GetPrintableHtml(this, viewModel);
-            return CreateJsonOrJsonpResponse(pageArray, viewModel.Callback);
+            string[] pageArray = _coreHandler.GetPrintableHtml(this, parameters);
+            return CreateJsonOrJsonpResponse(pageArray, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage ReorderPage(ReorderPageViewModel viewModel)
+        public HttpResponseMessage ReorderPage(ReorderPageParameters parameters)
         {
-            _coreHandler.ReorderPage(viewModel);
+            _coreHandler.ReorderPage(parameters);
             var data = new { success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage RotatePage(RotatePageViewModel viewModel)
+        public HttpResponseMessage RotatePage(RotatePageParameters parameters)
         {
-            int resultAngle = _coreHandler.RotatePage(viewModel);
+            int resultAngle = _coreHandler.RotatePage(parameters);
             var data = new { resultAngle, success = true };
-            return CreateJsonOrJsonpResponse(data, viewModel.Callback);
+            return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         #region IUrlsCreator implementation

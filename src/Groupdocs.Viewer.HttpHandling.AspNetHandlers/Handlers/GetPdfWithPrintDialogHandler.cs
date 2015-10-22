@@ -29,23 +29,23 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                     return;
 
-                GetFileViewModel viewModel = new GetFileViewModel();
-                NameValueCollection parameters = context.Request.Params;
-                viewModel.Path = GetParameter<string>(parameters, "path");
-                viewModel.GetPdf = true;
-                viewModel.IsPrintable = true;
-                viewModel.WatermarkText = GetParameter<string>(parameters, "watermarkText");
-                viewModel.WatermarkColor = GetParameter<int?>(parameters, "watermarkColor");
-                viewModel.WatermarkPosition = GetParameter<WatermarkPosition>(parameters, "watermarkPosition");
-                viewModel.WatermarkWidth = GetParameter<float>(parameters, "watermarkWidth");
-                viewModel.IgnoreDocumentAbsence = false;
-                viewModel.UseHtmlBasedEngine = GetParameter<bool>(parameters, "useHtmlBasedEngine");
-                viewModel.SupportPageRotation = GetParameter<bool>(parameters, "supportPageRotation");
-                viewModel.InstanceIdToken = GetParameter<string>(parameters, Constants.InstanceIdRequestKey);
+                GetFileParameters parameters = new GetFileParameters();
+                NameValueCollection requestParameters = context.Request.Params;
+                parameters.Path = GetParameter<string>(requestParameters, "path");
+                parameters.GetPdf = true;
+                parameters.IsPrintable = true;
+                parameters.WatermarkText = GetParameter<string>(requestParameters, "watermarkText");
+                parameters.WatermarkColor = GetParameter<int?>(requestParameters, "watermarkColor");
+                parameters.WatermarkPosition = GetParameter<WatermarkPosition>(requestParameters, "watermarkPosition");
+                parameters.WatermarkWidth = GetParameter<float>(requestParameters, "watermarkWidth");
+                parameters.IgnoreDocumentAbsence = false;
+                parameters.UseHtmlBasedEngine = GetParameter<bool>(requestParameters, "useHtmlBasedEngine");
+                parameters.SupportPageRotation = GetParameter<bool>(requestParameters, "supportPageRotation");
+                parameters.InstanceIdToken = GetParameter<string>(requestParameters, Constants.InstanceIdRequestKey);
 
                 byte[] bytes;
                 string fileDisplayName;
-                bool isSuccessful = GetFile(viewModel,
+                bool isSuccessful = GetFile(parameters,
                                          out bytes, out fileDisplayName);
                 if (!isSuccessful || bytes == null)
                     return;

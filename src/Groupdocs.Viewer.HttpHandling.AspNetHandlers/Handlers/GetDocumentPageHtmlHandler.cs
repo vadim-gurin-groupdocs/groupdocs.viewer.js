@@ -56,10 +56,10 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = context.Request.Params["data"];
                 else
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
-                
-                GetDocumentPageHtmlViewModel viewModel = serializer.Deserialize<GetDocumentPageHtmlViewModel>(json);
+
+                GetDocumentPageHtmlParameters parameters = serializer.Deserialize<GetDocumentPageHtmlParameters>(json);
                 string pageHtml, pageCss;
-                GetDocumentPageHtml(_urlsCreator, viewModel, out pageHtml, out pageCss);
+                GetDocumentPageHtml(_urlsCreator, parameters, out pageHtml, out pageCss);
                 var data = new { pageHtml, pageCss };
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
