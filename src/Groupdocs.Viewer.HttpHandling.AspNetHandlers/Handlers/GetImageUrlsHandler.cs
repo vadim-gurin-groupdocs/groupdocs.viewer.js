@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels.Responses.Statuses;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -51,7 +52,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                     json = new StreamReader(context.Request.InputStream).ReadToEnd();
 
                 GetImageUrlsParameters parameters = serializer.Deserialize<GetImageUrlsParameters>(json);
-                object data = GetImageUrls(_urlsCreator, parameters);
+                OperationStatusResponse data = GetImageUrls(_urlsCreator, parameters);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

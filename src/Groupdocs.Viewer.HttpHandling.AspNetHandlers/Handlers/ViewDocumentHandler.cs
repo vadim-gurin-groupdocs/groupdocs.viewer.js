@@ -5,6 +5,7 @@ using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
 using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.ViewModels.Responses.Statuses;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -62,7 +63,7 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
                 }
                 ViewDocumentParameters parameters = serializer.Deserialize<ViewDocumentParameters>(json);
 
-                ViewDocumentResponse data = ViewDocument(_urlsCreator,  parameters);
+                OperationStatusResponse data = ViewDocument(_urlsCreator,  parameters);
                 string serializedData = serializer.Serialize(data);
                 CreateJsonOrJsonpResponse(context, serializedData);
             }

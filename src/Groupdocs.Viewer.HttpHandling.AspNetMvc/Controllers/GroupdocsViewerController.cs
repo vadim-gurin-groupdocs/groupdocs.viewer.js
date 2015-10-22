@@ -10,6 +10,7 @@ using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
 using Groupdocs.Web.UI.Core;
 using Groupdocs.Web.UI.ViewModels;
+using Groupdocs.Web.UI.ViewModels.Responses.Statuses;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
 {
@@ -64,14 +65,14 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult ViewDocument(ViewDocumentParameters parameters)
         {
-            ViewDocumentResponse data = _coreHandler.ViewDocument(this, parameters);
+            OperationStatusResponse data = _coreHandler.ViewDocument(this, parameters);
             return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult GetImageUrls(GetImageUrlsParameters parameters)
         {
-            object data = _coreHandler.GetImageUrls(this, parameters);
+            OperationStatusResponse data = _coreHandler.GetImageUrls(this, parameters);
             return CreateJsonOrJsonpResponse(data, parameters.Callback);
         }
 
