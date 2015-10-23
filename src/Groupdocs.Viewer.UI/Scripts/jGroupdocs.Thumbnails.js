@@ -287,7 +287,7 @@
                     this._thumbnailWidth, 0, imageCount,
                     function (response) {
                         for (var i = 0; i < imageCount; i++) {
-                            this.thumbnails()[i].url(response.data.image_urls[i]);
+                            this.thumbnails()[i].url(response.data.imageUrls[i]);
                         }
                         this._onScrollThumbnailsPanel();
                     }.bind(this),

@@ -2,8 +2,8 @@
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
-using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
+using Groupdocs.Web.UI.DataTransferObjects;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {
@@ -14,8 +14,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
         /// web and register it with IIS before being able to use it. For more information
         /// see the following link: http://go.microsoft.com/?linkid=8101007
         /// </summary>
-        private HttpContext _context;
-
         public GetDocumentPageImageHandler() : this(string.Empty) { }
 
         public GetDocumentPageImageHandler(string productName)

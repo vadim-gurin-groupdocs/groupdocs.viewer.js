@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.Web;
 using Groupdocs.Web.UI;
-using Groupdocs.Web.UI.ViewModels;
+using Groupdocs.Web.UI.DataTransferObjects;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {

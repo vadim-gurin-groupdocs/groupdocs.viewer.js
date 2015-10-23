@@ -292,7 +292,7 @@
             
             this.pageCount(response.pageCount);
             this.documentName(response.name);
-            this.docType(response.doc_type);
+            this.docType(response.docType);
             this.password(response.password);
             this.matchesCount = 0;
 

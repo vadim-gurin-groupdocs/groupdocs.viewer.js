@@ -186,9 +186,14 @@
             var entitiesNotObservable = new Array();
             var filesNotObservable = new Array();
             var foldersNotObservable = new Array();
-            $.each(entities, function (i) {                
+            var currentId = 1;
+            $.each(entities, function (i) {
                 if (!this.extended) {
                     var e = this;
+                    if (typeof e.id == "undefined") {
+                        e.id = currentId;
+                        currentId++;
+                    }
                     self._extendEntity(e);
                     entitiesNotObservable.push(e);
                 }

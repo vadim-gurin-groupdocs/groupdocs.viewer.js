@@ -3,9 +3,9 @@ using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using Groupdocs.Common.InstallableViewer;
-using Groupdocs.Web.UI.ViewModels;
 using Groupdocs.Web.UI;
-using Groupdocs.Web.UI.ViewModels.Responses.Statuses;
+using Groupdocs.Web.UI.DataTransferObjects;
+using Groupdocs.Web.UI.DataTransferObjects.Responses.Statuses;
 
 namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Handlers
 {

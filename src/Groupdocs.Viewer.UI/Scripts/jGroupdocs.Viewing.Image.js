@@ -184,7 +184,7 @@
                 this.locale,
                 function (response) {
                     for (i = 0; i < imageCount; i++) {
-                        this.pages()[i].url(response.image_urls[i]);
+                        this.pages()[i].url(response.imageUrls[i]);
                         this.loadImagesForVisiblePages();
                     }
                 }.bind(this),
