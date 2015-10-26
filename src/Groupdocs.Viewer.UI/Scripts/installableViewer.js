@@ -647,7 +647,7 @@
             groupdocsViewerWrapper.find(".file_browser_content").bind('fileSelected', function (e, metadata) {
                 self._hideFileOpenDialog();
                 self.fileDisplayName = viewerAdapter.documentComponentViewModel.fileDisplayName = "";
-                viewerAdapter.documentComponentViewModel.loadDocument(metadata.guid);
+                viewerAdapter.documentComponentViewModel.loadDocument(metadata.path);
             });
 
             if (settings.showThumbnails && settings.openThumbnails) {
@@ -1157,7 +1157,7 @@
 
                 var useHtmlContentBasedPrinting = this.useHtmlBasedEngine && !this.useImageBasedPrinting;
 
-                if (!this.useFullSizeImages && !this.useHtmlBasedEngine) {
+                if (!this.useFullSizeImages || this.useHtmlBasedEngine) {
                     var bodyElement = $("body");
                     var printFrameName = "printFrame" + this.viewerId;
                     var printFrame = bodyElement.children("div.groupdocsPrintFrame[name='" + printFrameName + "'],div.groupdocsPrintFrameDeactivated[name='" + printFrameName + "']");
