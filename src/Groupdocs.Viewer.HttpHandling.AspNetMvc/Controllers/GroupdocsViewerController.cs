@@ -156,20 +156,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetMvc.Controllers
             return File(bytes, "application/pdf");
         }
 
-        [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public ActionResult GetPrintableHtml(GetPrintableHtmlParameters parameters)
-        {
-            if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
-                return new EmptyResult();
-
-            if (parameters.Path == null)
-            {
-                return new HttpStatusCodeResult(400);
-            }
-
-            string[] pageArray = _coreHandler.GetPrintableHtml(this, parameters);
-            return CreateJsonOrJsonpResponse(pageArray, parameters.Callback);
-        }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public ActionResult ReorderPage(ReorderPageParameters parameters)

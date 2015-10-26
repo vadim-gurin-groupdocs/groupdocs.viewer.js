@@ -1231,6 +1231,7 @@
                     }
                     else {
                         this._model.getPrintableHtml(this.documentPath, useHtmlContentBasedPrinting, fileDisplayName,
+                            this.quality, this.supportTextSelection,
                             watermarkText, watermarkColor,
                             watermarkPosition, watermarkWidth,
                             this.ignoreDocumentAbsence,
@@ -1525,19 +1526,22 @@
         },
 
         getPrintableHtml: function (documentPath, useHtmlBasedEngine, fileDisplayName,
+                                    quality, supportTextSelection,
                                     watermarkText, watermarkColor,
                                     watermarkPosition, watermarkWidth,
                                     ignoreDocumentAbsence,
                                     instanceIdToken,
                                     callback, errorCallback, locale) {
-            this._portalService.getPrintableHtml(documentPath, useHtmlBasedEngine, fileDisplayName,
+            this._portalService.getImageUrlsAsync(documentPath, /*width*/null, 0, null,
+                quality, supportTextSelection,
                 watermarkText, watermarkColor,
                 watermarkPosition, watermarkWidth,
-                ignoreDocumentAbsence,
+                ignoreDocumentAbsence, false,
+                useHtmlBasedEngine,
                 instanceIdToken,
                 locale,
                 function (response) {
-                    callback.apply(this, [response.data]);
+                    callback.apply(this, [response.data.imageUrls]);
                 },
                 function (error) {
                     errorCallback.apply(this, [error]);

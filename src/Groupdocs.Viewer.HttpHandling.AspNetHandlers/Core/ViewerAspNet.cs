@@ -45,10 +45,6 @@ namespace Groupdocs.Viewer.HttpHandling.AspNetHandlers.Core
                new GetPdfWithPrintDialogHandler()
             ));
 
-            routes.Add(null, new Route("document-viewer/GetPrintableHtmlHandler",
-               new GetPrintableHtmlHandler()
-            ));
-
             routes.Add(null, new Route("document-viewer/GetResourceForHtmlHandler",
                new GetResourceForHtmlHandler()
             ));

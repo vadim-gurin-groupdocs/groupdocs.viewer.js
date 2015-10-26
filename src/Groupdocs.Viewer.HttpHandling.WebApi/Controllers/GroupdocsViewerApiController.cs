@@ -164,20 +164,6 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return response;
         }
 
-        [AcceptVerbs("GET", "POST", "OPTIONS")]
-        public HttpResponseMessage GetPrintableHtml(GetPrintableHtmlParameters parameters)
-        {
-            if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
-                return new HttpResponseMessage(HttpStatusCode.NoContent);
-
-            if (parameters.Path == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            }
-
-            string[] pageArray = _coreHandler.GetPrintableHtml(this, parameters);
-            return CreateJsonOrJsonpResponse(pageArray, parameters.Callback);
-        }
 
         [AcceptVerbs("GET", "POST", "OPTIONS")]
         public HttpResponseMessage ReorderPage(ReorderPageParameters parameters)
