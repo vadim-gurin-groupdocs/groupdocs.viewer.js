@@ -93,7 +93,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return CreateJsonOrJsonpResponse(data, null);
         }
 
-        public HttpResponseMessage GetResourceForHtml(GetResourceForHtmlParameters parameters)
+        public HttpResponseMessage GetResourceForHtml([FromUri]GetResourceForHtmlParameters parameters)
         {
             DateTime? clientModifiedSince = GetClientModifiedSince();
             bool isModified;
@@ -115,7 +115,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
         }
 
 
-        public HttpResponseMessage GetFile(GetFileParameters parameters)
+        public HttpResponseMessage GetFile([FromUri]GetFileParameters parameters)
         {
             byte[] bytes;
             string fileDisplayName;
@@ -138,7 +138,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             return response;
         }
 
-        public HttpResponseMessage GetPdfWithPrintDialog(GetFileParameters parameters)
+        public HttpResponseMessage GetPdfWithPrintDialog([FromUri]GetFileParameters parameters)
         {
             if (!_helper.IsRequestHandlingEnabled(Constants.GroupdocsPrintRequestHandlingIsEnabled))
                 return new HttpResponseMessage(HttpStatusCode.NoContent);
