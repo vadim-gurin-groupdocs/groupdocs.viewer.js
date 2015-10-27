@@ -112,12 +112,6 @@
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.Core\Groupdocs.Viewer.HttpHandling.Core.csproj">
-      <Project>{f8fa3ae2-58db-461c-81d0-7715b27f80c0}</Project>
-      <Name>Groupdocs.Viewer.HttpHandling.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />

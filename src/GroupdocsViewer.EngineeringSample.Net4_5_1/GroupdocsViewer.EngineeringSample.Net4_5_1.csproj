@@ -363,11 +363,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.Core\Groupdocs.Viewer.HttpHandling.Core.csproj">
+    <ProjectReference Include="..\HttpHandlingSamples\Groupdocs.Viewer.HttpHandling.Core\Groupdocs.Viewer.HttpHandling.Core.csproj">
       <Project>{f8fa3ae2-58db-461c-81d0-7715b27f80c0}</Project>
       <Name>Groupdocs.Viewer.HttpHandling.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Groupdocs.Viewer.HttpHandling.WebApi\Groupdocs.Viewer.HttpHandling.WebApi.csproj">
+    <ProjectReference Include="..\HttpHandlingSamples\Groupdocs.Viewer.HttpHandling.WebApi\Groupdocs.Viewer.HttpHandling.WebApi.csproj">
       <Project>{63897653-5219-4e13-bd98-a8f63803bdf3}</Project>
       <Name>Groupdocs.Viewer.HttpHandling.WebApi</Name>
     </ProjectReference>
