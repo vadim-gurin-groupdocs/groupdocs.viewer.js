@@ -159,7 +159,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
             response.Content = new ByteArrayContent(bytes);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
             string contentDispositionString = new ContentDisposition { FileName = fileDisplayName, Inline = true }.ToString();
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(contentDispositionString);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline");
             return response;
         }
 
