@@ -133,8 +133,7 @@ namespace Groupdocs.Viewer.HttpHandling.WebApi.Controllers
 
             response.Content = new ByteArrayContent(bytes);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            string contentDispositionString = new ContentDisposition { FileName = fileDisplayName, Inline = true }.ToString();
-            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue(contentDispositionString);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attacment"){FileName = fileDisplayName};
             return response;
         }
 
