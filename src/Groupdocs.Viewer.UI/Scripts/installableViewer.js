@@ -164,6 +164,7 @@
     $.extend(window.groupdocs.groupdocsViewerViewModel.prototype, {
         groupdocsViewerWrapper: null,
         browserIsInternetExplorer: false,
+        browserIsChrome: false,
         resizeTimeoutId: null,
         viewModes: { ScrollMode: 1, BookMode: 2 },
         viewMode: null,
@@ -186,14 +187,14 @@
                 settings.useHtmlThumbnails = false;
             this.printImageElements = new Array();
             window.groupdocs.viewerId++;
-            var browserIsIE9OrLess = false;
+            this.browserIsIE9OrLess = false;
             this.browserIsIE8 = false;
             if (options.enableViewerInit) {
                 var style;
                 if ($.browser.msie) {
                     this.browserIsInternetExplorer = true;
                     if ($.browser.version == 8 || $.browser.version == 9) {
-                        browserIsIE9OrLess = true;
+                        this.browserIsIE9OrLess = true;
                         if ($.browser.version == 8)
                             this.browserIsIE8 = true;
                     }
@@ -202,8 +203,15 @@
                     $("<style>" + style + "</style>").appendTo("head");
                 }
                 
-                var classWithNumber = "grpdx" + settings.docViewerId;
+                var browserIsChrome;
+                var isChromium = window.chrome;
+                var vendorName = window.navigator.vendor;
+                var isOpera = window.navigator.userAgent.indexOf("OPR") > -1;
+                if (!!isChromium && vendorName === "Google Inc." && isOpera == false)
+                    browserIsChrome = true;
+                this.browserIsChrome = browserIsChrome;
 
+                var classWithNumber = "grpdx" + settings.docViewerId;
                 var self = this;
                 var browserDependentCssClass = "";
                 if (self.browserIsInternetExplorer && settings.useHtmlBasedEngine) {
@@ -509,7 +517,7 @@
                 supportListOfBookmarks: settings.supportListOfBookmarks,
                 embedImagesIntoHtmlForWordFiles: settings.embedImagesIntoHtmlForWordFiles,
                 instanceIdToken: settings.instanceIdToken,
-                browserIsIE9OrLess: browserIsIE9OrLess,
+                browserIsIE9OrLess: this.browserIsIE9OrLess,
                 locale: settings.locale
             };
 
@@ -1135,15 +1143,21 @@
 
         _printDocument: function () {
             var self = this;
+            var message, title;
             if (this.usePdfPrinting) {
-                var message = this._getLocalizedString("Printing", "Printing");
-                var title = this._getLocalizedString("Printing", "Printing");
+                message = this._getLocalizedString("Printing", "Printing");
+                title = this._getLocalizedString("Printing", "Printing");
                 this._showMessageDialogPdf(message, title);
-                var printWindow = window.open(this.pdfPrintUrl);
 
-                printWindow.onload = function () {
+                var printWindow = window.open(this.pdfPrintUrl);
+                var closeMessageDialog = function() {
                     self._hideMessageDialogPdf();
-                }
+                };
+
+                if (this.browserIsChrome)
+                    printWindow.onload = closeMessageDialog;
+                else
+                    window.setTimeout(closeMessageDialog, 1000);
             }
             else {
                 var ua = navigator.userAgent.toLowerCase();
@@ -1186,9 +1200,9 @@
                     window.print();
                 }
                 else {
-                    var message = this._getLocalizedString("Getting a printable version of the document",
+                    message = this._getLocalizedString("Getting a printable version of the document",
                                                            "GettingPrintableVersionOfDocument");
-                    var title = this._getLocalizedString("Printing", "Printing");
+                    title = this._getLocalizedString("Printing", "Printing");
 
                     this._showMessageDialog(message, title, 0);
                     var pageNum;
